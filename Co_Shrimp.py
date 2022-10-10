@@ -128,7 +128,6 @@ def breather(switch , save_file_name="" , param_list=list()) : # 戻り値 {}   
 
             case "save" :
                 try:       
-
                     f_name = save_file_name
                     if not f_name :  
                         f_name = "eldenring.csv"
