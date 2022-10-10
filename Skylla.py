@@ -74,20 +74,39 @@ if __name__ == '__main__':
     
 
 
-    sg.theme('LightBrown6')
+    sg.theme('DarkBlue11')
+
+    T = [[]]
+    H = ['Title','URL']
+
+    points = {
+        'A': ["普天間", "http://futenmagu.or.jp/"],
+        'B': [70, 60]
+    }
+
 
     frame1 = sg.Frame('',
     [
-        [sg.Text('検索ワード :'), sg.Input(key='-seach-') , sg.Button('検索'), sg.Button('終了')],
-        [sg.Listbox(values=sg.theme_list(), size=(20, 9), key='-LIST-', enable_events=True)]
-    ] , size=(540, 280) 
+        [sg.Text('検索ワード :'), sg.Input(key='-seach-') , sg.Button('search',font=('',11)), sg.Button('stop',font=('',11))],
+        #[ sg.Table (T , headings=H , auto_size_columns = False , vertical_scroll_only = False ,
+        #    #def_col_width=32 ,
+        #    col_widths=[24, 30],
+        #    num_rows=9 ,
+        #    display_row_numbers= True ,
+        #    font =('',10) ,
+        #    header_text_color= '#0000ff' ,
+        #    header_background_color= '#cccccc',
+        #    key='-TABLE-'
+        #)]
+        [sg.Listbox(values="", size=(120, 9), key='-LIST-', enable_events=True)]
+    ] , size=(540, 180) 
     )
 
     frame2 = sg.Frame('',
     [
                 [sg.Text('', key='-ACT-')],
                 [sg.Button('決定'), sg.Button('終了')]
-    ] , size=(540, 280) 
+    ] , size=(540, 220) 
     )
 
     frame3 = sg.Frame('',
@@ -100,14 +119,18 @@ if __name__ == '__main__':
                 [frame1] , [frame2] , [frame3]
             ]
 
-    window = sg.Window('sample', layout)
+    window = sg.Window('ui_sample_skylli', layout)
 
     while True:
         event, values = window.read()
         if event == sg.WIN_CLOSED or event == '終了':
             break
-        if event == '決定':
-            window['-ACT-'].update(f'成功！ あなたの名前は{values["-NAME-"]}さんですね')
+        elif event == '決定':
+        
+            window['-LIST-'].update(values=[])
+
+
+
 
     window.close()
 
