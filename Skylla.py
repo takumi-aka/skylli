@@ -16,16 +16,16 @@ from Co_Shrimp import GoogleShrimp
 from Co_Spider import CoSpider 
 
 
-thread_mode = ('noop','active','suspend','destroy')
+thread_mode = ('noop','active','suspend','destroy')#意味ないかも
 shrimp_stat = thread_mode[0]
 spider_stat = thread_mode[0]
 
-coshrimp = None
-cospider = None
+coshrimp = None #検索エンジンからデータをあさるクラス
+cospider = None #各サイトにコンタクトフォームが存在するか走査するクラス
 
-shrimp_executor = None
+shrimp_executor = None #coshrimp実行の為のサブスレッド
 
-__lock = Lock()
+__lock = Lock() #クリティカルセクション
 go_on = True
 
 def initializer(string):
@@ -44,8 +44,6 @@ def update_chrome_install() :
     webdriver.Chrome(ChromeDriverManager().install(), options=options)
     webdriver.Chrome.close
     return
-
-
 
 
 if __name__ == '__main__':
@@ -166,9 +164,6 @@ if __name__ == '__main__':
             window['-TABLE-'].update(values=li_li)
             li_li += li_li
         #息継ぎに処理の進捗をupdate()させる
-
-
-
 
 
     window.close()
