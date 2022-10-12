@@ -58,6 +58,9 @@ class GoogleShrimp(Arthropod) :
             except:
                 break
 
+            if not self.breather("life") :
+                break
+            self.breather("breath" , param_list=r_list)
             self.driver.get(next_page)      
             time.sleep(2.5+random.uniform(1, 3.7))  
 
