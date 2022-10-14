@@ -82,8 +82,8 @@ if __name__ == '__main__':
 
     frame2 = sg.Frame('',
     [
-                [sg.Text('', key='-ACT-')],
-                [sg.Button('決定'), sg.Button('終了')],
+                [sg.Button('Skylli',font=('',12)), sg.Button('suspend',font=('',11)), sg.Button('destroy',font=('',11)) , sg.Button('終了')],
+                [sg.Text('', key='-ACT-')],                
                 [sg.Listbox(values="", size=(120, 9), key='-LIST-', enable_events=True)]                
     ] , size=(base_frame_width, 220) 
     )
