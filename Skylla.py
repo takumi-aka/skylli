@@ -27,6 +27,7 @@ shrimp_executor = None #coshrimp実行の為のサブスレッド
 
 __lock = Lock() #クリティカルセクション
 go_on = True
+last_search_result = None
 
 def initializer(string):
     print(f'{string} init thread!')
@@ -119,19 +120,20 @@ if __name__ == '__main__':
                 case "save" :
                     try:       
                         result = False
-
-                        window['-TABLE-'].update(param_list)
-
-                        f_name = save_file_name
-                        if not f_name :  
-                            f_name = "nioh.csv"
-                        f = open(f_name , mode="a" , newline="", encoding="UTF-8")     
-
-                        writer = csv.writer(f)
                         if param_list :
+                            last_search_result = param_list
+                            window['-TABLE-'].update(param_list)
+
+                            f_name = save_file_name
+                            if not f_name :  
+                                f_name = "nioh.csv"
+                            f = open(f_name , mode="a" , newline="", encoding="UTF-8")     
+
+                            writer = csv.writer(f)
+                            
                             for row in param_list:
                                 writer.writerow(row)
-                        result = True    
+                            result = True    
                     finally:
                         f.close()
 
