@@ -59,17 +59,15 @@ if __name__ == '__main__':
     T = [[]]
     H = ['Title','URL']
 
-
-    li_li =[["普天間ひなこ","https://"],["玉城じゅん","http://"]]
-
-    base_frame_width = 640
+    base_frame_width = 720
 
     frame1 = sg.Frame('',
     [
         [sg.Text('検索ワード :'), sg.Input(key='-SEARCH-') , sg.Button('search',font=('',11)), sg.Button('suspend',font=('',11)), sg.Button('destroy',font=('',11))],
+        [sg.Text('current :'),sg.Text('', key='-CURRENT-TEXT-')],
         [ sg.Table (T , headings=H , auto_size_columns = False , vertical_scroll_only = False ,
             #def_col_width=32 ,
-            col_widths=[32, 38],
+            col_widths=[45, 38],
             num_rows=9 ,
             display_row_numbers= True ,
             font =('',10) ,
@@ -108,26 +106,31 @@ if __name__ == '__main__':
         return 
 
 
-    def breather(switch , save_file_name="" , param_list=list()) : # 戻り値 {}
+    def breather(switch , save_file_name="" , param_list=list(), current_text="") : # 戻り値 {}
         result = {}
         with __lock:    
             match switch:
                 case "breath" :
                     result = {}
-                    window['-TABLE-'].update(values=param_list)
+                    window['-CURRENT-TEXT-'].update(current_text)
                 case "life" :
                     result = go_on   
 
                 case "save" :
                     try:       
                         result = False
+
+                        window['-TABLE-'].update(param_list)
+
                         f_name = save_file_name
                         if not f_name :  
                             f_name = "nioh.csv"
-                        f = open(f_name , mode="a" , newline="", encoding="UTF-8")       
+                        f = open(f_name , mode="a" , newline="", encoding="UTF-8")     
+
+                        writer = csv.writer(f)
                         if param_list :
-                            writer = csv.writer(f)
-                            writer.writerow(param_list)
+                            for row in param_list:
+                                writer.writerow(row)
                         result = True    
                     finally:
                         f.close()
@@ -137,7 +140,7 @@ if __name__ == '__main__':
 
     while True:
         event, values = window.read()
-        if event == sg.WIN_CLOSED or event == '終了':
+        if event == sg.WIN_CLOSED or event == '終了': # スレッドセーフで終了するように色々やってね
             break
         elif event == 'search':
             if shrimp_stat == 'noop' :
@@ -160,9 +163,9 @@ if __name__ == '__main__':
                 shrimp_stat = thread_mode[0]  #back to noop
 
         elif event == '決定':#テストコード
-            window['-LIST-'].update(values=li_li)
-            window['-TABLE-'].update(values=li_li)
-            li_li += li_li
+
+            sg.Multiline.Update()   
+
         #息継ぎに処理の進捗をupdate()させる
 
 

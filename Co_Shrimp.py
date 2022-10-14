@@ -51,7 +51,7 @@ class GoogleShrimp(Arthropod) :
                     r_list += [[elem_h3.text , host_url]]
                 print(elem_h3.text)
                 print(elem_a.get_attribute('href'))
-            
+                self.breather("breath" , current_text=elem_h3.text+ " : " +host_url)
             try:
                 next_page = self.driver.find_element(By.ID , "pnnext").get_attribute("href")
                 #if next_page == [] :
@@ -62,6 +62,7 @@ class GoogleShrimp(Arthropod) :
                 break
             
             self.driver.get(next_page)      
+            
             time.sleep(2.5+random.uniform(1, 3.7))  
             
         self.breather("breath" , param_list=r_list)
