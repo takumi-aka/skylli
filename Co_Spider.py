@@ -98,9 +98,6 @@ class CoSpider(Arthropod):
          t_len = len(self.driver.page_source)
          t_url = self.driver.current_url
 
-         dummylist= ["逃げるよ","逃げるよ","あと少しだけ"]
-         self.breather("breath" , dummylist) 
-
          if "title" not in self.detected_url.keys(): #最初のページのタイトルだけを得る
             self.detected_url = {"title" : self.driver.title} 
          #問い合わせフォームであるかをテストするコードを入れる場所
@@ -284,8 +281,8 @@ class CoSpider(Arthropod):
             self.recursive_async(link_url, root_url) 
             continue
 
-         l_result = self.breather("life") 
-         if not l_result["life"]: break
+         #l_result = self.breather("life") 
+         #if not l_result["life"]: break
          if self.detected : break
 
          self.__download_file_selenium(link_url)
@@ -335,15 +332,17 @@ if __name__ == "__main__": #開発用
    import multiprocessing 
    multiprocessing.set_start_method('spawn', True)
      
-   u0 = "https://wx10.wadax.ne.jp/~yoshidakaya-co-jp/" #謎のエラー
-   #url = "https://www.octoparse.jp/"
+   
+
+   u0 = "https://www.oricon.co.jp" #謎のエラー
+   u6 = "https://music.oricon.co.jp"
    u1 = "https://oec-evaluation.uh-oh.jp/"
    u2 = "https://bonten.cc/"
    u3 = "https://akubi-office.com/"
    u4 = 'https://kokusai-bs.jp/' 
    u5 = "https://exceed-confect.co.jp/"
 
-   target_list = [u0 , u2, u3, u3, u4 ,u5]
+   target_list = [u0 , u2, u3, u3, u4 ,u5 , u6]
 
    with ProcessPoolExecutor(max_workers=1, initializer=initializer, initargs=('pool',)) as executor:
       futures = []

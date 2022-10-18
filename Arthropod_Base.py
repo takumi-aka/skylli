@@ -11,7 +11,7 @@ logger.propagate = False
 
 
 class Arthropod :
-    needless = "(twitter|instagram|facebook|youtube|indeed|google|baseconnect|yahoo|townpage|domonet|news)"
+    needless = "(twitter|instagram|facebook|youtube|indeed|google|baseconnect|yahoo|townpage|domonet|news|docomo|amazom|kakaku|oricon|wikipedia|tiktok)"
     negative_multibyte_words = ["派遣","求人","地図","アルバイト","ハローワーク","マピオン","goo地図"] 
     options = None
     driver = None

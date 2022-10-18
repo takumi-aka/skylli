@@ -66,7 +66,7 @@ class GoogleShrimp(Arthropod) :
             time.sleep(2.5+random.uniform(1, 3.7))  
             
         self.breather("breath" , param_list=r_list)
-        self.breather("save" , save_file_name=self.save_file_name , param_list=r_list)
+        self.breather("clean_up" , save_file_name=self.save_file_name , param_list=r_list)
 
         return
 # GoogleShrimp class end
