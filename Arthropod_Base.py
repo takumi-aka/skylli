@@ -11,10 +11,12 @@ logger.propagate = False
 
 
 class Arthropod :
-    needless = "(twitter|instagram|facebook|youtube|indeed|google|baseconnect|yahoo|townpage|domonet|news|docomo|amazom|kakaku|oricon|wikipedia|tiktok)"
+    lucky_urls = ("https://docs.google.com/forms","https://forms.gle")
+    needless = "(twitter|instagram|facebook|youtube|indeed|baseconnect|yahoo|townpage|domonet|news|docomo|amazom|kakaku|oricon|wikipedia|tiktok)"
     negative_multibyte_words = ["派遣","求人","地図","アルバイト","ハローワーク","マピオン","goo地図"] 
     options = None
     driver = None
+    save_directory = "./result_URLs"
     save_file_name = ""
     breather = None
     terminate_flag = False
@@ -43,3 +45,7 @@ class Arthropod :
         result = self.breath("save" , save_file_name=self.save_file_name  , param_list=data_list) 
         return result
 
+
+    def browser_close(self) :
+        if self.driver :
+            self.driver.close() 

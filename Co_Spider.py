@@ -3,12 +3,13 @@ import urllib.request
 from urllib.parse import urlparse
 from urllib.parse import urljoin
 from os import makedirs
-import os.path, time, re
+import os.path, time, re , csv
 
 from concurrent.futures.process import ProcessPoolExecutor
 from concurrent.futures import ProcessPoolExecutor, as_completed
 import random
 
+from threading import Lock
 
 from Arthropod_Base import Arthropod
 
@@ -64,7 +65,7 @@ class CoSpider(Arthropod):
 
       for a in links:
          href = a.attrs['href']
-         url = urljoin(base, href)
+         url = urljoin(base, href) 
          result.append(url)
       return result
 
@@ -72,18 +73,19 @@ class CoSpider(Arthropod):
    def __download_file_selenium(self , url): # result {'url' : str ,'savepath' : str ,  'isthis' bool}
 
       try:#ここをダウンロードからコンテンツチェックに変える
-         result = {"url" : "" , "savepath" : "" ,  "isthis" : False }
+         result = {"url" : "" , "savepath" : "" ,  "isthis" : False , "needless" : False}
          o = urlparse(url)
 
          result["url"] = url 
          #savepath 
-         savepath = "./" + o.netloc + o.path + o.query
+         savepath = self.save_directory + "/" + o.netloc + o.path + o.query
          if re.search(r"/$", savepath):#末尾に / が無いからと言ってディレクトリとは限らない。
             savepath += "index.html"
 
          result["savepath"] = savepath
 
          if re.search(self.needless , savepath):
+            result["needless"] = True
             return result #savepath
 
          savedir = os.path.dirname(savepath)
@@ -109,7 +111,7 @@ class CoSpider(Arthropod):
             self.detected = True
 
             o = urlparse(t_url)
-            savepath = "./" + o.netloc + o.path + o.query
+            savepath = self.save_directory + "/" + o.netloc + o.path + o.query
             if re.search(r"/$", savepath):#末尾に / が無いからと言ってディレクトリとは限らない。
                if 0 <= t_len :
                   savepath += "index.html"
@@ -247,16 +249,24 @@ class CoSpider(Arthropod):
          self.detected_url |= {"hostname" : hostname}
          result = True 
          self.save_to_csv_a()  
+      else:
+         self.browser_close()
 
       return result
 
 
    def recursive_async(self , url, root_url):
-      result = self.__download_file_selenium(url)  #ドメインであるはずであるため
-      savepath = result["savepath"] #
-      if savepath is None: return
-      if savepath in self.test_files: return
-      if self.detected : return 
+      
+      nest = 0
+      result = False
+
+      r_selenium = self.__download_file_selenium(url)  #ドメインであるはずであるため
+
+      if True == r_selenium["needless"] : return result #不要なURLである印がある
+      savepath = r_selenium["savepath"] 
+      if savepath is None: return result
+      if savepath in self.test_files: return result # 既に辞書にあるURLである
+      if self.detected : return result
 
       self.test_files[savepath] = True
       logger.debug("recursiv_sync=", url)
@@ -270,23 +280,35 @@ class CoSpider(Arthropod):
             html = open(savepath, "r", encoding="CP932").read()  #今のところそれ以外
             self.enc="CP932"
          except :
-            return "対策求" # まだ先はあろう
+            try :
+               html = open(savepath, "r", encoding="shift_jis").read()  #今のところそれ以外
+               self.enc="shift_jis"
+            except :
+
+               return "対策求" # まだ先はあろう
 
       links = self.enum_links(html, url)
-      for link_url in links:   # self.detectedが来るまではURLをひたすら走査しなくなった時点で終わる。ここに教師終了を置ける。
-         if link_url.find(root_url) != 0: continue
+      for link_url in links:   # self.detectedが来るまではURLをひたすら走査しなくなった時点で終わる。この辺に強制終了を置ける。
+         if link_url.find(root_url) != 0: 
+            if link_url.find(self.lucky_urls[1]) == 0:        #限定的ドメインは通過させるよう組まねばならない
+               continue  
+            
          if re.search(r".(css|css2)", link_url): continue
          if re.search(r".(html|htm|cgi)$", link_url):
             if self.detected : break  
-            self.recursive_async(link_url, root_url) 
+            ++nest
+            if 2 > nest :
+               self.recursive_async(link_url, root_url)   # ネストのチェック
+
+            --nest   
             continue
 
-         #l_result = self.breather("life") 
-         #if not l_result["life"]: break
+         l_result = self.breather("life") 
+         if not l_result["life"]: break
          if self.detected : break
 
          self.__download_file_selenium(link_url)
-
+ 
       return self.detected
 
 
@@ -313,6 +335,9 @@ class CoSpider(Arthropod):
 
 
 #開発用
+
+__lock = Lock()
+go_on = True
 def initializer(string):
         print(f'{string} init thread!')
 
@@ -322,11 +347,38 @@ def worker(url):
         #data = filename
         #sleep(filenames[data]) # heavy task !
 
-    cs = CoSpider("nioh" , url) 
+    cs = CoSpider("nioh" , url=url , breath=breather ) 
     cs.finish_it()
     #return f"started"
     return cs.get_result_list()
 
+
+
+def breather(switch , save_file_name="" , param_list=list()) : # 戻り値 {}   デバッグ用、オリジナルはskyllaに
+    result = {}
+    with __lock:    
+        match switch:
+            case "breath" :
+                result = {}
+
+            case "life" :
+                result = {"life" : go_on}   
+
+            case "save" :
+                try:       
+                    f_name = save_file_name
+                    if not f_name :  
+                        f_name = "eldenring.csv"
+                    f = open(f_name , mode="a" , newline="", encoding="UTF-8")       
+                    for a_list in param_list :
+                        writer = csv.writer(f)
+                        writer.writerow(a_list)
+                finally:
+                    f.close()
+
+                result = {}
+
+    return result
 
 if __name__ == "__main__": #開発用
    import multiprocessing 
@@ -334,15 +386,17 @@ if __name__ == "__main__": #開発用
      
    
 
-   u0 = "https://www.oricon.co.jp" #謎のエラー
-   u6 = "https://music.oricon.co.jp"
-   u1 = "https://oec-evaluation.uh-oh.jp/"
+   u0 = "https://forms.gle/DLUDB7GZ7V1Q9Ddc9" #謎のエラー
+
+   u1 = "https://atsuma-note.jp/"
    u2 = "https://bonten.cc/"
    u3 = "https://akubi-office.com/"
    u4 = 'https://kokusai-bs.jp/' 
    u5 = "https://exceed-confect.co.jp/"
+   u6 = "https://music.oricon.co.jp"
 
-   target_list = [u0 , u2, u3, u3, u4 ,u5 , u6]
+
+   target_list = [u0 , u1, u2, u3, u4 ,u5 , u6]
 
    with ProcessPoolExecutor(max_workers=1, initializer=initializer, initargs=('pool',)) as executor:
       futures = []
