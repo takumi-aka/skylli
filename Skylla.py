@@ -162,13 +162,14 @@ if __name__ == '__main__':
 
                             f_name = save_file_name
                             if not f_name :  
-                                f_name = "nioh.csv"
-                            f = open(f_name , mode="a" , newline="", encoding="UTF-8")     
+                                f_name = "eldenring"
+                            f = open(f_name + ".csv" , mode="a" , newline="", encoding="UTF-8")                       
+                            if param_list :    
+                                writer = csv.writer(f)                
+                                writer.writerow(param_list)
 
-                            writer = csv.writer(f)
-                            
-                            for row in param_list:
-                                writer.writerow(row)
+
+
                             result = True    
                     finally:
                         f.close()
