@@ -1,3 +1,4 @@
+from tkinter.tix import Tree
 from selenium import webdriver 
 from webdriver_manager.chrome import ChromeDriverManager
 
@@ -9,10 +10,11 @@ logger.setLevel(DEBUG)
 logger.addHandler(handler)
 logger.propagate = False
 
+from threading import Lock
 
 class Arthropod :
-    lucky_urls = ("https://docs.google.com/forms","https://forms.gle")
-    needless = "(twitter|instagram|facebook|youtube|indeed|baseconnect|yahoo|townpage|domonet|news|docomo|amazom|kakaku|oricon|wikipedia|tiktok)"
+    lucky_urls = "(docs.google.com/forms|forms.gle)"
+    needless = "(twitter|instagram|facebook|asahi|youtube|indeed|baseconnect|yahoo|townpage|domonet|news|docomo|amazom|kakaku|oricon|wikipedia|tiktok|tokubai|seeing-japan|satomono|/navi)"
     negative_multibyte_words = ["派遣","求人","地図","アルバイト","ハローワーク","マピオン","goo地図"] 
     options = None
     driver = None
@@ -25,7 +27,7 @@ class Arthropod :
     def __init__(self , save_file_name="" , breath = None , hedden_window = False) :
         try:
             self.options = webdriver.ChromeOptions()
-            self.options.add_argument("--window-size=1920,1080")
+            self.options.add_argument("--window-size=1024,720")
             if hedden_window :
                 self.options.add_argument('--headless')
             self.driver = webdriver.Chrome(ChromeDriverManager().install(), options=self.options) 
@@ -42,7 +44,7 @@ class Arthropod :
     def save_to_csv_a(self) :
         if self.detected_url :
             data_list = [self.detected_url["title"] , self.detected_url["hostname"] , self.detected_url["url"] , str(id(self)) , str(id(self.driver))]        
-        result = self.breath("save" , save_file_name=self.save_file_name  , param_list=data_list) 
+        result = self.breather("clean_up" , save_file_name=self.save_file_name  , param_list=data_list) 
         return result
 
 

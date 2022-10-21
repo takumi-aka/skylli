@@ -41,16 +41,15 @@ class CoSpider(Arthropod):
    enc = "UTF-8"
    init_error = False
    
-   search_name = ""
    url = ""
 
-   def __init__(self , sname , url = "",  breath = None , hedden_window = False) :# sname : 結果を保存するFILENAMEを指定している
+   def __init__(self , save_file_name="" , url = "",  breath = None , hedden_window = False) :# sname : 結果を保存するFILENAMEを指定している
       
-      super().__init__(save_file_name=sname ,  breath = breath , hedden_window = hedden_window)
+      super().__init__(save_file_name=save_file_name ,  breath = breath , hedden_window = hedden_window)
       
       #インスツール自体は先に済ませておくべき。
       #ここでは既に行われたアップデートのインストール先のパスが帰ってきている。
-      self.search_name = sname
+
       self.url = url
 
       logger.debug("__init__ failure", url)
@@ -78,9 +77,16 @@ class CoSpider(Arthropod):
 
          result["url"] = url 
          #savepath 
-         savepath = self.save_directory + "/" + o.netloc + o.path + o.query
+
+         savepath = self.save_directory + "/" + o.netloc 
+         if o.path : 
+            savepath +=  o.path 
+            if re.search(r"/$", savepath):
+               savepath += o.query
+            else : savepath += "/" + o.query   
+         else : savepath += "/"
          if re.search(r"/$", savepath):#末尾に / が無いからと言ってディレクトリとは限らない。
-            savepath += "index.html"
+            savepath += "res.html"
 
          result["savepath"] = savepath
 
@@ -111,16 +117,18 @@ class CoSpider(Arthropod):
             self.detected = True
 
             o = urlparse(t_url)
-            savepath = self.save_directory + "/" + o.netloc + o.path + o.query
-            if re.search(r"/$", savepath):#末尾に / が無いからと言ってディレクトリとは限らない。
-               if 0 <= t_len :
-                  savepath += "index.html"
-            else:
+
+            savepath = self.save_directory + "/" + o.netloc 
+            if o.path : 
+               savepath +=  o.path 
+               if re.search(r"/$", savepath):
+                  savepath += o.query
+               else : savepath += "/" + o.query   
+            else : savepath += "/"
+            if re.search(r"/$", savepath):#末尾に / が無いからと言ってディレクトリとは限らない
                if 0 <= t_len :# コンテンツあり。ディレクトリではない。
                   if not re.search(r".(html|htm|cgi)$", savepath):# ここにファイル名が無ければ
-                     savepath += "/index.html"  
-               else:
-                  savepath += "/"
+                     savepath += "res.html"
 
             savedir = os.path.dirname(savepath)
             result["savepath"] = savepath
@@ -249,8 +257,7 @@ class CoSpider(Arthropod):
          self.detected_url |= {"hostname" : hostname}
          result = True 
          self.save_to_csv_a()  
-      else:
-         self.browser_close()
+      self.browser_close()
 
       return result
 
@@ -281,7 +288,7 @@ class CoSpider(Arthropod):
             self.enc="CP932"
          except :
             try :
-               html = open(savepath, "r", encoding="shift_jis").read()  #今のところそれ以外
+               html = open(savepath, "r", encoding="shift_jis").read()  #今のところそれ以外-
                self.enc="shift_jis"
             except :
 
@@ -289,10 +296,9 @@ class CoSpider(Arthropod):
 
       links = self.enum_links(html, url)
       for link_url in links:   # self.detectedが来るまではURLをひたすら走査しなくなった時点で終わる。この辺に強制終了を置ける。
-         if link_url.find(root_url) != 0: 
-            if link_url.find(self.lucky_urls[1]) == 0:        #限定的ドメインは通過させるよう組まねばならない
-               continue  
-            
+         if (link_url.find(root_url) != 0) and (not re.search(self.lucky_urls , link_url)) :          
+            continue   
+
          if re.search(r".(css|css2)", link_url): continue
          if re.search(r".(html|htm|cgi)$", link_url):
             if self.detected : break  
@@ -339,19 +345,14 @@ class CoSpider(Arthropod):
 __lock = Lock()
 go_on = True
 def initializer(string):
-        print(f'{string} init thread!')
+   print(f'{string} init thread!')
 
 
 def worker(url): 
-        # with open(filename) as file: data = file.read()
-        #data = filename
-        #sleep(filenames[data]) # heavy task !
-
-    cs = CoSpider("nioh" , url=url , breath=breather ) 
+    cs = CoSpider("CoSpiderResult" , url=url , breath=breather ) 
     cs.finish_it()
     #return f"started"
     return cs.get_result_list()
-
 
 
 def breather(switch , save_file_name="" , param_list=list()) : # 戻り値 {}   デバッグ用、オリジナルはskyllaに
@@ -364,15 +365,16 @@ def breather(switch , save_file_name="" , param_list=list()) : # 戻り値 {}   
             case "life" :
                 result = {"life" : go_on}   
 
-            case "save" :
+            case "clean_up" :
                 try:       
                     f_name = save_file_name
                     if not f_name :  
-                        f_name = "eldenring.csv"
-                    f = open(f_name , mode="a" , newline="", encoding="UTF-8")       
-                    for a_list in param_list :
-                        writer = csv.writer(f)
-                        writer.writerow(a_list)
+                        f_name = "eldenring"
+                    f = open(f_name + ".csv" , mode="a" , newline="", encoding="UTF-8")                       
+                    if param_list :    
+                        writer = csv.writer(f)                
+                        writer.writerow(param_list)
+
                 finally:
                     f.close()
 
@@ -380,23 +382,25 @@ def breather(switch , save_file_name="" , param_list=list()) : # 戻り値 {}   
 
     return result
 
+
+
 if __name__ == "__main__": #開発用
    import multiprocessing 
    multiprocessing.set_start_method('spawn', True)
      
    
 
-   u0 = "https://forms.gle/DLUDB7GZ7V1Q9Ddc9" #謎のエラー
+   u0 = 'https://www.pref.hokkaido.lg.jp' #謎のエラー
 
-   u1 = "https://atsuma-note.jp/"
-   u2 = "https://bonten.cc/"
+   u1 = "https://wx10.wadax.ne.jp/~yoshidakaya-co-jp/"
+   u2 = "https://oec-evaluation.uh-oh.jp/"
    u3 = "https://akubi-office.com/"
    u4 = 'https://kokusai-bs.jp/' 
    u5 = "https://exceed-confect.co.jp/"
-   u6 = "https://music.oricon.co.jp"
+   u6 = "https://www.octoparse.jp/"
 
 
-   target_list = [u0 , u1, u2, u3, u4 ,u5 , u6]
+   target_list = [u6 , u3 , u6, u2, u4 ,u5 , u6]
 
    with ProcessPoolExecutor(max_workers=1, initializer=initializer, initargs=('pool',)) as executor:
       futures = []

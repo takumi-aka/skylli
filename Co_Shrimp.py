@@ -40,6 +40,7 @@ class GoogleShrimp(Arthropod) :
 
         elem = self.driver.find_elements(By.TAG_NAME,'A')
         r_list = []
+        r_dic = {}
 
         while True :
 
@@ -49,6 +50,7 @@ class GoogleShrimp(Arthropod) :
                 host_url = o.scheme + "://" + o.hostname
                 if not re.search(self.needless , host_url):
                     r_list += [[elem_h3.text , host_url]]
+                    r_dic.update({host_url : elem_h3.text})
                 print(elem_h3.text)
                 print(elem_a.get_attribute('href'))
                 self.breather("breath" , current_text=elem_h3.text+ " : " +host_url)
@@ -67,12 +69,12 @@ class GoogleShrimp(Arthropod) :
             
         self.breather("breath" , param_list=r_list)
         self.breather("clean_up" , save_file_name=self.save_file_name , param_list=r_list)
+        #self.breather("clean_up" , save_file_name=self.save_file_name , param_dic=r_dic)        
 
         return
 # GoogleShrimp class end
 
-
-class BillShrimp(Arthropod) :
+class BillShrimp(Arthropod) : #没
     search_word = ""
     def __init__(self , search_word = "" , save_file_name="",  breath = None , hedden_window = False) :
 
@@ -117,11 +119,10 @@ class BillShrimp(Arthropod) :
         return
 
 
-
 __lock = Lock()
 go_on = True
 
-def breather(switch , save_file_name="" , param_list=list()) : # 戻り値 {}   デバッグ用、オリジナルはskyllaに
+def breather(switch , current_text="" , save_file_name="" , param_list=[] , param_dic={}) : # 戻り値 {}   デバッグ用、オリジナルはskyllaに
     result = {}
     with __lock:    
         match switch:
@@ -131,15 +132,20 @@ def breather(switch , save_file_name="" , param_list=list()) : # 戻り値 {}   
             case "life" :
                 result = {"life" : go_on}   
 
-            case "save" :
+            case "clean_up" :
                 try:       
                     f_name = save_file_name
                     if not f_name :  
                         f_name = "eldenring.csv"
-                    f = open(f_name , mode="a" , newline="", encoding="UTF-8")       
-                    for a_list in param_list :
+                    f = open(f_name + ".csv" , mode="a" , newline="", encoding="UTF-8")    
+
+                    for url_key, title_value in param_dic.items():
                         writer = csv.writer(f)
-                        writer.writerow(a_list)
+                        writer.writerow([url_key , title_value])
+
+                    #for a_list in param_list :
+
+
                 finally:
                     f.close()
 
@@ -153,7 +159,7 @@ if __name__ == '__main__':
 
     multiprocessing.set_start_method('spawn', True)
 
-    gs = GoogleShrimp(search_word="食品加工 静岡" , save_file_name="検索結果.csv" , breath = breather)
+    gs = GoogleShrimp(search_word="食品工場 北海道" , save_file_name="検索結果.csv" , breath = breather)
     gs.boil() 
 
 

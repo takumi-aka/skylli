@@ -103,7 +103,7 @@ if __name__ == '__main__':
 
 
     def shrimp_breather(switch , save_file_name="" , param_list=list(), current_text="") : # 戻り値 {}
-        global shrimp_stat , search_result_all
+        global shrimp_stat , search_result_all , go_on
         result = {}
         with __lock:    
             match switch:
@@ -111,7 +111,7 @@ if __name__ == '__main__':
                     result = {}
                     window['-CURRENT-TEXT-SHRIMP-'].update(current_text)
                 case "life" :
-                    result = go_on   
+                    result = {"life" : go_on}     
     
                 case "clean_up" :
                     try:       
@@ -137,6 +137,7 @@ if __name__ == '__main__':
         return result
 
 
+
     def spider_worker(url=""):
         cospider = CoSpider("nioh" , url=url , breath=spider_breather , hedden_window=False) 
         cospider.finish_it()
@@ -144,15 +145,15 @@ if __name__ == '__main__':
 
 
     def spider_breather(switch , save_file_name="" , param_list=list(), current_text="") : # 戻り値 {}
-        global shrimp_stat , search_result_all
+        global shrimp_stat , search_result_all , go_on
         result = {}
         with __lock:    
             match switch:
                 case "breath" :
                     result = {}
-                    window['-CURRENT-TEXT-'].update(current_text)
+                    #window['-CURRENT-TEXT-'].update(current_text)
                 case "life" :
-                    result = go_on   
+                    result = {"life" : go_on}   
     
                 case "clean_up" :
                     try:       
@@ -174,6 +175,7 @@ if __name__ == '__main__':
                         shrimp_stat = thread_mode[0]
 
         return result
+
 
     futures = []
     while True:
@@ -202,12 +204,10 @@ if __name__ == '__main__':
 
         elif event == '蜘蛛':
             if 0 < len(search_result_all) :
-                window.refresh()
-                with ThreadPoolExecutor(max_workers=1, initializer=initializer, initargs=('pool',)) as executor:   
+                with ThreadPoolExecutor(max_workers=3, initializer=initializer, initargs=('pool',)) as executor:   
                     for name_url in search_result_all:
                         if 2 == len(name_url) :
                             futures.append(executor.submit(spider_worker, name_url[1]))
-
 
         elif event == '蜘蛛終了':
             window.refresh()
