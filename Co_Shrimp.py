@@ -49,8 +49,9 @@ class GoogleShrimp(Arthropod) :
                 o = urlparse(elem_a.get_attribute('href'))
                 host_url = o.scheme + "://" + o.hostname
                 if not re.search(self.needless , host_url):
-                    r_list += [[elem_h3.text , host_url]]
-                    r_dic.update({host_url : elem_h3.text})
+                    if not re.search(self.negative_multibyte_words , elem_h3.text):
+                        r_list += [[elem_h3.text , host_url]]
+                        r_dic.update({host_url : elem_h3.text})
                 print(elem_h3.text)
                 print(elem_a.get_attribute('href'))
                 self.breather("breath" , current_text=elem_h3.text+ " : " +host_url)

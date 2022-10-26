@@ -205,10 +205,15 @@ if __name__ == '__main__':
 
         elif event == '蜘蛛':
             if 0 < len(search_result_all) :
-                with ThreadPoolExecutor(max_workers=3, initializer=initializer, initargs=('pool',)) as executor:   
-                    for name_url in search_result_all:
-                        if 2 == len(name_url) :
-                            futures.append(executor.submit(spider_worker, name_url[1]))
+                executor = ThreadPoolExecutor(max_workers=1)
+                for name_url in search_result_all:
+                    if 2 == len(name_url) :
+                        futures.append(executor.submit(spider_worker, name_url[1]))
+
+                #with ThreadPoolExecutor(max_workers=1, initializer=initializer, initargs=('pool',)) as executor:   
+                #    for name_url in search_result_all:
+                #        if 2 == len(name_url) :
+                #            futures.append(executor.submit(spider_worker, name_url[1]))
 
         elif event == '蜘蛛終了':
             window.refresh()

@@ -44,14 +44,10 @@ class CoSpider(Arthropod):
    url = ""
 
    def __init__(self , save_file_name="" , url = "",  breath = None , hedden_window = False) :# sname : 結果を保存するFILENAMEを指定している
-      
       super().__init__(save_file_name=save_file_name ,  breath = breath , hedden_window = hedden_window)
-      
-      #インスツール自体は先に済ませておくべき。
+      #インストール自体は先に済ませておくべき。
       #ここでは既に行われたアップデートのインストール先のパスが帰ってきている。
-
       self.url = url
-
       logger.debug("__init__ failure", url)
       return None
 
@@ -244,6 +240,31 @@ class CoSpider(Arthropod):
          print("ダウンロード失敗:", url)
          return None
 
+   def first_contact(self) -> str :
+
+      result = ""
+      logger.debug("first_contact : " + self.url)
+      self.driver.get(self.url)#直後のデータとURLが有効
+      html = self.driver.page_source
+
+
+      #soup = BeautifulSoup(html, "html.parser")
+      #links = soup.select("link[rel='stylesheet']")
+      #links += soup.select("a[href]")
+      
+      #title をセット
+      if "title" not in self.detected_url.keys(): 
+         self.detected_url = {"title" : self.driver.title} 
+
+      for a_href_text in links :
+         if 'a' == a_href_text.name :
+            if re.search(r"(お問合|問い合|問合|contact)", a_href_text.text): 
+               t_f_d = self.target_form_detector(html)
+               if (2 <= t_f_d["p"])and(1 <= t_f_d["t"]) :
+                  result = a_href_text.attrs['href']
+                  break
+
+      return result
 
    def finish_it(self) -> bool :
       result = False
@@ -252,7 +273,15 @@ class CoSpider(Arthropod):
       o = urlparse(self.url)
       hostname = o.hostname
 
-      r_result = self.recursive_async(self.url , self.url) # 結果が何であれ記録が必要
+      #全体走査の前にTOPページにあるURLに関連付けられたワードなどから、お問い合わせフォームであるかをチェックする。（時間を端折るため
+      f_s_r_href = self.first_contact()
+      if f_s_r_href :
+         f_s_r_href = o.scheme + '/' + hostname + f_s_r_href
+         self.detected_url |= {"url" : f_s_r_href} 
+         r_result = True
+      else:
+         r_result = self.recursive_async(self.url , self.url) # 結果が何であれ記録が必要
+
       if r_result : # 結果の保存はここで
          self.detected_url |= {"hostname" : hostname}
          result = True 
@@ -300,6 +329,7 @@ class CoSpider(Arthropod):
             continue   
 
          if re.search(r".(css|css2)", link_url): continue
+         if re.search(r".(png|wmv|avi|mpeg|mp4|pdf|gif|jpg)$", link_url): continue
          if re.search(r".(html|htm|cgi)$", link_url):
             if self.detected : break  
             ++nest
@@ -316,16 +346,6 @@ class CoSpider(Arthropod):
          self.__download_file_selenium(link_url)
  
       return self.detected
-
-
-   #def save_to_csv_a(self) : # 書き込むのは一行のみ
-
-   #   super().save_file_name()
-   #   data_list = [self.detected_url["title"] , self.detected_url["hostname"] , self.detected_url["url"] , str(id(self)) , str(id(self.driver))]        
-   #   result = self.breath("save" , data_list) 
-      #戻り値の検証
-
-   #   return result
 
 
    def get_result_list(self) -> list:
@@ -397,10 +417,16 @@ if __name__ == "__main__": #開発用
    u3 = "https://akubi-office.com/"
    u4 = 'https://kokusai-bs.jp/' 
    u5 = "https://exceed-confect.co.jp/"
-   u6 = "https://www.octoparse.jp/"
-
+   u6 = "http://www.pref.kagoshima.jp/index.html"
 
    target_list = [u6 , u3 , u6, u2, u4 ,u5 , u6]
+
+   c0 = "https://www.takunansteel.co.jp/contact/"
+   c1 = "http://yanadori.co.jp/contact.html"
+   c2 = "http://niigata-tekkotsu.com/contact.html"
+   c3 = "https://www.ohtsuka-steel.co.jp/contact/"
+   f_c_list = [c0,c1,c2,c3]
+
 
    with ProcessPoolExecutor(max_workers=1, initializer=initializer, initargs=('pool',)) as executor:
       futures = []
