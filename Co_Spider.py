@@ -4,6 +4,9 @@ from urllib.parse import urlparse
 from urllib.parse import urljoin
 from os import makedirs
 import os.path, time, re , csv
+from selenium.webdriver.common.keys import Keys 
+from selenium.webdriver.common.by import By
+
 
 from concurrent.futures.process import ProcessPoolExecutor
 from concurrent.futures import ProcessPoolExecutor, as_completed
@@ -32,6 +35,9 @@ class CoSpider(Arthropod):
    positive_words = ["お名前","メールアドレス","フォーム","コンタクト","送信","問い合","件名" ,"お問合"
                      , "確認" , "進む" , "必須" , "タイトル" , "題名" , "本文" , "連絡先" , "フリガナ" , "内容"] 
    negative_words = ["レンタル","アカウント"] 
+
+   contact_texts = ['お問い合わせ' , '問い合わせ','お問合せ','お問合わせ','御問合せ','御問い合わせ','御問合わせ','お問い合せ','おといあわせ','ご質問 お問い合わせ', 'ご注文・お問い合わせ','contact','contact us']
+   contact_href_into_words = ['contact','toiawase','otoiawase','faq','inquiry']
 
    ext = ".csv"
    test_files = {} # {[url] : bool}
@@ -247,22 +253,55 @@ class CoSpider(Arthropod):
       self.driver.get(self.url)#直後のデータとURLが有効
       html = self.driver.page_source
 
+      if "title" not in self.detected_url.keys(): 
+         self.detected_url = {"title" : self.driver.title} 
+
+      elements_l_t = []
+      for c_str in self.contact_texts :
+         elements_l_t += self.driver.find_elements(By.LINK_TEXT,c_str)
+
+      if not elements_l_t :
+         t_element = None
+         time.sleep(1+random.uniform(1, 2)) 
+         elements_i_a = self.driver.find_elements(By.TAG_NAME,'img')    
+         for element in elements_i_a:
+            a_str = element.get_attribute('alt')
+            for c_str in self.contact_texts :
+               if re.search(c_str, a_str):
+                  t_element = element.find_element(By.XPATH , './..')
+                  if t_element :
+                     elements_l_t.append(t_element)
+                     break
+            if t_element :
+               break
+
+
+      for element in elements_l_t :    
+         href_srt = element.get_attribute('href')   #フルパスであるかチェックしたいところ
+         #o = urlparse(href_srt)
+         logger.debug("first_contact : " + href_srt)
+         self.driver.get(href_srt)#直後のデータとURLが有効
+         time.sleep(2+random.uniform(1, 2))        #嘘だろ 
+         html = self.driver.page_source
+         t_f_d = self.target_form_detector(html)
+         if (2 <= t_f_d["p"])and(1 <= t_f_d["t"]) :
+            result = href_srt
+            break
 
       #soup = BeautifulSoup(html, "html.parser")
       #links = soup.select("link[rel='stylesheet']")
       #links += soup.select("a[href]")
-      
-      #title をセット
-      if "title" not in self.detected_url.keys(): 
-         self.detected_url = {"title" : self.driver.title} 
 
-      for a_href_text in links :
-         if 'a' == a_href_text.name :
-            if re.search(r"(お問合|問い合|問合|contact)", a_href_text.text): 
-               t_f_d = self.target_form_detector(html)
-               if (2 <= t_f_d["p"])and(1 <= t_f_d["t"]) :
-                  result = a_href_text.attrs['href']
-                  break
+      #title をセット
+
+
+      #for a_href_text in links :
+      #   if 'a' == a_href_text.name :
+      #      if re.search(r"(お問合|問い合|問合|contact)", a_href_text.text): 
+      #         t_f_d = self.target_form_detector(html)
+      #         if (2 <= t_f_d["p"])and(1 <= t_f_d["t"]) :
+      #            result = a_href_text.attrs['href']
+      #            break
 
       return result
 
@@ -276,7 +315,7 @@ class CoSpider(Arthropod):
       #全体走査の前にTOPページにあるURLに関連付けられたワードなどから、お問い合わせフォームであるかをチェックする。（時間を端折るため
       f_s_r_href = self.first_contact()
       if f_s_r_href :
-         f_s_r_href = o.scheme + '/' + hostname + f_s_r_href
+         #f_s_r_href = o.scheme + '/' + hostname + f_s_r_href
          self.detected_url |= {"url" : f_s_r_href} 
          r_result = True
       else:
@@ -416,10 +455,12 @@ if __name__ == "__main__": #開発用
    u2 = "https://oec-evaluation.uh-oh.jp/"
    u3 = "https://akubi-office.com/"
    u4 = 'https://kokusai-bs.jp/' 
-   u5 = "https://exceed-confect.co.jp/"
-   u6 = "http://www.pref.kagoshima.jp/index.html"
+   u5 = "https://agripick.com/"
+   u6 = "https://www.ogb.go.jp/"
+   u7 = "https://ecologia.100nen-kankyo.jp/" 
+   u8 = "https://www.vill.yomitan.okinawa.jp/"
 
-   target_list = [u6 , u3 , u6, u2, u4 ,u5 , u6]
+   target_list = [u8 , u7 , u6 , u5 , u1, u2, u4 ,u5 , u0]
 
    c0 = "https://www.takunansteel.co.jp/contact/"
    c1 = "http://yanadori.co.jp/contact.html"

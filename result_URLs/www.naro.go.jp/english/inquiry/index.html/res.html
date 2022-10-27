@@ -1,0 +1,501 @@
+<html lang="en"><head>
+<meta charset="UTF-8">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="Content-Script-Type" content="text/javascript">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<title>Mail form</title>
+<meta name="description" content=" The inquiry form is currently under mai...">
+<meta name="keywords" content="NARO, ">
+
+<link rel="stylesheet" href="../../common/css/reset.css">
+<link rel="stylesheet" href="../../common/css/style.css">
+<link rel="stylesheet" href="../../common/css/bootstrap.css">
+<link rel="stylesheet" href="../../common/css/bootstrap-grid.css">
+<link rel="stylesheet" href="../../common/css/bootstrap-reboot.css">
+<script async="" src="//ssl.google-analytics.com/ga.js"></script><script type="text/javascript" src="../../common/js/jquery.js"></script>
+<script type="text/javascript" src="../../common/js/bootstrap.min.js"></script>
+<link rel="shortcut icon" href="../../favicon.ico">
+<link rel="icon" href="../../favicon.ico">
+<!--[if lte IE 7]><link href="../../common/css/ie.css" rel="stylesheet" type="text/css" media="screen" /></script><![endif]-->
+<script src="../../common/js/jquery.js" type="text/javascript"></script>
+<script src="../../common/js/script.js" type="text/javascript"></script>
+<script src="../../common/js/external.js" type="text/javascript"></script>
+<link rel="stylesheet" href="../../common/css/icon.css">
+<script src="../../common/js/doctextsizer.js" type="text/javascript"></script>
+
+
+
+
+
+
+<link href="styles.css" rel="stylesheet" type="text/css" media="screen,print">
+
+
+
+<script type="text/javascript">
+var _gaq=[["_setAccount","UA-2489051-1"],["_trackPageview"]];
+(function(d,s,e){e=d.createElement(s);e.async=!0;e.src=("https:"===d.location.protocol?"//ssl":"//www")+".google-analytics.com/ga.js";s=d.getElementsByTagName(s)[0];s.parentNode.insertBefore(e,s)}(this.document,"script"));
+</script>
+
+
+</head>
+
+<body id="inquiry" class="custom">
+  	<header>
+		<div class="logo">
+        <a href="../index.html"><img src="../img/logo_en.png" alt="National Agriculture and Food Research Organization"></a>
+		</div>
+		<div class="header-menu clearfix">
+			<div class="header-link">
+				<ul>
+					<li class="no-sp"><a href="../contents/site-map.html">Site Map</a></li>
+                <li class="no-sp"><a href="index.html">Contact</a></li>
+					<li><a href="../../index.html">Japanese</a></li>
+				</ul>
+			</div>
+			<div class="search">
+        		<form id="cse-search-box" action="https://www.naro.go.jp/result.html" class="search-box">
+        		<div>
+            		<input type="hidden" name="cx" value="018252636870386869687:jia4zandm3g">
+            		<input type="hidden" name="ie" value="UTF-8">
+            		<input type="text" name="q" class="search-input" placeholder="" title="Internal search" style="background: url(&quot;https://www.google.com/cse/static/images/1x/ja/branding.png&quot;) left 9px top 50% no-repeat rgb(255, 255, 255);">
+            		<input type="submit" name="sa" class="search-button" value="Search">
+            	</div>
+            	<input name="siteurl" value="www.naro.go.jp/english/inquiry/index.html" type="hidden"><input name="ref" value="" type="hidden"><input name="ss" value="" type="hidden"></form>
+            <script type="text/javascript" src="https://www.google.co.jp/coop/cse/brand?form=cse-search-box&amp;lang=ja"></script>
+			</div>
+		</div>
+		<div id="nav-drawer">
+			<input id="nav-input" type="checkbox" class="nav-unshown">
+			<label id="nav-open" for="nav-input"><span></span></label>
+			<label class="nav-unshown" id="nav-close" for="nav-input"></label>
+			<div id="nav-content">
+				<ul>
+					<li><a href="../about-naro/index.html">About NARO</a></li>
+					<li><a href="../research-programs/index.html">Research Programs</a></li>
+					<li><a href="../global-initiatives/index.html">Global Initiatives</a></li>
+					<li><a href="../outreach/index.html">PR Activities</a></li>
+					<li><a href="../contents/site-map.html">Site Map</a></li>
+					<li><a href="index.html">Contact</a></li>
+				</ul>
+			</div>
+		</div>
+	</header>
+	<div id="gnav_bg">
+		<nav id="groval_nav">
+			<ul class="nav">
+				<li><a href="../about-naro/index.html" class="parent">About NARO</a>
+					<ul>
+						<li><a href="../about-naro/president/index.html">Message from the President</a></li>
+						<li><a href="../about-naro/organization.html">Organization</a></li>
+						<li><a href="../about-naro/history.html">History</a></li>
+						<li><a href="../about-naro/naro-navi.html">NARO Navi</a></li>
+                       <li><a href="../about-naro/recent/index.html">Recent Trends</a></li>
+					</ul>
+				</li>
+				<li><a href="../centers/index.html" class="parent">Centers・Institutes</a>
+					<ul>
+						<li><a href="../laboratory/rcait/index.html">Research Center for Agricultural Information Technology, NARO</a></li>
+                        <li><a href="../laboratory/rcar/index.html">Research Center for Agricultural Robotics, NARO </a></li>
+                        <li><a href="../laboratory/ngrc/index.html">Research Center of Genetic Resources, NARO</a></li>
+						<li><a href="../laboratory/naac/index.html">Research Center for Advanced Analysis, NARO</a></li>
+          
+                    	<li><a href="../laboratory/nfri/index.html">Institute of Food Research, NARO</a></li>
+
+						<li><a href="../laboratory/nilgs/index.html">Institute of Livestock and Grassland Science, NARO</a></li>
+                        <li><a href="../laboratory/niah/index.html">National Institute of Animal<br> Health, NARO</a></li>
+
+						<li><a href="../laboratory/harc/index.html">Hokkaido Agricultural Research Center, NARO</a></li>
+						<li><a href="../laboratory/tarc/index.html">Tohoku Agricultural Research Center, NARO</a></li>
+						<li><a href="../laboratory/carc/index.html">Central Region Agricultural Research Center, NARO</a></li>
+						<li><a href="../laboratory/warc/index.html">Western Region Agricultural Research Center, NARO</a></li>
+						<li><a href="../laboratory/karc/index.html">Kyushu Okinawa Agricultural Research Center, NARO</a></li>
+                    	<li><a href="../laboratory/iam/index.html">Institute of Agricultural <br>Machinery, NARO</a></li>
+
+                    	<li><a href="../laboratory/nics/index.html">Institute of Crop Science,<br> NARO</a></li>
+						<li><a href="../laboratory/nifts/index.html">Institute of Fruit Tree and Tea Science, NARO</a></li>
+						<li><a href="../laboratory/nivfs/index.html">Institute of Vegetable and Floriculture Science, NARO</a></li>
+                    	<li><a href="../laboratory/nias/index.html">Institute of Agrobiological <br>Sciences, NARO</a></li>
+						
+                        <li><a href="../laboratory/niaes/index.html">Institute for Agro-Environmental Sciences, NARO</a></li>
+ 						<li><a href="../laboratory/nkk/index.html">Institute for Rural Engineering, NARO</a></li>
+                        <li><a href="../laboratory/nipp/index.html">Institute for Plant Protection, <br>NARO </a></li>
+
+						<li><a href="../laboratory/ncss/index.html">Center for Seeds and Seedlings, NARO</a></li>
+					    <li><a href="../../laboratory/brain/english/index.html">Bio-oriented Technology Research Advancement Institution, NARO</a></li>
+                         
+                </ul>
+				</li>
+				<li><a href="../research-programs/index.html" class="parent">Research Programs</a>
+					<ul>
+						<li><a href="../research-programs/outline.html">Outline</a></li>
+						<li><a href="../research-programs/midplan/5thterm/index.html">NARO 5th Mid-term Plan</a></li>
+						<li><a href="../research-programs/publications/index.html">Publications</a></li>
+                    <li><a href="../research-programs/researchprize/index.html">NARO Research Prize </a></li>
+                    <li><a href="../research-programs/researchachievements/index.html">NARO Research Achievements - MAFF</a></li>
+					</ul>
+				</li>
+				<li><a href="../global-initiatives/index.html" class="parent">Global Initiatives</a>
+					<ul>
+
+						<li><a href="../global-initiatives/mou/index.html">MOU</a></li>
+						<li><a href="../global-initiatives/international-events/index.html">International Events</a></li>
+						<li><a href="../global-initiatives/international-peer-review/index.html">International Peer Review</a></li>
+						<li><a href="../global-initiatives/international-visitors/index.html">International Visitors</a></li>
+						<li><a href="../global-initiatives/guidelines/index.html">Information for Visitors</a></li>
+                   </ul>
+				</li>
+				<li><a href="../outreach/index.html" class="parent">PR Activities</a>
+					<ul>
+						<li><a href="../outreach/open-day/index.html">Open Day</a></li>
+						<li><a href="../outreach/sympsoium/index.html">Symposium</a></li>
+						<li><a href="../outreach/research-exchange-forum.html">Research Exchange Forum</a></li>
+					</ul>
+				</li>
+			</ul>
+		</nav>
+	</div>
+
+
+
+<nav aria-label="breadcrumb" class="breadcrumb-wrap">
+			<ol class="breadcrumb">
+
+
+
+<li class="breadcrumb-item"><a href="../index.html">English HOME</a></li>
+<li class="breadcrumb-item active">Contact Us</li>
+
+
+
+<!-- / id breadcrumbs --></ol>
+<!-- / id globalHeader --></nav>
+<div class="content-wrap">
+<div class="content-inner">
+<div class="left-content">
+
+
+
+<div id="bHead" style="padding-bottom:0px !important;">
+<h1>Contact Us</h1>
+<!-- / id bHead --></div>
+
+<div id="postBlock">
+<h2 style="margin-top:0px !important;">Mail form</h2>
+</div>
+
+
+
+
+<div id="postBlock">
+<div class="section">
+
+
+
+<div class="public">
+<div class="boxInfo">
+<div class="boxInfoTop">
+<div class="boxInfoContent">
+<p class="image"><img src="../../img/inquiry/inquiry_mail_img.gif" width="60" height="60" alt=""></p>
+<div class="content">
+<p>The inquiry form is currently under maintenance.<br>
+If you have any questions and concerns, please contact us by e-mail.<br>
+The e-mail address is "www(★)naro.affrc.go.jp".<br>
+*Please change (★) to @.<br>
+Thank you.</p>
+
+
+
+<p><b><font color="#ff0000">In order to prevent the spreading of COVID-19, we regret to inform you about the temporary suspension of visit application service.
+We sincerely apologize the inconvenience and highly appreciate your understanding.<br><br>
+
+Public Relations Section, NARO</font></b></p> 
+
+</div>
+
+<!-- / class boxInfoContent --></div>
+<!-- / class boxInfoTop --></div>
+<!-- / class boxInfo --></div>
+<!-- / class public --></div>
+<!-- / class section --></div>
+<div class="related">
+<h3>Related Links</h3>
+<ul class="relatedLink">
+<li style="background:none;padding:0;margin:0;">
+
+<a href="https://www.naro.go.jp/english/global-initiatives/guidelines/index.html"><span class="click">Information for visiting researchers </span></a>
+
+</li>
+<li style="background:none;padding:0;margin:0;">
+
+<a href="https://www.naro.go.jp/english/contents/career-opportunities/index.html"><span class="click">Career Opportunities </span></a>
+
+</li>
+</ul>
+<!-- / class related --></div>
+
+</div>
+<div class="extrafields">
+		
+			
+				<p></p>
+			
+			
+			
+			
+			
+			
+			
+			
+			
+		
+			
+				<p></p>
+			
+			
+			
+			
+			
+			
+			
+			
+			
+		
+			
+				<p></p>
+			
+			
+			
+			
+			
+			
+			
+			
+			
+		
+			
+				<p></p>
+			
+			
+			
+			
+			
+			
+			
+			
+			
+		
+			
+				<p></p>
+			
+			
+			
+			
+			
+			
+			
+			
+			
+		
+			
+				<p></p>
+			
+			
+			
+			
+			
+			
+			
+			
+			
+		
+			
+				<p></p>
+			
+			
+			
+			
+			
+			
+			
+			
+			
+		
+			
+				<p></p>
+			
+			
+			
+			
+			
+			
+			
+			
+			
+		
+			
+			
+				
+			
+			
+			
+			
+			
+			
+			
+			
+		
+			
+			
+				
+			
+			
+			
+			
+			
+			
+			
+			
+		
+		</div>
+
+
+
+
+
+<!-- / left-content --></div>
+<div class="right-menu">
+<div id="subCol">
+
+
+<!-- / subCol --></div>
+<!-- / right-menu --></div>
+<!-- / content-inner --></div>
+<!-- / content-wrap --></div>
+
+
+
+
+
+<!--  laboratory  -->
+
+	<div class="laboratory">
+    <h2 class="mb-0 pb-3 pt-3" style="width:995px;margin:0 auto !important;"><a href="../centers/index.html" style="margin-left:1em !important;">Centers・Institutes</a></h2>
+		<div class="row">
+      
+			<ul class="laboratory-left col-md-6 pt-0 pl-5">
+            
+               <li><a href="../laboratory/rcait/index.html">Research Center for Agricultural Information Technology, NARO</a></li>
+              <li><a href="../laboratory/rcar/index.html">Research Center for Agricultural Robotics, NARO </a></li>
+            	<li><a href="../laboratory/ngrc/index.html">Research Center of Genetic Resources, NARO</a></li>
+				<li><a href="../laboratory/naac/index.html">Research Center for Advanced Analysis, NARO</a></li>
+				<li><a href="../laboratory/nfri/index.html">Institute of Food Research, NARO</a></li>
+				<li><a href="../laboratory/nilgs/index.html">Institute of Livestock and Grassland Science, NARO</a></li>
+				 <li><a href="../laboratory/niah/index.html">National Institute of Animal Health, NARO</a></li>
+
+				<li><a href="../laboratory/harc/index.html">Hokkaido Agricultural Research Center, NARO</a></li>
+				<li><a href="../laboratory/tarc/index.html">Tohoku Agricultural Research Center, NARO</a></li>
+				<li><a href="../laboratory/carc/index.html">Central Region Agricultural Research Center, NARO</a></li>
+				<li><a href="../laboratory/warc/index.html">Western Region Agricultural Research Center, NARO</a></li>
+				
+        </ul>
+			<ul class="laboratory-right col-md-6 pt-0 pl-5">
+                <li><a href="../laboratory/karc/index.html">Kyushu Okinawa Agricultural Research Center, NARO</a></li>
+             	<li><a href="../laboratory/iam/index.html">Institute of Agricultural Machinery, NARO</a></li>
+				<li><a href="../laboratory/nics/index.html">Institute of Crop Science, NARO</a></li>
+				<li><a href="../laboratory/nifts/index.html">Institute of Fruit Tree and Tea Science, NARO</a></li>
+				<li><a href="../laboratory/nivfs/index.html">Institute of Vegetable and Floriculture Science, NARO</a></li>
+            	<li><a href="../laboratory/nias/index.html">Institute of Agrobiological Sciences, NARO</a></li>
+				<li><a href="../laboratory/niaes/index.html">Institute for Agro-Environmental Sciences, NARO</a></li>
+			    <li><a href="../laboratory/nkk/index.html">Institute for Rural Engineering, NARO</a></li>
+				<li><a href="../laboratory/nipp/index.html">Institute for Plant Protection, NARO </a></li>
+				<li><a href="../laboratory/ncss/index.html">Center for Seeds and Seedlings, NARO</a></li>
+               <li><a href="../../laboratory/brain/english/index.html">Bio-oriented Technology Research Advancement Institution, NARO</a></li>	
+              
+           </ul>
+		</div>
+	</div>
+	<!--  sitemap  -->
+	<div class="footer-sitemap">
+		<div class="row">
+			<div class="sitemap col-md-offset-2">
+				<h2>NARO Site Map</h2>
+				<ul class="sitemap-left col-md-4">
+                <li class="sitemap-head"><a href="../about-naro/index.html">About NARO</a></li>
+					<li><a href="../about-naro/president/index.html">Message from the President</a></li>
+					<li><a href="../about-naro/organization.html">Organization</a></li>
+					<li><a href="../about-naro/history.html">History</a></li>
+					<li><a href="../about-naro/naro-navi.html">NARO Navi</a></li>
+                    <li><a href="../about-naro/recent/index.html">Recent Trends</a></li>
+
+               	    <li class="sitemap-head"><a href="../research-programs/index.html">Research Programs</a></li>
+					<li><a href="../research-programs/outline.html">Outline</a></li>
+					<li><a href="../research-programs/midplan/5thterm/index.html">NARO 5th Mid-term Plan</a></li>
+					<li><a href="../research-programs/publications/index.html">Publications</a></li>
+                    <li><a href="../research-programs/researchprize/index.html">NARO Research Prize </a></li>
+                    <li><a href="../research-programs/researchachievements/index.html">NARO Research Achievements - MAFF</a></li>
+
+				</ul>
+				<ul class="sitemap-center col-md-4">
+					<li class="sitemap-head"><a href="../global-initiatives/index.html">Global Initiatives</a></li>
+
+					<li><a href="../global-initiatives/mou/index.html">MOU</a></li>
+					<li><a href="../global-initiatives/international-events/index.html">International Events</a></li>
+					<li><a href="../global-initiatives/international-peer-review/index.html">International Peer Review</a></li>
+					<li><a href="../global-initiatives/international-visitors/index.html">International Visitors</a></li>
+					<li><a href="../global-initiatives/guidelines/index.html">Information for Visitors</a></li>
+                  <li class="sitemap-head"><a href="../outreach/index.html">PR Activities</a></li>
+					<li><a href="../outreach/open-day/index.html">Open Day</a></li>
+					<li><a href="../outreach/symposium/index.html">Symposium</a></li>
+					<li><a href="../outreach/research-exchange-forum.html">Research Exchange Forum</a></li>
+			</ul>
+			<ul class="sitemap-left col-md-4">
+					<li class="sitemap-head"><a href="../about-naro/research.html">R&amp;D Activities</a></li>
+					<li class="sitemap-head"><a href="../research-programs/publications/index.html">Open Resources</a></li>
+            <li class="sitemap-head"><a href="../global-initiatives/international-events/index.html">Symposiums &amp; Seminars</a></li>
+					<li class="sitemap-head"><a href="../outreach/index.html">PR Activities</a></li>
+					<li class="sitemap-head"><a href="../contents/career-opportunities/index.html">Career Opportunities</a></li>
+				</ul>
+			</div>
+		</div>
+    		<!--  SNS  -->
+		<!-- 
+		<div class="sns-icon">
+			<ul>
+				<li class="sns-icon-tw"><a href="#"><img src="../../common/img/sns-icon-tw.png" alt="Twitter"></a></li>
+				<li class="sns-icon-fb"><a href="#"><img src="../../common/img/sns-icon-fb.png" alt="Facebook"></a></li>
+			</ul>
+		</div>
+		-->
+		<!--  バナーエリア  -->
+		<div class="top-banner-area">
+			<ul>
+				<li><a href="../../tarh/en/index.html"><img src="../topimg/kagakukan_bnr_en.png" alt="TARH" width="222"></a></li>
+				<li><a href="https://www.youtube.com/watch?v=ZfZ-1AA3dD0&amp;list=PLW99yTRNzVkPpBMyGubqVY3TeqSurjusE" class="externalLink"><img src="../../topimg/youtube_bnr3.png" alt="NARO Channel" width="222"></a></li>
+				<li><a href="../diversity_and_inclusion_section/index.html"><img src="../files/top_bnr03_diversity_en.png" alt="diversity" width="222"></a></li>
+            <li><a href="https://researchmap.jp/researchers?q=%E5%9B%BD%E7%AB%8B%E7%A0%94%E7%A9%B6%E9%96%8B%E7%99%BA%E6%B3%95%E4%BA%BA%E8%BE%B2%E6%A5%AD%E3%83%BB%E9%A3%9F%E5%93%81%E7%94%A3%E6%A5%AD%E6%8A%80%E8%A1%93%E7%B7%8F%E5%90%88%E7%A0%94%E7%A9%B6%E6%A9%9F%E6%A7%8B&amp;lang=en" class="externalLink"><img src="../../topimg/researchmap_bnr.png" alt="researchmap" width="222"></a></li>
+			</ul>
+       
+		</div>
+	</div>
+	<!--  footer  -->
+	<div class="footer">
+		<div class="row  col-md-12">
+			<ul>
+				<li class="footer-section-line"><a href="../contents/links.html">Links</a></li>
+				<li class="footer-section-line"><a href="../contents/privacy-policy.html">Privacy Policy</a></li>
+				<li class="footer-section-line"><a href="../contents/terms-of-use.html">Terms of Use</a></li>
+			</ul>
+		</div>
+	</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="../../common/js/gmenu.js"></script>
+<!--  -->
+<script src="../../common/js/slide.js"></script>
+
+
+  
+ 
+
+
+</body></html>

@@ -1,0 +1,1967 @@
+<html lang="ja"><head>
+<meta charset="UTF-8">
+<title>農研機構 | 国立研究開発法人農業・食品産業技術総合研究機構</title>
+
+<meta name="description" content="農研機構は食料・農業・農村に関する研究開発を行う機関です。">
+<meta name="keywords" content="農研機構,NARO,のうけんきこう,ノウケンキコウ,農業,農業研究,食品,畜産,家畜,技術, ">
+<meta name="format-detection" content="telephone=no">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="alternate" type="application/rss+xml" title="農研機構 - 新着情報のフィード" href="top_new_feed.xml">
+<link rel="shortcut icon" href="favicon.ico" type="image/vnd.microsoft.icon">
+<link rel="icon" href="favicon.ico" type="image/vnd.microsoft.icon">
+<link rel="stylesheet" href="common/css/reset.css">
+<link rel="stylesheet" href="common/css/style.css?ver=20200605">
+<link rel="stylesheet" href="common/css/bootstrap.css">
+<link rel="stylesheet" href="common/css/bootstrap-grid.css">
+<link rel="stylesheet" href="common/css/bootstrap-reboot.css">
+
+
+<script type="text/javascript" async="" src="https://www.google-analytics.com/analytics.js"></script><script src="common/js/script.js"></script>
+<script src="common/js/external.js"></script>
+<script src="common/js/doctextsizer.js"></script>
+
+<script src="common/js/jquery.js"></script>
+<script src="common/js/bootstrap.min.js"></script>
+
+<script src="common/js/wideslider.js"></script>
+
+<link rel="stylesheet" href="common/css/icon.css">
+
+<link rel="start" href="index.html" title="Home">
+
+
+<!-- 旧Google Analyticsトラッキングコード
+<script>
+var _gaq=[["_setAccount","UA-2489051-1"],["_trackPageview"]];
+(function(d,s,e){e=d.createElement(s);e.async=!0;e.src=("https:"===d.location.protocol?"//ssl":"//www")+".google-analytics.com/ga.js";s=d.getElementsByTagName(s)[0];s.parentNode.insertBefore(e,s)}(this.document,"script"));
+</script>
+ -->
+<!-- 最新のGoogle Analyticsトラッキングコード 20210614 大川追加 -->
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=UA-2489051-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-2489051-1');
+</script>
+
+<script>
+$('#content01 a').click(function (e) {
+	e.preventDefault();
+	$(this).tab('show');
+});
+</script>
+
+<style>
+.out label {
+    margin-bottom: 0 !important;
+}
+.out{
+    position: relative;
+}
+.in img{
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 0;
+    transition: .5s;
+    z-index: 0;
+}
+.out img{
+    display: block;
+    width: 100%;
+    height: auto;
+}
+.out input{
+    display: none;
+}
+.in{
+    display: flex;
+    justify-content: center;
+}
+.out label span{
+    display: block;
+    width: 20px;
+    height: 20px;
+    padding: 7px;
+    margin: -30px 0 0;
+    border-radius: 100%;
+    cursor: pointer;
+    position: relative;
+    z-index: 2;
+}
+.out label span::before{
+    content: "";
+    display: block;
+    width: 100%;
+    height: 100%;
+    background: #aaa;
+    opacity: 0.5;
+    border-radius: 100%;
+}            
+.out input:nth-of-type(1):checked ~ .in label:nth-of-type(1) span::before,
+.out input:nth-of-type(2):checked ~ .in label:nth-of-type(2) span::before,
+.out input:nth-of-type(3):checked ~ .in label:nth-of-type(3) span::before,
+.out input:nth-of-type(4):checked ~ .in label:nth-of-type(4) span::before{
+    background: #fff;
+    opacity: 1;
+}
+.out label span::before{
+    animation: slidebutton 14s infinite;
+}
+@keyframes slidebutton{
+    0%{opacity: 0.5;background: #aaa;}
+    3.5%{opacity: 1;background: #fff;}/* b÷x×100=y */
+    25%{opacity: 1;background: #fff;}/* 100÷c=z */
+    28.5%{opacity: 0.5;background: #aaa;}/* y+z */
+}            
+.out label:nth-of-type(2) span::before,label:nth-of-type(2) img{
+    animation-delay: 3.5s;
+}            
+.out label:nth-of-type(3) span::before,label:nth-of-type(3) img{
+    animation-delay: 7s;
+}            
+ .out label:nth-of-type(4) span::before,label:nth-of-type(4) img{
+    animation-delay: 10.5s;
+}      
+
+.out input:nth-of-type(1):checked ~ .in label:nth-of-type(1) img,
+.out input:nth-of-type(2):checked ~ .in label:nth-of-type(2) img,
+.out input:nth-of-type(3):checked ~ .in label:nth-of-type(3) img,
+.out input:nth-of-type(4):checked ~ .in label:nth-of-type(4) img{
+    opacity: 1;
+    z-index: 1;
+}
+.in img{
+    animation: slide 14s infinite;/* (a+b)×c=x */
+    opacity: 0;
+}
+@keyframes slide{
+    0%{opacity: 0;}
+    3.5%{opacity: 1;z-index: 1;}/* b÷x×100=y */
+    25%{opacity: 1;}/* 100÷c=z */
+    28.5%{opacity: 0;z-index: 0;}/* y+z */
+}
+input:checked ~ .in img,input:checked ~ .in span::before{
+    animation: none;
+}
+.in:hover img,.in:hover span::before{
+    animation-play-state:paused;/* マウスを載せると一時停止 */
+}
+
+
+
+
+
+
+.wideslider_base{
+font-size:32px !important;
+}
+
+.shisetsu{
+line-height:1.5em !important;
+padding-top:1em !important;
+}
+
+.cal2_portal{
+clear:none;
+}
+.hosoku{
+color:#ff0000;
+font-weight:bold;
+margin-left:30em !important;
+letter-spacing:-1px;
+}
+
+
+@media (max-width: 768px) {
+.portal_box{
+padding-left:6em;
+padding-right:6em;
+padding-top:1.5em;
+padding-bottom:0.6em;
+}
+span.hosoku{
+margin-left:0 !important;
+}
+
+.cal2_portal{
+clear:both !important;
+}
+
+.shisetsu{
+line-height: 3.0rem !important;
+padding-top:0 !important;
+}
+
+.laboratory ul {
+    padding: 0 !important;
+}
+}
+</style>
+</head>
+
+<body style="">
+<div class="container-fluid">
+<header>
+		<div class="logo">
+         <a href="index.html"><img src="common/img/logo.svg" alt="農研機構"></a>
+		</div>
+		<div class="header-menu clearfix">
+			<div class="header-link">
+				<ul>
+	  			<li class="no-sp"><a href="sitemap.html">サイトマップ</a></li>
+			  	<li class="no-sp"><a href="inquiry/index.html">お問い合わせ</a></li>
+                 <li><a href="english/index.html"><span lang="en">English</span></a></li>
+                  <li class="sns1"><a href="https://www.facebook.com/NARO.go.jp/" target="_blank"><img src="topimg/facebook_logo.png" alt="Facebook" width="30"></a></li>
+                  <li class="sns2"><a href="https://twitter.com/NARO_JP" target="_blank"><img src="topimg/twitter_logo.png" alt="Twitter" width="31"></a></li>
+				</ul>
+			</div>
+			<div class="search">
+        		<form id="cse-search-box" action="https://www.naro.go.jp/result.html" class="search-box">
+        		<div>
+            		<input type="hidden" name="cx" value="018252636870386869687:jia4zandm3g">
+            		<input type="hidden" name="ie" value="UTF-8">
+            		<input type="text" name="q" class="search-input" placeholder="" title="サイト内検索" value="" style="background: url(&quot;https://www.google.com/cse/static/images/1x/ja/branding.png&quot;) left 9px top 50% no-repeat rgb(255, 255, 255);">
+            		<input type="submit" name="sa" class="search-button" value="検索">
+            	</div>
+            	<input name="siteurl" value="www.naro.go.jp/" type="hidden"><input name="ref" value="" type="hidden"><input name="ss" value="" type="hidden"></form>
+            <script src="https://www.google.co.jp/coop/cse/brand?form=cse-search-box&amp;lang=ja"></script>
+			</div>
+		</div>
+		<div id="nav-drawer">
+			<input id="nav-input" type="checkbox" class="nav-unshown" value="1">
+			<label id="nav-open" for="nav-input"><span></span></label>
+			<label class="nav-unshown" id="nav-close" for="nav-input"></label>
+			<div id="nav-content">
+				<ul>
+					<li><a href="introduction/index.html">農研機構について</a></li>
+					<li><a href="project/index.html">研究情報</a></li>
+					<li><a href="collab/index.html">産学連携・品種・特許</a></li>
+					<li><a href="publicity_report/index.html">プレスリリース・広報</a></li>
+                  <li><a href="acquisition/index.html">採用情報</a></li>
+					<li class="portal"><a href="portal/ippan.html">一般の方</a></li>
+					<li class="portal"><a href="portal/agricultural.html">生産者の方</a></li>
+					<li class="portal"><a href="portal/company.html">企業の方</a></li>
+					<li class="portal"><a href="portal/study.html">研究者・学生の方</a></li>
+					<li><a href="sitemap.html">サイトマップ</a></li>
+					<li><a href="inquiry/index.html">お問い合わせ</a></li>
+				</ul>
+			</div>
+		</div>
+	</header>
+	<div id="gnav_bg">
+		<nav id="groval_nav">
+			<ul class="nav">
+				<li><a href="introduction/index.html" class="parent">農研機構について</a>
+					<ul>
+                	<li><a href="introduction/president/index.html">理事長メッセージ</a></li>
+                	<li><a href="introduction/about-naro.html">農研機構とはどんなところ?</a></li>
+                    <li><a href="introduction/profile.html">農研機構の基本データ</a></li>	
+					<li><a href="introduction/access.html">アクセス</a></li>
+      				<li><a href="introduction/vision-statement.html">農研機構ビジョンステートメント</a></li>    
+                    <li><a href="introduction/library/index.html">図書館の利用</a></li>
+               		<li><a href="introduction/iro/index.html">国際活動</a></li> 
+					</ul>
+				</li>
+				<li><a href="project/index.html" class="parent">研究情報・SOP</a>
+					<ul>
+						<li><a href="project/challenge/index.html">研究課題</a></li>
+						<li><a href="project/results/index.html">研究成果</a></li>
+						
+						
+                        <li class="font_95"><a href="project/results/impact/index.html">社会にインパクトのあった研究成果</a></li>
+						<li><a href="project/results/research_prize/index.html">NARO Research Prize</a></li>
+	
+						<li><a href="project/results/main/index.html">成果情報</a></li>
+                    	<li><a href="project/society5-sdgs/index.html">Society5.0 農業・食品版の実現とSDGs</a></li>
+						<li><a href="smart-nogyo/index.html">スマート農業実証プロジェクト</a></li>
+                    	<li><a href="q_sfc/index.html">九州沖縄経済圏SFCプロジェクト</a></li>
+                        <li><a href="publicity_report/publication/laboratory/naro/sop/index.html">標準作業手順書(SOP)</a></li>
+					</ul>
+				</li>
+				<li><a href="collab/index.html" class="parent">産学連携・品種・特許</a>
+					<ul>
+						<li><a href="collab/system/index.html">産学官連携制度</a></li>
+                      <li><a href="collab/breed/index.html">品種</a></li>
+                    <li><a href="collab/gyomuirai/index.html">農研機構職員への業務依頼</a></li>
+                    <li><a href="collab/patent/index.html">特許</a></li>
+                    <li><a href="collab/open_lab/index.html" style="padding-right:2em !important;">共同研究施設(開放型研究施設・共同利用施設)の紹介</a></li>
+						<li><a href="collab/program/index.html">職務作成プログラム</a></li>
+						<li class="clear_B"><a href="collab/experiment/index.html">試験目的での利用</a></li>
+ 
+					</ul>
+				</li>
+				<li><a href="publicity_report/index.html" class="parent">プレスリリース・広報</a>
+					<ul>
+						<li><a href="publicity_report/press/index.html">プレスリリース</a></li>
+						<li><a href="publicity_report/pr_report/index.html">広報活動報告</a></li>
+						<li><a href="publicity_report/publication/index.html">刊行物のご紹介</a></li>  
+						<li><a href="inquiry/kengaku/index.html">見学の申し込み</a></li> 
+						<li><a href="publicity_report/season/index.html">農研機構「旬」の話題</a></li>
+
+						<li><a href="publicity_report/shiminkouza/index.html">農研機構市民講座</a></li>
+						<li><a href="publicity_report/movie/index.html">農研機構 動画集</a></li>
+						<li><a href="event/index.html">イベント・セミナー</a></li>
+                    	<li><a href="publicity_report/pr_report/sns/index.html">農研機構SNS</a></li>
+					</ul>
+				</li>
+  				<li><a href="acquisition/index.html" class="parent">採用情報</a>
+					<ul>
+						<li><a href="acquisition/recruitment/index.html">募集(職種別)</a></li>
+						<li><a href="acquisition/rearing/index.html">人材育成プログラム</a></li>
+						<li><a href="acquisition/new_graduate/index.html">新規職員採用サイト</a></li>
+					</ul>
+				</li>             
+			</ul>
+		</nav>
+	</div>
+
+	<div class="topimg_wrap sp_only">
+
+    
+    
+    
+    
+    
+    <div class="out">
+
+    <img src="topimg/top_header_naro_sdgs_s.png" alt="Society5.0 農業・食品版の実現とSDGs">
+  <input type="radio" name="slide" id="slide1">
+  <!--    <input type=radio name="slide" id="slide2">
+  <input type=radio name="slide" id="slide3"> -->
+   
+    <div class="in">
+   <li for="slide1"><a href="project/society5-sdgs/index.html"><img src="topimg/top_header_naro_sdgs_s.png" alt="Society5.0 農業・食品版の実現とSDGs"></a></li> 
+ 
+
+
+   
+
+    </div>
+</div>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+	</div>
+	<div class="wideslider no-sp" style="height: 300px;">
+		<div class="slider_btn_wrap">
+			<div class="slider_btn">
+				<a href="javascript:void(0);" id="stop"><img src="common/img/pause_off.png" alt="スライドショーの一時停止" class="stop" style="display: block;"></a>
+
+			</div>
+		</div>
+    
+<div class="wideslider_base" style="left: -2px; width: 995px; height: 300px;"><div class="wideslider_wrap" style="width: 8955px; height: 300px; left: -2985px;"><ul style="width: 2985px; height: 300px;"> 
+
+ <li style="width: 991px; height: 300px;"><a href="project/society5-sdgs/index.html"><img src="topimg/top_header_naro_sdgs.png" alt="Society5.0 農業・食品版の実現とSDGs" style="display: block;"></a></li> 
+
+ <li style="width: 991px; height: 300px;"><a href="smart-nogyo/enter.html"><img src="topimg/top_header_smart_nogyo8.png" alt="スマート農業実証プロジェクト" style="display: block;"></a></li> 
+<li style="width: 991px; height: 300px;"><a href="publicity_report/movie/ouchi/index.html"><img src="topimg/top_header_ouchidouga.png" alt="学びがいっぱい!! お家で楽しむ農業動画集" style="display: block;"></a></li>
+
+
+</ul><ul class="mainList" style="width: 2985px; height: 300px;"> 
+
+ <li style="width: 991px; height: 300px;" class="mainActive"><a href="project/society5-sdgs/index.html"><img src="topimg/top_header_naro_sdgs.png" alt="Society5.0 農業・食品版の実現とSDGs" style="display: block;"></a></li> 
+
+ <li style="width: 991px; height: 300px;"><a href="smart-nogyo/enter.html"><img src="topimg/top_header_smart_nogyo8.png" alt="スマート農業実証プロジェクト" style="display: block;"></a></li> 
+<li style="width: 991px; height: 300px;"><a href="publicity_report/movie/ouchi/index.html"><img src="topimg/top_header_ouchidouga.png" alt="学びがいっぱい!! お家で楽しむ農業動画集" style="display: block;"></a></li>
+
+
+</ul><ul style="width: 2985px; height: 300px;"> 
+
+ <li style="width: 991px; height: 300px;"><a href="project/society5-sdgs/index.html"><img src="topimg/top_header_naro_sdgs.png" alt="Society5.0 農業・食品版の実現とSDGs" style="display: block;"></a></li> 
+
+ <li style="width: 991px; height: 300px;"><a href="smart-nogyo/enter.html"><img src="topimg/top_header_smart_nogyo8.png" alt="スマート農業実証プロジェクト" style="display: block;"></a></li> 
+<li style="width: 991px; height: 300px;"><a href="publicity_report/movie/ouchi/index.html"><img src="topimg/top_header_ouchidouga.png" alt="学びがいっぱい!! お家で楽しむ農業動画集" style="display: block;"></a></li>
+
+
+</ul></div><div class="slider_prev" style="left: 2px; width: 0px; height: 300px; opacity: 0.9;"></div><div class="slider_next" style="right: 2px; width: 0px; height: 300px; opacity: 0.9;"></div></div>
+	<div class="pagination"><a href="javascript:void(0);" class="pn1 active" style="opacity: 0.9;"></a><a href="javascript:void(0);" class="pn2" style="opacity: 0.9;"></a><a href="javascript:void(0);" class="pn3" style="opacity: 0.9;"></a></div></div>
+
+
+		<div class="user-entrance col-md-10 col-xs-2 portal_box">
+			<div class="user-entrance01">
+				<div class="user-entrance-text"><a href="portal/ippan.html">一般の方</a></div>
+				<div class="user-entrance-arrow"></div>	
+			</div>
+			<div class="user-entrance01">
+				<div class="user-entrance-text"><a href="portal/agricultural.html">生産者の方</a></div>
+				<div class="user-entrance-arrow"></div>
+			</div>
+			<div class="user-entrance01">
+				<div class="user-entrance-text"><a href="portal/company.html">企業の方</a></div>
+				<div class="user-entrance-arrow"></div>
+			</div>
+			<div class="user-entrance01">
+				<div class="user-entrance-text"><a href="portal/study.html">研究者・学生の方</a></div>
+				<div class="user-entrance-arrow"></div>
+			</div>
+		</div>
+			<div class="box4">
+				<div class="newsarea">
+					<div class="ul_bg">
+						<ul class="nav nav-tabs nav-fill" role="tablist">
+							<li class="col-3 nav-item"><a class="nav-link active" href="#content01" data-toggle="tab">新着情報</a></li>
+							<li class="col-3 nav-item"><a class="nav-link" href="#content02" data-toggle="tab">プレスリリース</a></li>
+							<li class="col-3 nav-item"><a class="nav-link" href="#content03" data-toggle="tab">イベント・セミナー</a></li>
+							<li class="col-3 nav-item"><a class="nav-link" href="#content04" data-toggle="tab">研究活動報告</a></li>
+						</ul>
+						<!-- タブ内容 -->
+						<div class="tab-content col-md-8">
+							<div class="tab-pane fade show active" id="content01" role="tabpanel" aria-labelledby="content01">
+ 
+                           <p class="mt-2 font-weight-bold ml-3 mb-4"><a href="other/laboratory/naro/135412.html"><span style="background:url(/common/img/cm_arrow01_ico.gif) no-repeat 0px 2px;padding-left:17px;">農研機構における新型コロナウイルス感染拡大防止のための措置について</span></a>
+    
+
+                           </p><div class="news">
+									<dl>
+
+
+
+
+
+<dt><span class="news_date">2022年10月25日</span><span class="blog_name"><img src="common/img/icon_event.png" alt="イベント・セミナー">
+
+
+
+
+
+
+</span></dt>
+
+
+
+
+<dd><a href="event/list/2022/10/155249.html">第9回 アジア植物遺伝資源 (PGRAsia) シンポジウム (Web開催) のご案内</a>
+
+
+
+(11月16日&nbsp;開催)</dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dt><span class="news_date">2022年10月24日</span><span class="blog_name"><img src="common/img/icon_event.png" alt="イベント・セミナー">
+
+
+
+
+
+
+</span></dt>
+
+
+
+
+<dd><a href="event/list/2022/10/155194.html">令和4年度 第1回東北スマート農業実証プロジェクト現地勉強会「水田作」開催のお知らせ</a>
+
+
+
+(11月10日&nbsp;開催)</dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dt><span class="news_date">2022年10月24日</span><span class="blog_name"><img src="common/img/icon_other.png" alt="その他">
+
+
+</span></dt>
+
+
+
+
+
+
+
+<dd><a href="other/laboratory/naro/155256.html">新型コロナウイルス感染者の発生について</a></dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dt><span class="news_date">2022年10月24日</span><span class="blog_name"><img src="common/img/icon_publicity.png" alt="広報活動">
+
+
+
+
+
+</span></dt>
+
+
+
+
+<dd><a href="publicity_report/publication/laboratory/niaes/manual/155027.html">飼料及び堆肥に残留する除草剤(クロピラリド)の簡易判定法と被害軽減対策マニュアル(第3版)および解説集を掲載しました</a>
+
+</dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dt><span class="news_date">2022年10月24日</span><span class="blog_name"><img src="common/img/icon_publicity.png" alt="広報活動">
+
+
+
+
+
+</span></dt>
+
+
+
+
+<dd><a href="publicity_report/publication/pamphlet/tech-pamph/155030.html">土壌中クロピラリドが野菜・花きの初期生育に及ぼす影響・データ集(第2版)を掲載しました</a>
+
+</dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dt><span class="news_date">2022年10月24日</span><span class="blog_name"><img src="common/img/icon_study.png" alt="研究活動">
+
+
+
+
+</span></dt>
+
+
+
+
+<dd><a href="laboratory/nias/gmo/news/gene_recombination/155250.html">令和4年度 シンク能改変イネの生育状況(10月13日)(観音台第1事業場高機能隔離圃場)</a>
+
+</dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dt><span class="news_date">2022年10月24日</span><span class="blog_name"><img src="common/img/icon_study.png" alt="研究活動">
+
+
+
+
+</span></dt>
+
+
+
+
+
+
+
+<dd><a href="project/research_activities/laboratory/carc/155245.html">谷原小学校で「地球温暖化とSDGsについて」をテーマに講演を行いました</a></dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dt><span class="news_date">2022年10月21日</span><span class="blog_name"><img src="common/img/icon_press.png" alt="プレスリリース">
+
+
+
+</span></dt>
+
+
+
+
+
+
+
+<dd><a href="publicity_report/press/laboratory/nias/155209.html">(研究成果) ニワトリを加害するワクモの共生細菌群を解明- これまでと異なる作用機序を持つ駆除剤開発に期待 -</a></dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dt><span class="news_date">2022年10月20日</span><span class="blog_name"><img src="common/img/icon_publicity.png" alt="広報活動">
+
+
+
+
+
+</span></dt>
+
+
+
+
+<dd><a href="publicity_report/publication/laboratory/nire/news/155218.html">農村工学通信129号を掲載しました。</a>
+
+</dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dt><span class="news_date">2022年10月20日</span><span class="blog_name"><img src="common/img/icon_press.png" alt="プレスリリース">
+
+
+
+</span></dt>
+
+
+
+
+
+
+
+<dd><a href="publicity_report/press/laboratory/nire/155152.html">(研究成果) 「固結工法」による農業用パイプラインの耐震性向上技術を開発</a></dd>
+
+
+
+
+
+
+
+
+</dl>
+
+								</div>
+								<div class="btn_wrap">
+                                <a href="new_list.html" class="btn-link">新着情報一覧</a>
+								</div>
+							</div>
+							<div class="tab-pane fade" id="content02" role="tabpanel" aria-labelledby="content02">
+								<div class="news">
+									<dl>
+
+
+
+
+
+<dt><span class="news_date">2022年10月21日</span><span class="blog_name"><img src="common/img/icon_press.png" alt="プレスリリース">
+
+
+
+</span></dt>
+
+
+
+
+
+
+
+<dd><a href="publicity_report/press/laboratory/nias/155209.html">(研究成果) ニワトリを加害するワクモの共生細菌群を解明- これまでと異なる作用機序を持つ駆除剤開発に期待 -</a></dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dt><span class="news_date">2022年10月20日</span><span class="blog_name"><img src="common/img/icon_press.png" alt="プレスリリース">
+
+
+
+</span></dt>
+
+
+
+
+
+
+
+<dd><a href="publicity_report/press/laboratory/nire/155152.html">(研究成果) 「固結工法」による農業用パイプラインの耐震性向上技術を開発</a></dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dt><span class="news_date">2022年10月20日</span><span class="blog_name"><img src="common/img/icon_press.png" alt="プレスリリース">
+
+
+
+</span></dt>
+
+
+
+
+
+
+
+<dd><a href="publicity_report/press/laboratory/nire/155147.html">(研究成果) 河川構造物で生じる摩耗劣化を模擬した試験方法「回転式水中摩耗試験」を開発- 河川構造物の耐摩耗性の評価に活用 -</a></dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dt><span class="news_date">2022年10月18日</span><span class="blog_name"><img src="common/img/icon_press.png" alt="プレスリリース">
+
+
+
+</span></dt>
+
+
+
+
+
+
+
+<dd><a href="publicity_report/press/laboratory/tarc/151373.html">(研究成果) バイオマス植物として有用なオギススキ新品種の開発- 株の広がりが速く、草地造成が簡単に  -</a></dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dt><span class="news_date">2022年10月12日</span><span class="blog_name"><img src="common/img/icon_press.png" alt="プレスリリース">
+
+
+
+</span></dt>
+
+
+
+
+<dd><a href="https://www.iseki.co.jp/cms/upload/pdf/news/co_20221012.pdf">(お知らせ)有機農業の普及発展に向け水稲用自動抑草ロボット「アイガモロボ」の 共同研究を開始 ー井関農機、有機米デザインと農研機構が共同研究ー(外部リンク:井関農機株式会社)</a>
+
+</dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dt><span class="news_date">2022年10月11日</span><span class="blog_name"><img src="common/img/icon_press.png" alt="プレスリリース">
+
+
+
+</span></dt>
+
+
+
+
+
+
+
+<dd><a href="publicity_report/press/laboratory/nipp/154876.html">(研究成果) 野外の生物集団の遺伝子頻度を効率よく推定する統計モデルを開発- 複数個体を一括して抽出したサンプルにおけるDNA量の個体差に対処する -</a></dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dt><span class="news_date">2022年10月11日</span><span class="blog_name"><img src="common/img/icon_press.png" alt="プレスリリース">
+
+
+
+</span></dt>
+
+
+
+
+
+
+
+<dd><a href="publicity_report/press/laboratory/nire/154982.html">(お知らせ) 「令和4年度 実用新技術講習会及び技術相談会」をWeb配信- 農業農村整備に関する新技術を研究者が紹介します -</a></dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dt><span class="news_date">2022年10月07日</span><span class="blog_name"><img src="common/img/icon_press.png" alt="プレスリリース">
+
+
+
+</span></dt>
+
+
+
+
+
+
+
+<dd><a href="publicity_report/press/laboratory/naro/154885.html">(お知らせ) 果樹品種の「自家用の栽培向け増殖」に係る許諾手続きを一部見直します</a></dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dt><span class="news_date">2022年10月06日</span><span class="blog_name"><img src="common/img/icon_press.png" alt="プレスリリース">
+
+
+
+</span></dt>
+
+
+
+
+
+
+
+<dd><a href="publicity_report/press/laboratory/nics/154950.html">(研究成果) 植物の隠れた能力を見える化できる栽培計測プラットフォームの構築- 多様な気候条件下での未利用遺伝子発掘により、新しい作物開発が可能に -</a></dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dt><span class="news_date">2022年10月06日</span><span class="blog_name"><img src="common/img/icon_press.png" alt="プレスリリース">
+
+
+
+</span></dt>
+
+
+
+
+
+
+
+<dd><a href="publicity_report/press/laboratory/nfri/154890.html">(お知らせ)「農研機構 食品研究成果展示会2022」を開催- 最新食品研究成果を一挙ご紹介 -</a></dd>
+
+
+
+
+
+
+
+
+</dl>
+
+								</div>
+								<div class="btn_wrap">
+                                <a href="publicity_report/press/index.html" class="btn-link">プレスリリース一覧</a>
+								</div>
+							</div>
+							<div class="tab-pane fade" id="content03" role="tabpanel" aria-labelledby="content03">
+                            <p class="mt-4 mb-5 font-weight-bold ml-3"><a href="event/cancel/index.html"><span style="background:url(/common/img/cm_arrow04_ico.gif) no-repeat 0px 5px;padding-left:10px;">新型コロナウイルス対応に伴う各種イベント等の開催中止情報</span></a>
+
+								</p><div class="news">
+									<dl>
+
+
+
+
+
+<dt><span class="news_date">2022年10月25日</span><span class="blog_name"><img src="common/img/icon_event.png" alt="イベント・セミナー">
+
+
+
+
+
+
+</span></dt>
+
+
+
+
+<dd><a href="event/list/2022/10/155249.html">第9回 アジア植物遺伝資源 (PGRAsia) シンポジウム (Web開催) のご案内</a>
+
+
+
+(11月16日&nbsp;開催)</dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dt><span class="news_date">2022年10月24日</span><span class="blog_name"><img src="common/img/icon_event.png" alt="イベント・セミナー">
+
+
+
+
+
+
+</span></dt>
+
+
+
+
+<dd><a href="event/list/2022/10/155194.html">令和4年度 第1回東北スマート農業実証プロジェクト現地勉強会「水田作」開催のお知らせ</a>
+
+
+
+(11月10日&nbsp;開催)</dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dt><span class="news_date">2022年10月19日</span><span class="blog_name"><img src="common/img/icon_event.png" alt="イベント・セミナー">
+
+
+
+
+
+
+</span></dt>
+
+
+
+
+<dd><a href="event/list/2022/10/155188.html">令和4年度 第1回農研機構植物工場九州実証拠点 スマートグリーンハウス展開推進 研修会 「スプラウト生産および環境計測等スマート農業技術の習得」 </a>
+
+
+(11月16日～11月17日&nbsp;開催)</dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dt><span class="news_date">2022年10月18日</span><span class="blog_name"><img src="common/img/icon_event.png" alt="イベント・セミナー">
+
+
+
+
+
+
+</span></dt>
+
+
+
+
+<dd><a href="laboratory/nifts/contents/kaigi/r4_rakuyou_kanreichi_byougai.html">令和4年度果樹茶業研究会 「落葉果樹研究会」「寒冷地果樹研究会」「果樹病害研究会」「果樹虫害研究会」 について</a>
+
+
+
+(01月31日～02月03日&nbsp;開催)
+
+
+</dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dt><span class="news_date">2022年10月17日</span><span class="blog_name"><img src="common/img/icon_event.png" alt="イベント・セミナー">
+
+
+
+
+
+
+</span></dt>
+
+
+
+
+<dd><a href="event/list/2022/10/155149.html">令和4年度農研機構つくば植物工場研修会</a>
+
+
+
+(11月22日&nbsp;開催)</dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dt><span class="news_date">2022年10月14日</span><span class="blog_name"><img src="common/img/icon_event.png" alt="イベント・セミナー">
+
+
+
+
+
+
+</span></dt>
+
+
+
+
+<dd><a href="https://www.ogb.go.jp/nousui/200327_1/sumanou_forum_20221117">「スマート農業推進フォーラム2022 in おきなわ」の開催について(外部リンク:沖縄総合事務局)</a>
+
+
+
+
+(11月17日&nbsp;開催)
+
+
+</dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dt><span class="news_date">2022年10月14日</span><span class="blog_name"><img src="common/img/icon_event.png" alt="イベント・セミナー">
+
+
+
+
+
+
+</span></dt>
+
+
+
+
+<dd><a href="event/list/2022/10/155069.html">大規模有機畑作研究会2022</a>
+
+
+
+(11月18日&nbsp;開催)</dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dt><span class="news_date">2022年10月12日</span><span class="blog_name"><img src="common/img/icon_event.png" alt="イベント・セミナー">
+
+
+
+
+
+
+</span></dt>
+
+
+
+
+<dd><a href="https://www.maff.go.jp/kyusyu/press/kankyo/221007_35.html">「スマート農業現地サミット(中山間)」(スマート農業推進フォーラム2022in九州)の開催について(外部リンク:九州農政局)</a>
+
+
+
+
+(10月23日&nbsp;開催)
+
+
+</dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dt><span class="news_date">2022年10月11日</span><span class="blog_name"><img src="common/img/icon_event.png" alt="イベント・セミナー">
+
+
+
+
+
+
+</span></dt>
+
+
+
+
+
+
+
+<dd><a href="event/list/2022/10/154097.html">令和4年度 実用新技術講習会及び技術相談会 開催要項</a></dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dt><span class="news_date">2022年10月07日</span><span class="blog_name"><img src="common/img/icon_event.png" alt="イベント・セミナー">
+
+
+
+
+
+
+</span></dt>
+
+
+
+
+<dd><a href="event/list/2022/10/155023.html">【参加無料】第69回日本シルク学会研究発表会シンポジウムのご案内</a>
+
+
+
+(11月24日&nbsp;開催)</dd>
+
+
+
+
+
+
+
+</dl>
+
+								</div>
+								<div class="btn_wrap">
+                                <a href="event/index.html" class="btn-link">イベント・セミナー</a>
+								</div>
+							</div>
+							<div class="tab-pane fade" id="content04" role="tabpanel" aria-labelledby="content04">
+								<div class="news">
+									<dl>
+
+
+
+
+
+<dt><span class="news_date">2022年10月24日</span><span class="blog_name"><img src="common/img/icon_study.png" alt="研究活動">
+
+
+
+
+</span></dt>
+
+
+
+
+<dd><a href="laboratory/nias/gmo/news/gene_recombination/155250.html">令和4年度 シンク能改変イネの生育状況(10月13日)(観音台第1事業場高機能隔離圃場)</a>
+
+</dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dt><span class="news_date">2022年10月24日</span><span class="blog_name"><img src="common/img/icon_study.png" alt="研究活動">
+
+
+
+
+</span></dt>
+
+
+
+
+
+
+
+<dd><a href="project/research_activities/laboratory/carc/155245.html">谷原小学校で「地球温暖化とSDGsについて」をテーマに講演を行いました</a></dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dt><span class="news_date">2022年10月18日</span><span class="blog_name"><img src="common/img/icon_study.png" alt="研究活動">
+
+
+
+
+</span></dt>
+
+
+
+
+
+
+
+<dd><a href="project/research_activities/laboratory/carc/155167.html">農研機構サイエンスカフェ第30回 植物のごはん～植物が土から養分を吸収するしくみと肥料の話 を開催しました</a></dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dt><span class="news_date">2022年10月17日</span><span class="blog_name"><img src="common/img/icon_study.png" alt="研究活動">
+
+
+
+
+</span></dt>
+
+
+
+
+
+
+
+<dd><a href="project/research_activities/laboratory/naro/155109.html">角田 秀穂 農林水産大臣政務官 農研機構の研究現場をご視察</a></dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dt><span class="news_date">2022年10月07日</span><span class="blog_name"><img src="common/img/icon_study.png" alt="研究活動">
+
+
+
+
+</span></dt>
+
+
+
+
+<dd><a href="laboratory/nias/gmo/news/gene_recombination/154994.html">令和4年度 ノボキニン蓄積イネの生育状況(収穫の様子、9月29日)(観音台第3事業場組換え植物隔離ほ場)</a>
+
+</dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dt><span class="news_date">2022年10月07日</span><span class="blog_name"><img src="common/img/icon_study.png" alt="研究活動">
+
+
+
+
+</span></dt>
+
+
+
+
+<dd><a href="laboratory/nias/gmo/news/gene_recombination/154993.html">令和4年度 スギ花粉ペプチド含有イネ及びノボキニン蓄積イネの生育状況(収穫の様子、9月28日)(観音台第2事業場隔離ほ場)</a>
+
+</dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dt><span class="news_date">2022年09月29日</span><span class="blog_name"><img src="common/img/icon_study.png" alt="研究活動">
+
+
+
+
+</span></dt>
+
+
+
+
+<dd><a href="laboratory/nias/gmo/news/154760.html">令和4年度シンク能改変イネの収穫</a>
+
+</dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dt><span class="news_date">2022年09月20日</span><span class="blog_name"><img src="common/img/icon_study.png" alt="研究活動">
+
+
+
+
+</span></dt>
+
+
+
+
+
+
+
+<dd><a href="project/research_activities/laboratory/carc/154745.html">農研機構サイエンスカフェ第29回 シロアリと遊ぼう! ～身近にあるもので虫を思い通りに動かしてみよう～ を開催しました</a></dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dt><span class="news_date">2022年09月15日</span><span class="blog_name"><img src="common/img/icon_study.png" alt="研究活動">
+
+
+
+
+</span></dt>
+
+
+
+
+
+
+
+<dd><a href="project/research_activities/laboratory/nias/154715.html">令和4年度 ステロイドグリコアルカロイド低生産性バレイショ(ジャガイモ)の栽培状況(植え付け(2回目)の様子、8月30日、観音台第3事業場組換え植物隔離ほ場)</a></dd>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dt><span class="news_date">2022年09月13日</span><span class="blog_name"><img src="common/img/icon_study.png" alt="研究活動">
+
+
+
+
+</span></dt>
+
+
+
+
+<dd><a href="laboratory/nias/gmo/news/154596.html">令和4年度 スギ花粉ペプチド含有イネ及びノボキニン蓄積イネの収穫</a>
+
+</dd>
+
+
+
+
+
+
+
+</dl>
+
+								</div>
+								<div class="btn_wrap">
+                                <a href="project/research_activities/index.html" class="btn-link">研究活動報告</a>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!--  注目トピックス  -->
+			<div class="content-wrap-de">
+				<div class="content-inner">
+					<div class="full-content">
+<div class="newbox1">
+  <div class="newtopics">
+    <h2>注目トピックス</h2>
+    <div class="col-xs-12">
+
+<div class="ntbox">
+        <div class="ntbox-title">広報活動</div>
+        <p class="ntbox-image">
+          <img src="files/topics-image_nikkei_shigotonin2021.png" alt="">
+        </p>
+        <p class="ntbox-text">
+          <a href="publicity_report/pr_report/laboratory/naro/142932.html">「仕事人秘録」に久間理事長が登場</a></p> 
+</div>
+
+
+<!--    <div class="ntbox">
+        <div class="ntbox-title">お知らせ</div>
+        <p class="ntbox-image">
+          <img src="topimg/topics-image54.png" alt="" />
+        </p>
+        <p class="ntbox-text">
+         <a href="event/cancel/index.html">新型コロナウイルス対応に伴う各種イベント等の開催中止情報</a>
+        </p>
+      </div>  -->
+
+
+<div class="ntbox">
+<div class="ntbox-title">お知らせ</div>
+<p class="ntbox-image"><img src="topimg/topics-image_shubyouhou.png" alt=""></p>
+<p class="ntbox-text">
+<a href="collab/breed/permission/index.html">種苗法改正への対応について</a></p>
+</div>
+
+
+
+
+<div class="ntbox">
+<div class="ntbox-title">研究活動</div>
+<p class="ntbox-image"><img src="topimg/topics-image_shimazu_labo.png" alt=""></p>
+<p class="ntbox-text">
+<a href="project/research_activities/laboratory/naro/144400.html">NARO島津ラボ 山本万里研究代表インタビュー動画掲載</a></p>
+</div>
+
+
+ <div class="ntbox">
+<div class="ntbox-title">刊行物</div>
+<p class="ntbox-image"><img src="topimg/topics-image89.png" alt=""></p>
+<p class="ntbox-text">
+<a href="publicity_report/publication/laboratory/naro/sop/index.html">標準作業手順書(SOP)</a></p>
+</div> 
+
+
+<!-- <div class="ntbox">
+        <div class="ntbox-title">国際活動</div>
+        <p class="ntbox-image">
+          <img src="topimg/topics-image_oushu.png" alt="" />
+        </p>
+        <p class="ntbox-text">
+          <a href="introduction/iro/reports/index.html">NAROの欧州駐在員レポート</a></p> 
+</div> -->
+
+
+ <div class="ntbox">
+<div class="ntbox-title">研究活動</div>
+<p class="ntbox-image"><img src="topimg/moonshot_top_bnr.png" alt="" style="border:solid 1px #ccc;box-sizing: border-box !important;"></p>
+<p class="ntbox-text">
+<a href="moon_shot/index.html">農研機構が参加しているムーンショット型研究開発事業</a></p>
+</div> 
+ 
+<div class="ntbox">
+<div class="ntbox-title">お知らせ</div>
+<p class="ntbox-image"><img src="topimg/topics-image_q_sfc.png" alt=""></p>
+<p class="ntbox-text">
+<a href="q_sfc/index.html">「九州沖縄経済圏SFCプロジェクト」のウェブページを開設</a></p>
+</div>
+
+
+
+
+<!--  <div class="ntbox">
+        <div class="ntbox-title">研究活動</div>
+        <p class="ntbox-image">
+          <img src="topimg/topics-image_smart02.png" alt="" />
+        </p>
+        <p class="ntbox-text">
+          <a href="project/research_activities/laboratory/naro/137977.html">「国際競争力強化技術開発プロジェクト」の公募について</a>
+        </p>
+      </div>  -->
+
+
+ 
+
+  <div class="ntbox">
+        <div class="ntbox-title">研究活動</div>
+        <p class="ntbox-image">
+          <img src="topimg/topics-image_smart.png" alt="">
+        </p>
+        <p class="ntbox-text" style="letter-spacing:-1px;">
+          <a href="https://www.naro.go.jp/smart-nogyo/">スマート農業プロジェクト</a>
+        </p>
+      </div> 
+
+
+
+
+ <!--   <div class="ntbox">
+        <div class="ntbox-title">プレスリリース</div>
+        <p class="ntbox-image">
+          <img src="laboratory/nias/topimg/topics-image91.png" alt="" />
+        </p>
+        <p class="ntbox-text">
+          <a href="publicity_report/press/laboratory/nias/137326.html">4種の重要病害に強いトマトを作出</a>
+        </p>
+      </div> -->
+
+
+
+
+    <div class="ntbox">
+        <div class="ntbox-title">表彰・受賞</div>
+        <p class="ntbox-image">
+          <img src="topimg/topics-image40.png" alt="">
+        </p>
+        <p class="ntbox-text">
+          <a href="project/research_activities/prize/index.html">農研機構職員の受賞一覧です</a>
+        </p>
+      </div>  
+
+
+<!-- 
+      <div class="ntbox">
+        <div class="ntbox-title">トピックス</div>
+        <p class="ntbox-image">
+          <img src="laboratory/niah/topimg/topics-image95.png" alt="" />
+        </p>
+        <p class="ntbox-text">
+          <a href="faq/bird_influenza/index.html">高病原性鳥インフルエンザQ&A</a>
+        </p>
+      </div>
+-->
+
+
+
+    </div>
+  </div>
+</div>
+					</div>
+				</div>
+			</div>
+	<!--  公開情報  -->
+	<div class="content-wrap-white clearfix">
+		<div class="pub-info">
+			<ul>
+				<li>
+               <div class="pub-info-button"><a href="supply/index.html">調達情報</a></div>
+              <div class="pub-info-button"><a href="public_information/index.html">公開情報</a></div>
+            </li>
+				<li>
+    
+                <div class="pub-info-button"><a href="training/index.html">研修情報</a></div>
+                <div class="pub-info-button"><a href="disaster/index.html">災害関連情報</a></div>
+				</li>
+			</ul>
+		</div>
+	</div>
+<footer>
+<!--  研究センター  -->
+	<div class="laboratory">
+		<div class="row">
+        <h2 class="col-md-4"><a href="introduction/laboratory/index.html">研究センター</a></h2>
+<ul class="laboratory-left col-md-4">
+  <li> <a href="laboratory/rcait/index.html">農業情報研究センター</a> </li>
+  <li> <a href="laboratory/rcar/index.html">農業ロボティクス研究センター</a> </li>
+  <li> <a href="laboratory/ngrc/index.html">遺伝資源研究センター</a> </li>
+  <li> <a href="laboratory/naac/index.html">高度分析研究センター</a> </li>
+  <li> <a href="laboratory/nfri/index.html">食品研究部門</a> </li>
+  <li> <a href="laboratory/nilgs/index.html">畜産研究部門</a> </li>
+  <li> <a href="laboratory/niah/index.html">動物衛生研究部門</a> </li>
+  <li> <a href="laboratory/harc/index.html">北海道農業研究センター</a> </li>
+  <li> <a href="laboratory/tarc/index.html">東北農業研究センター</a> </li>
+  <li> <a href="laboratory/carc/index.html">中日本農業研究センター</a> </li>
+  <li> <a href="laboratory/warc/index.html">西日本農業研究センター</a> </li>
+</ul>
+<ul class="laboratory-right col-md-4">
+
+  <li> <a href="laboratory/karc/index.html">九州沖縄農業研究センター</a> </li>
+  <li> <a href="laboratory/iam/index.html">農業機械研究部門</a> </li>
+  <li> <a href="laboratory/nics/index.html">作物研究部門</a> </li>
+  <li> <a href="laboratory/nifts/index.html">果樹茶業研究部門</a> </li>
+  <li> <a href="laboratory/nivfs/index.html">野菜花き研究部門</a> </li>
+  <li> <a href="laboratory/nias/index.html">生物機能利用研究部門</a> </li>
+  <li> <a href="laboratory/niaes/index.html">農業環境研究部門</a> </li>
+  <li> <a href="laboratory/nire/index.html">農村工学研究部門</a> </li>
+  <li> <a href="laboratory/nipp/index.html">植物防疫研究部門</a> </li>
+  <li> <a href="laboratory/ncss/index.html">種苗管理センター</a> </li>
+  <li> <a href="laboratory/brain/index.html">生物系特定産業技術研究支援センター</a> </li>
+</ul>
+		</div>
+	</div>
+	<!--  サイトマップ  -->
+	<div class="footer-sitemap">
+		<div class="row">
+			<div class="sitemap col-md-offset-2">
+				<h2>サイトマップ</h2>
+				<ul class="sitemap-left col-md-4">
+			<li class="sitemap-head"><a href="introduction/index.html">農研機構について</a></li>
+                	<li><a href="introduction/president/index.html">理事長メッセージ</a></li>
+                	<li><a href="introduction/about-naro.html">農研機構とはどんなところ?</a></li>
+                    <li><a href="introduction/profile.html">農研機構の基本データ</a></li>
+		
+					<li><a href="introduction/access.html">アクセス</a></li>
+      					<li><a href="introduction/vision-statement.html">農研機構ビジョンステートメント</a></li>
+                
+  
+					<li><a href="introduction/library/index.html">図書館の利用</a></li>
+             		<li><a href="introduction/iro/index.html">国際活動</a></li> 
+                
+					<li class="sitemap-head"><a href="project/index.html">研究情報</a></li>
+					<li><a href="project/challenge/index.html">研究課題(プロジェクト)</a></li>
+					<li><a href="project/results/index.html">研究成果</a></li>
+					
+					
+					<li><a href="project/results/impact/index.html">社会にインパクトのあった研究成果</a></li>
+					<li><a href="project/results/research_prize/index.html">NARO Research Prize</a></li>
+	
+					<li><a href="project/results/main/index.html">成果情報</a></li>
+	                <li><a href="project/society5-sdgs/index.html">Society5.0 農業・食品版の実現とSDGs</a></li>
+					<li><a href="smart-nogyo/index.html">スマート農業実証プロジェクト</a></li>
+                   	<li><a href="q_sfc/index.html">九州沖縄経済圏SFCプロジェクト</a></li>              
+				</ul>
+				<ul class="sitemap-center col-md-4">
+                    <li class="sitemap-head"><a href="collab/index.html">産学連携・品種・特許</a></li>
+
+
+					<li><a href="publicity_report/pr_report/collab/index.html">産学官連携交流セミナー</a></li>
+                    <li class="shisetsu"><a href="collab/open_lab/index.html">共同研究施設(開放型研究施設・共同利用施設)の紹介</a></li>
+
+					<li><a href="collab/breed/index.html">品種</a></li>
+					<li><a href="collab/patent/index.html">特許</a></li>
+					<li><a href="collab/program/index.html">職務作成プログラム</a></li>
+					<li><a href="collab/experiment/index.html">試験目的での利用</a></li>
+				</ul>
+				<ul class="sitemap-right col-md-4">
+					<li class="sitemap-head"><a href="publicity_report/index.html">プレスリリース・広報</a></li>
+                					<li><a href="publicity_report/press/index.html">プレスリリース</a></li>
+					
+ 
+					<li><a href="publicity_report/pr_report/index.html">広報活動報告</a></li> 
+					<li><a href="publicity_report/publication/index.html">刊行物のご紹介</a></li>  
+					<li><a href="inquiry/kengaku/index.html">見学の申し込み</a></li> 
+					<li><a href="publicity_report/season/index.html">農研機構「旬」の話題</a></li>
+
+					<li><a href="publicity_report/shiminkouza/index.html">農研機構市民講座</a></li>
+					<li><a href="publicity_report/movie/index.html">農研機構 動画集</a></li>
+					<li><a href="event/index.html">イベント・セミナー</a></li>
+           			<li><a href="publicity_report/pr_report/sns/index.html">農研機構SNS</a></li>     
+				</ul>
+			</div>
+		</div>
+
+		<!--  バナーエリア  -->
+		<div class="top-banner-area">
+			<ul>
+				<li><a href="tarh/index.html"><img src="topimg/kagakukan_bnr2.png" alt="食と農の科学館" width="222"></a></li>
+				<li><a href="https://www.youtube.com/user/NAROchannel"><img src="topimg/youtube_bnr3.png" alt="NARO Channel" width="222"></a></li>
+				<li><a href="diversity/index.html"><img src="topimg/top_bnr_diversity.png" alt="ダイバーシティ推進" width="222"></a></li>
+				<li><a href="https://researchmap.jp/researchers?q=%E5%9B%BD%E7%AB%8B%E7%A0%94%E7%A9%B6%E9%96%8B%E7%99%BA%E6%B3%95%E4%BA%BA%E8%BE%B2%E6%A5%AD%E3%83%BB%E9%A3%9F%E5%93%81%E7%94%A3%E6%A5%AD%E6%8A%80%E8%A1%93%E7%B7%8F%E5%90%88%E7%A0%94%E7%A9%B6%E6%A9%9F%E6%A7%8B"><img src="topimg/researchmap_bnr.png" alt="researchmap" width="222"></a></li>
+				</ul>
+		</div>
+	</div>
+	<!--  フッター表記  -->
+	<div class="footer">
+		<div class="row  col-md-12">
+			<ul>
+				<li class="footer-section-line"><a href="privacy_policy.html">プライバシーポリシー</a></li>
+				<li class="footer-section-line"><a href="copyright.html">著作権・免責事項</a></li>
+				<li class="footer-section-line"><a href="docu_procedure/index.html">法人文書の開示手続き</a></li>
+				<li class="footer-section-line"><a href="farmers-ac/index.html">農業者大学校に関する情報・手続き</a></li>
+				<li class="footer-section-line"><a href="privacy_procedure/index.html">個人情報の開示手続き</a></li>
+				<li class="footer-section-line"><a href="rss.html">RSSについて</a></li>
+				<li class="footer-section-line_last"><a href="link.html">関連リンク</a></li>
+			</ul>
+		</div>
+	</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="common/js/gmenu2.js"></script> 
+ 
+</footer>
+
+
+</div>
+
+
+
+
+
+
+
+
+</body></html>
