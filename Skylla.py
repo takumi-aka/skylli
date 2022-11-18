@@ -56,10 +56,12 @@ if __name__ == '__main__':
     H = ['Title','URL']
 
     base_frame_width = 720
-
+    search_word_list = []
     frame1 = sg.Frame('',
     [
         [sg.Text('検索ワード :'), sg.Input(key='-SEARCH-SHRIMP-') , sg.Button('エビ',font=('',11)), sg.Button('suspend',font=('',11)), sg.Button('エビ終了',font=('',11))],
+        [sg.Text('連続検索ワード :'), sg.Listbox ( search_word_list , size =(24 , 5) , key='-search-word-list-box-') , sg.Button('追加',font=('',11)),  sg.Button('削除',font=('',11)),sg.Button('リストの読み込み',font=('',11)), sg.Button('リストの保存',font=('',11))],
+        [sg.Button('エビs',font=('',11)), sg.Button('suspend',font=('',11)), sg.Button('エビs終了',font=('',11))],
         [sg.Text('current :'),sg.Text('', key='-CURRENT-TEXT-SHRIMP-')],
         [ sg.Table (T , headings=H , auto_size_columns = False , vertical_scroll_only = False ,
             #def_col_width=32 ,
@@ -72,7 +74,7 @@ if __name__ == '__main__':
             key='-TABLE-'
         )]
 
-    ] , size=(base_frame_width, 180) 
+    ] , size=(base_frame_width, 220) 
     )
 
     frame2 = sg.Frame('',
@@ -90,10 +92,28 @@ if __name__ == '__main__':
     )
 
     layout = [
-                [frame1] , [frame2] , [frame3]
+                [frame1] , [frame2] 
             ]
 
     window = sg.Window('ui_sample_skylli', layout)
+
+
+    def _search_word_load() :#ファイルからロード
+        global search_word_list
+
+
+        return
+
+    def _search_word_save() :#ファイルへセーブ
+        global search_word_list
+
+        f_name = 'かっこ仮.ini' #ダイアログで指定できるように
+        f = open(f_name , mode="w+" , encoding="UTF-8")     
+        for row in search_word_list:
+            f.writer(row)    #miss
+
+        f.close()
+        return
 
 
     def shrimp_worker(search_word):
@@ -168,8 +188,6 @@ if __name__ == '__main__':
                                 writer = csv.writer(f)                
                                 writer.writerow(param_list)
 
-
-
                             result = True    
                     finally:
                         f.close()
@@ -202,6 +220,27 @@ if __name__ == '__main__':
                 go_on = False #発生したスレッドの処理を終了に促す
                 shrimp_executor = None
                 shrimp_stat = thread_mode[0]  #back to noop
+
+        elif event == '追加':
+            w = sg . PopupGetText ('検索ワード ' , title = '検索ワードリストへ追加')
+            if w:
+                search_word_list += [w + '\n']
+                window ['-search-word-list-box-']. Update ( search_word_list )
+
+        elif event == '削除':
+            if values['-search-word-list-box-']:
+                #ここにリストから選択して削除・アップデート
+                search_word_list.remove(values['-search-word-list-box-'][0]) 
+                window ['-search-word-list-box-'].Update( search_word_list )
+
+        elif event == 'リストの読み込み':
+            _search_word_load()
+            window ['-search-word-list-box-'].Update( search_word_list )
+
+        elif event == 'リストの保存':
+            _search_word_save()
+            window ['-search-word-list-box-'].Update( search_word_list )
+
 
         elif event == '蜘蛛':
             if 0 < len(search_result_all) :
