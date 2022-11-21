@@ -10,6 +10,8 @@ from threading import Lock
 #from concurrent.futures.process import ProcessPoolExecutor
 from concurrent.futures import ThreadPoolExecutor
 
+import tkinter as tk
+
 
 import time
 from webdriver_manager.chrome import ChromeDriverManager
@@ -29,7 +31,7 @@ shrimp_executor = None #coshrimp実行の為のサブスレッド
 
 __lock = Lock() #クリティカルセクション
 go_on = True
-search_result_all = [[]]
+search_result_all = {}
 
 def initializer(string):
     print(f'{string} init thread!')
@@ -95,24 +97,42 @@ if __name__ == '__main__':
                 [frame1] , [frame2] 
             ]
 
-    window = sg.Window('ui_sample_skylli', layout)
-
+    window = sg.Window('ui_sample_skylli', layout , resizable=True,  finalize=True)
+    window["-search-word-list-box-"].bind('<Double-Button-1>' , "+-double click-")  #-Button
 
     def _search_word_load() :#ファイルからロード
         global search_word_list
 
+        fTyp = [("検索ワードリスト", "*.txt")]
+        iDir = os.path.abspath(os.path.dirname(__file__))
+        file_name = tk.filedialog.askopenfile(filetypes=fTyp, initialdir=iDir)
+        if None == file_name :
+            return 
+
+        if 0 < len(file_name.name):
+            f = open(file_name.name , mode="r" , encoding="UTF-8")     
+            search_word_list = [] 
+            data = f.read()
+            for line in data.splitlines():
+                search_word_list += [line + '\n']
+            f.close()  
 
         return
 
     def _search_word_save() :#ファイルへセーブ
         global search_word_list
 
-        f_name = 'かっこ仮.ini' #ダイアログで指定できるように
-        f = open(f_name , mode="w+" , encoding="UTF-8")     
-        for row in search_word_list:
-            f.writer(row)    #miss
+        fTyp = [("検索ワードリスト", "*.txt")]
+        iDir = os.path.abspath(os.path.dirname(__file__))
+        file_name = tk.filedialog.asksaveasfile(filetypes=fTyp, initialdir=iDir)
+        if None == file_name :
+            return 
 
-        f.close()
+        if 0 < len(file_name.name):
+            f = open(file_name.name , mode="w+" , encoding="UTF-8")     
+            f.writelines([row for row in search_word_list]) 
+            f.close()            
+
         return
 
 
@@ -122,7 +142,7 @@ if __name__ == '__main__':
         return 
 
 
-    def shrimp_breather(switch , save_file_name="" , param_list=list(), current_text="") : # 戻り値 {}
+    def shrimp_breather(switch , save_file_name="" , param_dic={}, current_text="") : # 戻り値 {}
         global shrimp_stat , search_result_all , go_on
         result = {}
         with __lock:    
@@ -136,9 +156,10 @@ if __name__ == '__main__':
                 case "clean_up" :
                     try:       
                         result = False
-                        if param_list :
-                            search_result_all.extend(param_list)
-                            window['-TABLE-'].update(param_list)
+                        if param_dic :
+                            search_result_all |= param_dic # kokokara 20221121
+                            #search_result_all.extend(param_dic)
+                            window['-TABLE-'].update(param_dic)# dic型の値からlist に変換して渡す必要がある　かそもそも集計してるそれを使うか
 
                             f_name = save_file_name
                             if not f_name :  
@@ -147,7 +168,7 @@ if __name__ == '__main__':
 
                             writer = csv.writer(f)
                             
-                            for row in param_list:
+                            for row in param_dic:
                                 writer.writerow(row)
                             result = True    
                     finally:
@@ -241,7 +262,19 @@ if __name__ == '__main__':
             _search_word_save()
             window ['-search-word-list-box-'].Update( search_word_list )
 
+        elif event == '-search-word-list-box-+-double click-':
+            if values['-search-word-list-box-']:
+                val = values['-search-word-list-box-'][0] 
+                window ['-SEARCH-SHRIMP-'].Update(val)
 
+        elif event == 'エビs':
+            if shrimp_stat == 'noop' :
+
+
+
+                shrimp_stat = thread_mode[1] 
+                go_on = True 
+             
         elif event == '蜘蛛':
             if 0 < len(search_result_all) :
                 executor = ThreadPoolExecutor(max_workers=1)
