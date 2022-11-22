@@ -8,6 +8,7 @@ import csv
 #UI 機能統合など
 from threading import Lock
 #from concurrent.futures.process import ProcessPoolExecutor
+import concurrent
 from concurrent.futures import ThreadPoolExecutor
 
 import tkinter as tk
@@ -20,6 +21,7 @@ from Co_Shrimp import GoogleShrimp
 from Co_Spider import CoSpider 
 
 
+worker_thread_with = None
 thread_mode = ('noop','active','suspend','destroy')#意味ないかも
 shrimp_stat = thread_mode[0]
 spider_stat = thread_mode[0]
@@ -64,7 +66,7 @@ if __name__ == '__main__':
         [sg.Text('検索ワード :'), sg.Input(key='-SEARCH-SHRIMP-') , sg.Button('エビ',font=('',11)), sg.Button('suspend',font=('',11)), sg.Button('エビ終了',font=('',11))],
         [sg.Text('連続検索ワード :'), sg.Listbox ( search_word_list , size =(24 , 5) , key='-search-word-list-box-') , sg.Button('追加',font=('',11)),  sg.Button('削除',font=('',11)),sg.Button('リストの読み込み',font=('',11)), sg.Button('リストの保存',font=('',11))],
         [sg.Button('エビs',font=('',11)), sg.Button('suspend',font=('',11)), sg.Button('エビs終了',font=('',11))],
-        [sg.Text('current :'),sg.Text('', key='-CURRENT-TEXT-SHRIMP-')],
+        [sg.Text('passing :'),sg.Text('', key='-CURRENT-TEXT-SHRIMP-')],
         [ sg.Table (T , headings=H , auto_size_columns = False , vertical_scroll_only = False ,
             #def_col_width=32 ,
             col_widths=[45, 38],
@@ -81,20 +83,22 @@ if __name__ == '__main__':
 
     frame2 = sg.Frame('',
     [
-                [sg.Button('蜘蛛',font=('',12)), sg.Button('suspend',font=('',11)), sg.Button('蜘蛛終了',font=('',11)) , sg.Button('終了')],
-                [sg.Text('', key='-ACT-')],                
-                [sg.Listbox(values="", size=(120, 9), key='-LIST-', enable_events=True)]                
-    ] , size=(base_frame_width, 180) 
+        [sg.Text('狭間のインスタンス : ')] , [sg.Text('', key='-STAT2-')] , [sg.Text('', key='-STAT1-')] , [sg.Text('', key='-STAT-')]
+    ] , size=(base_frame_width, 32) 
     )
 
     frame3 = sg.Frame('',
     [
-        [sg.Multiline(default_text='',size=(160,9), border_width=2, key='memo')]
-    ] , size=(base_frame_width, 160) 
+                [sg.Button('蜘蛛',font=('',12)), sg.Button('suspend',font=('',11)), sg.Button('蜘蛛終了',font=('',11)) , sg.Button('終了')],
+                [sg.Text('', key='-ACT-')],                
+                [sg.Listbox(values="", size=(120, 9), key='-LIST-', enable_events=True)]                
+    ] , size=(base_frame_width, 220) 
     )
 
+
+
     layout = [
-                [frame1] , [frame2] 
+                [frame1] , [frame2] ,[frame3] 
             ]
 
     window = sg.Window('ui_sample_skylli', layout , resizable=True,  finalize=True)
@@ -137,6 +141,7 @@ if __name__ == '__main__':
 
 
     def shrimp_worker(search_word):
+
         coshrimp = GoogleShrimp(search_word=search_word , save_file_name="検索結果.csv" , breath = shrimp_breather)  
         coshrimp.boil()
         return 
@@ -159,9 +164,10 @@ if __name__ == '__main__':
                         if param_dic :
                             search_result_all |= param_dic # kokokara 20221121
                             update_list = list()
-                            for key_url , value_title in search_result_all.items():
+                            for key_url , value_title in param_dic.items():#その検索ワードの成果だけを表示させたいためparam_dicにしてある
                                 update_list += [[value_title , key_url]]
-                            window['-TABLE-'].update(update_list)# dic型の値からlist に変換して渡す必要がある　かそもそも集計してるそれを使うか
+
+                            window['-TABLE-'].update(update_list)
 
                             f_name = save_file_name
                             if not f_name :  
@@ -219,6 +225,27 @@ if __name__ == '__main__':
         return result
 
 
+
+    def skylli_worker_thread_with(swt , param_list):#ワーカースレッドが終わるまで待ってるスレッド  状態遷移の主軸に
+        if worker_thread_with :
+            return 
+
+        match swt:
+            case "swt_shrimps" : 
+                with ThreadPoolExecutor(max_workers=1, initializer=initializer, initargs=('pool',)) as executor:   
+                    for search_word in param_list:
+                        futures.append(executor.submit(shrimp_worker, search_word))
+
+                    for future in concurrent.futures.as_completed(futures):
+                        result = future.result()
+
+            case "swt_spider" : 
+                pass
+
+        worker_thread_with = None
+        return 
+
+
     futures = []
     while True:
         event, values = window.read()
@@ -252,7 +279,6 @@ if __name__ == '__main__':
 
         elif event == '削除':
             if values['-search-word-list-box-']:
-                #ここにリストから選択して削除・アップデート
                 search_word_list.remove(values['-search-word-list-box-'][0]) 
                 window ['-search-word-list-box-'].Update( search_word_list )
 
@@ -271,23 +297,20 @@ if __name__ == '__main__':
 
         elif event == 'エビs':
             if shrimp_stat == 'noop' :
-
-
+                if (0 < len(search_word_list)) and (None == worker_thread_with): 
+                    executor = ThreadPoolExecutor(max_workers=1)
+                    worker_thread_with = executor.submit(skylli_worker_thread_with , 'swt_shrimps' , search_word_list)
 
                 shrimp_stat = thread_mode[1] 
                 go_on = True 
              
-        elif event == '蜘蛛':
+        elif event == '蜘蛛':# list からdic に代わってるので動作不可
             if 0 < len(search_result_all) :
                 executor = ThreadPoolExecutor(max_workers=1)
                 for name_url in search_result_all:
                     if 2 == len(name_url) :
                         futures.append(executor.submit(spider_worker, name_url[1]))
 
-                #with ThreadPoolExecutor(max_workers=1, initializer=initializer, initargs=('pool',)) as executor:   
-                #    for name_url in search_result_all:
-                #        if 2 == len(name_url) :
-                #            futures.append(executor.submit(spider_worker, name_url[1]))
 
         elif event == '蜘蛛終了':
             window.refresh()
@@ -314,7 +337,8 @@ if __name__ == '__main__':
     target_list = [u0 , u2, u3, u3, u4 ,u5]
 
     futures = []
-    #ProcessPoolExecutor
+
+    #ProcessPoolExecutor   破棄
     with ThreadPoolExecutor(max_workers=1, initializer=initializer, initargs=('pool',)) as executor:       
 
         for url in target_list:
@@ -335,10 +359,6 @@ if __name__ == '__main__':
                         writer.writerow(r_list)
             finally:
                 f.close()
-
-
-
-
 
         #sg.theme_previewer()
 
