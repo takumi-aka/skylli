@@ -76,7 +76,7 @@ if __name__ == '__main__':
             key='-TABLE-'
         )]
 
-    ] , size=(base_frame_width, 220) 
+    ] , size=(base_frame_width, 320) 
     )
 
     frame2 = sg.Frame('',
@@ -84,7 +84,7 @@ if __name__ == '__main__':
                 [sg.Button('蜘蛛',font=('',12)), sg.Button('suspend',font=('',11)), sg.Button('蜘蛛終了',font=('',11)) , sg.Button('終了')],
                 [sg.Text('', key='-ACT-')],                
                 [sg.Listbox(values="", size=(120, 9), key='-LIST-', enable_events=True)]                
-    ] , size=(base_frame_width, 220) 
+    ] , size=(base_frame_width, 180) 
     )
 
     frame3 = sg.Frame('',
@@ -158,8 +158,10 @@ if __name__ == '__main__':
                         result = False
                         if param_dic :
                             search_result_all |= param_dic # kokokara 20221121
-                            #search_result_all.extend(param_dic)
-                            window['-TABLE-'].update(param_dic)# dic型の値からlist に変換して渡す必要がある　かそもそも集計してるそれを使うか
+                            update_list = list()
+                            for key_url , value_title in search_result_all.items():
+                                update_list += [[value_title , key_url]]
+                            window['-TABLE-'].update(update_list)# dic型の値からlist に変換して渡す必要がある　かそもそも集計してるそれを使うか
 
                             f_name = save_file_name
                             if not f_name :  
@@ -168,7 +170,7 @@ if __name__ == '__main__':
 
                             writer = csv.writer(f)
                             
-                            for row in param_dic:
+                            for row in update_list:
                                 writer.writerow(row)
                             result = True    
                     finally:
