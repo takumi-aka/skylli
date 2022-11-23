@@ -378,8 +378,11 @@ class CoSpider(Arthropod):
             --nest   
             continue
 
-         l_result = self.breather("life") 
-         if not l_result["life"]: break
+
+         if not self.breather("life")['life'] :
+            self.terminate_flag = True
+            break
+
          if self.detected : break
 
          self.__download_file_selenium(link_url)

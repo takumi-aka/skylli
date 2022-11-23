@@ -61,9 +61,12 @@ class GoogleShrimp(Arthropod) :
             except:
                 break
 
-            if not self.breather("life") :
+            if not self.breather("life")['life'] :
+                self.terminate_flag = True
                 break
             
+
+
             self.driver.get(next_page)      
             
             time.sleep(2.5+random.uniform(1, 3.7))  
@@ -71,7 +74,8 @@ class GoogleShrimp(Arthropod) :
         #self.breather("breath" , param_list=r_list)
         #self.breather("breath" , param_list=r_dic)
         #self.breather("clean_up" , save_file_name=self.save_file_name , param_list=r_list)
-        self.breather("clean_up" , save_file_name=self.save_file_name , param_dic=r_dic)        
+        if not self.terminate_flag :
+            self.breather("clean_up" , save_file_name=self.save_file_name , param_dic=r_dic)        
 
         return
 # GoogleShrimp class end
