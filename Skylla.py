@@ -1,18 +1,13 @@
 import os
-import urllib.parse
-import time
 import PySimpleGUI as sg
 import csv
-#import numpy as np
 
 #UI 機能統合など
 from threading import Lock
-#from concurrent.futures.process import ProcessPoolExecutor
 import concurrent
 from concurrent.futures import ThreadPoolExecutor
 
 import tkinter as tk
-
 
 import time
 from webdriver_manager.chrome import ChromeDriverManager
@@ -274,33 +269,36 @@ if __name__ == '__main__':
 
     def skylli_worker_thread_with(swt , param):#ワーカースレッドが終わるまで待ってるスレッド  状態遷移の主軸に
         global worker_thread_with
-        if None == worker_thread_with :
+        if worker_thread_with is None :
             return 
 
         match swt:
-
+#stringなのかチェックしてない
             case "swt_shrimp" : 
-                with ThreadPoolExecutor(max_workers=1, initializer=initializer, initargs=('pool',)) as executor: 
-                    futures.append(executor.submit(shrimp_worker, param)) #stringなのかチェックしてない
-                    for future in concurrent.futures.as_completed(futures):# キューではない
-                        result = future.result() 
+                if type(param) is str :
+                    with ThreadPoolExecutor(max_workers=1, initializer=initializer, initargs=('pool',)) as executor: 
+                        futures.append(executor.submit(shrimp_worker, param)) 
+                        for future in concurrent.futures.as_completed(futures):# キューではない
+                            result = future.result() 
 
             case "swt_shrimps" : 
-                with ThreadPoolExecutor(max_workers=1, initializer=initializer, initargs=('pool',)) as executor:   
-                    for search_word in param:#listなのかチェックしていない
-                        futures.append(executor.submit(shrimp_worker, search_word))
+                if type(param) is list :
+                    with ThreadPoolExecutor(max_workers=1, initializer=initializer, initargs=('pool',)) as executor:   
+                        for search_word in param:#listなのかチェックしていない
+                            futures.append(executor.submit(shrimp_worker, search_word))
 
-                    for future in concurrent.futures.as_completed(futures):
-                        result = future.result() #正常終了か問題ありか位は乗せておきたい
+                        for future in concurrent.futures.as_completed(futures):
+                            result = future.result() #正常終了か問題ありか位は乗せておきたい
 
 
             case "swt_spider" : 
-                with ThreadPoolExecutor(max_workers=4, initializer=initializer, initargs=('pool',)) as executor:   
-                    for url in param:#listなのかチェックしていない
-                        futures.append(executor.submit(spider_worker, url))
+                if type(param) is list :               
+                    with ThreadPoolExecutor(max_workers=4, initializer=initializer, initargs=('pool',)) as executor:   
+                        for url in param:#listなのかチェックしていない
+                            futures.append(executor.submit(spider_worker, url))
 
-                    for future in concurrent.futures.as_completed(futures):
-                        result = future.result() #正常終了か問題ありか位は乗せておきたい
+                        for future in concurrent.futures.as_completed(futures):
+                            result = future.result() 
 
         worker_thread_with = None
         return 
@@ -313,14 +311,14 @@ if __name__ == '__main__':
             break
 
         elif event == 'エビs':#subthread
-            if (shrimp_stat == thread_mode['noop']) and (0 < len(search_word_list)) and (None == worker_thread_with) :
+            if (shrimp_stat == thread_mode['noop']) and (0 < len(search_word_list)) and (worker_thread_with is None) :
                 executor = ThreadPoolExecutor(max_workers=1)
                 shrimp_stat = thread_mode['active'] 
                 go_on = True                 
                 worker_thread_with = executor.submit(skylli_worker_thread_with , 'swt_shrimps' , search_word_list)
              
         elif event == '蜘蛛':#subthread   # list からdic に代わってるので動作不可 
-            if (0 < len(search_result_all)) and (None == worker_thread_with) :
+            if (0 < len(search_result_all)) and (worker_thread_with is None) :
                 executor = ThreadPoolExecutor(max_workers=1)
                 url_list = list() 
                 for url in search_result_all.keys() :
@@ -331,7 +329,7 @@ if __name__ == '__main__':
                     worker_thread_with = executor.submit(skylli_worker_thread_with , 'swt_spider' , url_list)
 
         elif event == 'エビ': #subthread
-            if (shrimp_stat == thread_mode['noop'] )  and (None == worker_thread_with) :
+            if (shrimp_stat == thread_mode['noop'] )  and (worker_thread_with is None) :
                 s_str =  window['-SEARCH-SHRIMP-'].get()
                 if s_str : #スペースだろうが検索するよ 正規化はしない
                     executor = ThreadPoolExecutor(max_workers=1)
