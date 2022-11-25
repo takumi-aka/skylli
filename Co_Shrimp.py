@@ -66,7 +66,6 @@ class GoogleShrimp(Arthropod) :
                 break
             
 
-
             self.driver.get(next_page)      
             
             time.sleep(2.5+random.uniform(1, 3.7))  

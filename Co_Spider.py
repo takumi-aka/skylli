@@ -378,7 +378,6 @@ class CoSpider(Arthropod):
             --nest   
             continue
 
-
          if not self.breather("life")['life'] :
             self.terminate_flag = True
             break
