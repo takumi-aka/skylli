@@ -3,7 +3,8 @@ import urllib.request
 from urllib.parse import urlparse
 from urllib.parse import urljoin
 from os import makedirs
-import os.path, time, re , csv
+import os.path, time, re , csv , shutil
+import selenium
 from selenium.webdriver.common.keys import Keys 
 from selenium.webdriver.common.by import By
 
@@ -36,7 +37,7 @@ class CoSpider(Arthropod):
                      , "確認" , "進む" , "必須" , "タイトル" , "題名" , "本文" , "連絡先" , "フリガナ" , "内容"] 
    negative_words = ["レンタル","アカウント"] 
 
-   contact_texts = ['お問い合わせ' , '問い合わせ','お問合せ','お問合わせ','御問合せ','御問い合わせ','御問合わせ','お問い合せ','おといあわせ','ご質問 お問い合わせ', 'ご注文・お問い合わせ','contact','contact us']
+   contact_texts = ['お問い合わせ' , '問い合わせ','お問合せ','お問合わせ','御問合せ','御問い合わせ','御問合わせ','お問い合せ','おといあわせ','ご質問 お問い合わせ', 'ご注文・お問い合わせ','お問い合わせ先','contact','contact us']
    contact_href_into_words = ['contact','toiawase','otoiawase','faq','inquiry']
 
    ext = ".csv"
@@ -104,6 +105,9 @@ class CoSpider(Arthropod):
          logger.debug("get=" + url)
          self.driver.get(url)#直後のデータとURLが有効
 
+         #GETのあとスリープを入れてselenumの処理結果を安定させる。
+         time.sleep(5) 
+
          time.sleep(1+random.uniform(2, 2))
          t_len = len(self.driver.page_source)
          t_url = self.driver.current_url
@@ -151,6 +155,10 @@ class CoSpider(Arthropod):
            
          time.sleep(1+random.uniform(2, 2))
          return result
+
+      except selenium.common.exceptions.NoSuchWindowException :
+         logger.debug("NoSuchWindowException:" + url)
+         return None
 
       except:
          logger.debug("ダウンロード失敗:" + url)
@@ -246,11 +254,15 @@ class CoSpider(Arthropod):
          print("ダウンロード失敗:", url)
          return None
 
-   def first_contact(self) -> str :
+   def first_contact(self) -> str :# コンタクトフォームと思しきurlを返す | 見つからなければ空
 
       result = ""
       logger.debug("first_contact : " + self.url)
       self.driver.get(self.url)#直後のデータとURLが有効
+      
+      #GETのあとスリープを入れてselenumの処理結果を安定させる。
+      time.sleep(5) 
+
       html = self.driver.page_source
 
       if "title" not in self.detected_url.keys(): 
@@ -275,26 +287,23 @@ class CoSpider(Arthropod):
             if t_element :
                break
 
-
       for element in elements_l_t :    
-         href_srt = element.get_attribute('href')   #フルパスであるかチェックしたいところ
-         #o = urlparse(href_srt)
-         logger.debug("first_contact : " + href_srt)
-         self.driver.get(href_srt)#直後のデータとURLが有効
-         time.sleep(2+random.uniform(1, 2))        #嘘だろ 
-         html = self.driver.page_source
-         t_f_d = self.target_form_detector(html)
-         if (2 <= t_f_d["p"])and(1 <= t_f_d["t"]) :
-            result = href_srt
+         try :
+            href_srt = element.get_attribute('href')
+            #o = urlparse(href_srt)
+            logger.debug("first_contact : " + href_srt)
+            self.driver.get(href_srt)#直後のデータとURLが有効
+            time.sleep(5)        #嘘だろ 
+            html = self.driver.page_source
+            t_f_d = self.target_form_detector(html)
+            if (2 <= t_f_d["p"])and(1 <= t_f_d["t"]) :
+               result = href_srt
+               break
             break
 
-      #soup = BeautifulSoup(html, "html.parser")
-      #links = soup.select("link[rel='stylesheet']")
-      #links += soup.select("a[href]")
-
-      #title をセット
-
-
+         except selenium.common.exceptions.StaleElementReferenceException :
+            break # さて
+            
       #for a_href_text in links :
       #   if 'a' == a_href_text.name :
       #      if re.search(r"(お問合|問い合|問合|contact)", a_href_text.text): 
@@ -327,6 +336,16 @@ class CoSpider(Arthropod):
          self.save_to_csv_a()  
       self.browser_close()
 
+      #いずれにしてもここでファイルを削除したい
+      rmtd= self.save_directory + '/' + hostname + '/'
+      if(os.path.isdir(rmtd) == True):
+         try:
+            if not os.access(rmtd, os.W_OK):
+               os.chmod(rmtd, 755)
+            shutil.rmtree(rmtd)
+         except:
+            pass
+         
       return result
 
 
@@ -341,7 +360,7 @@ class CoSpider(Arthropod):
       savepath = r_selenium["savepath"] 
       if savepath is None: return result
       if savepath in self.test_files: return result # 既に辞書にあるURLである
-      if self.detected : return result
+      if self.detected : return self.detected 
 
       self.test_files[savepath] = True
       logger.debug("recursiv_sync=", url)
@@ -412,7 +431,7 @@ def initializer(string):
 def worker(url): 
     cs = CoSpider("CoSpiderResult" , url=url , breath=breather ) 
     cs.finish_it()
-    #return f"started"
+
     return cs.get_result_list()
 
 

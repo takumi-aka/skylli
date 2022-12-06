@@ -47,7 +47,8 @@ class GoogleShrimp(Arthropod) :
             for elem_h3 in self.driver.find_elements(By.XPATH, '//a/h3'):
                 elem_a = elem_h3.find_element(By.XPATH , '..')  
                 o = urlparse(elem_a.get_attribute('href'))
-                host_url = o.scheme + "://" + o.hostname
+                host_url = elem_a.get_attribute('href')
+                #host_url = o.scheme + "://" + o.hostname
                 if not re.search(self.needless , host_url):
                     if not re.search(self.negative_multibyte_words , elem_h3.text):
                         r_list += [[elem_h3.text , host_url]]

@@ -49,7 +49,7 @@ if __name__ == '__main__':
     multiprocessing.set_start_method('spawn', True)
     update_chrome_install() 
     
-    sg.theme('DarkBlue11')
+    sg.theme('SandyBeach')
 
     T = [[]]
     H = ['Title','URL']
@@ -60,9 +60,9 @@ if __name__ == '__main__':
     [
         [sg.Text('検索ワード :'), sg.Input(key='-SEARCH-SHRIMP-') , sg.Button('エビ',font=('',11)),  sg.Button('エビ終了',font=('',11))],
         [sg.Text('連続検索ワード :'), sg.Listbox ( search_word_list , size =(24 , 5) , key='-search-word-list-box-') , sg.Button('追加',font=('',11)),  sg.Button('削除',font=('',11)),sg.Button('リストの読み込み',font=('',11)), sg.Button('リストの保存',font=('',11))],
-        [sg.Button('エビs',font=('',11)), sg.Button('エビs終了',font=('',11))],
+        [sg.Text('連続検索 :') , sg.Button('エビs',font=('',11)), sg.Button('エビs終了',font=('',11))],
         [sg.Text('passing :'),sg.Text('', key='-CURRENT-TEXT-SHRIMP-')],
-        [ sg.Table (T , headings=H , auto_size_columns = False , vertical_scroll_only = False ,
+        [ sg.Table (T , headings=H , auto_size_columns = False , vertical_scroll_only = True ,expand_x=True,
             #def_col_width=32 ,
             col_widths=[45, 38],
             num_rows=9 ,
@@ -73,21 +73,21 @@ if __name__ == '__main__':
             key='-TABLE-'
         )],
         [sg.Button('CSVを読み込む',font=('',11)), sg.Button('CSVへ保存',font=('',11))]
-    ] , size=(base_frame_width, 376) 
+    ] , size=(base_frame_width, 376) , key='-frame0-'
     )
 
     frame2 = sg.Frame('',
     [
         [sg.Text('狭間のインスタンス : ')] , [sg.Text('', key='-STAT2-')] , [sg.Text('', key='-STAT1-')] , [sg.Text('', key='-STAT-')]
-    ] , size=(base_frame_width, 32) 
+    ] , size=(base_frame_width, 32)  , key='-frame1-'
     )
 
     frame3 = sg.Frame('',
     [
                 [sg.Button('蜘蛛',font=('',12)),  sg.Button('蜘蛛終了',font=('',11)) , sg.Button('終了')],
                 [sg.Text('', key='-ACT-')],                
-                [sg.Listbox(values="", size=(120, 9), key='-LIST-', enable_events=True)]                
-    ] , size=(base_frame_width, 220) 
+                [sg.Listbox(values="", size=(120, 9), expand_x=True, key='-LIST-', enable_events=True)]                
+    ] , size=(base_frame_width, 220)  , key='-frame2-'
     )
 
 
@@ -96,8 +96,12 @@ if __name__ == '__main__':
                 [frame1] , [frame2] ,[frame3] 
             ]
 
-    window = sg.Window('ui_sample_skylli', layout , resizable=True,  finalize=True)
+    window = sg.Window('ui_sample_skylli', layout , resizable=True,  finalize=True )
     window["-search-word-list-box-"].bind('<Double-Button-1>' , "+-double click-")  #-Button
+    window["-frame0-"].expand(expand_x=True, expand_y=False)
+    window["-frame1-"].expand(expand_x=True, expand_y=False)
+    window["-frame2-"].expand(expand_x=True, expand_y=False)
+
 
     def _search_word_load() :#ファイルからロード
         global search_word_list
@@ -227,7 +231,6 @@ if __name__ == '__main__':
         return result
 
 
-
     def spider_worker(url=""):
         cospider = CoSpider("nioh" , url=url , breath=spider_breather , hedden_window=False) 
         cospider.finish_it()
@@ -247,7 +250,7 @@ if __name__ == '__main__':
     
                 case "clean_up" :
                     try:       
-                        result = False
+                        result = {"clean_up" : False}
                         if param_list :
 
                             f_name = save_file_name
@@ -258,10 +261,10 @@ if __name__ == '__main__':
                                 writer = csv.writer(f)                
                                 writer.writerow(param_list)
 
-                            result = True    
+                            result = {"clean_up" : True}     
                     finally:
                         f.close()
-                        shrimp_stat = thread_mode[0]
+                        shrimp_stat = thread_mode['noop']
 
         return result
 
@@ -275,26 +278,27 @@ if __name__ == '__main__':
         match swt:
 #stringなのかチェックしてない
             case "swt_shrimp" : 
-                if type(param) is str :
+                if (type(param) is str) and (param) :
                     with ThreadPoolExecutor(max_workers=1, initializer=initializer, initargs=('pool',)) as executor: 
                         futures.append(executor.submit(shrimp_worker, param)) 
                         for future in concurrent.futures.as_completed(futures):# キューではない
-                            result = future.result() 
+                            result = future.result() #正常終了か問題ありか位は乗せておきたい
 
             case "swt_shrimps" : 
-                if type(param) is list :
+                if (type(param) is list) and (0 < len(param)) :
                     with ThreadPoolExecutor(max_workers=1, initializer=initializer, initargs=('pool',)) as executor:   
-                        for search_word in param:#listなのかチェックしていない
+                        for search_word in param:
                             futures.append(executor.submit(shrimp_worker, search_word))
 
                         for future in concurrent.futures.as_completed(futures):
-                            result = future.result() #正常終了か問題ありか位は乗せておきたい
+                            result = future.result() 
 
+#この間より上下にあるCASEはある数字以外を除いて、全てお無しなのであと一つ増えそうなら入れ子関数にしまう。
 
             case "swt_spider" : 
-                if type(param) is list :               
-                    with ThreadPoolExecutor(max_workers=4, initializer=initializer, initargs=('pool',)) as executor:   
-                        for url in param:#listなのかチェックしていない
+                if (type(param) is list) and (0 < len(param)):               
+                    with ThreadPoolExecutor(max_workers=1, initializer=initializer, initargs=('pool',)) as executor:   
+                        for url in param:
                             futures.append(executor.submit(spider_worker, url))
 
                         for future in concurrent.futures.as_completed(futures):
