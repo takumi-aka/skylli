@@ -49,7 +49,7 @@ if __name__ == '__main__':
     multiprocessing.set_start_method('spawn', True)
     update_chrome_install() 
     
-    sg.theme('SandyBeach')
+    sg.theme('DarkTeal')
 
     T = [[]]
     H = ['Title','URL']
@@ -297,7 +297,7 @@ if __name__ == '__main__':
 
             case "swt_spider" : 
                 if (type(param) is list) and (0 < len(param)):               
-                    with ThreadPoolExecutor(max_workers=1, initializer=initializer, initargs=('pool',)) as executor:   
+                    with ThreadPoolExecutor(max_workers=1, initializer=initializer, initargs=('pool',)) as executor:   #ワーカースレッド数
                         for url in param:
                             futures.append(executor.submit(spider_worker, url))
 

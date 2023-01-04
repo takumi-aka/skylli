@@ -3,11 +3,12 @@ import urllib.request
 from urllib.parse import urlparse
 from urllib.parse import urljoin
 from os import makedirs
-import os.path, time, re , csv , shutil
+import os.path, time, re , csv , shutil , copy
 import selenium
 from selenium.webdriver.common.keys import Keys 
 from selenium.webdriver.common.by import By
-
+from selenium import webdriver 
+from webdriver_manager.chrome import ChromeDriverManager
 
 from concurrent.futures.process import ProcessPoolExecutor
 from concurrent.futures import ProcessPoolExecutor, as_completed
@@ -254,7 +255,7 @@ class CoSpider(Arthropod):
          print("ダウンロード失敗:", url)
          return None
 
-   def first_contact(self) -> str :# コンタクトフォームと思しきurlを返す | 見つからなければ空
+   def first_contact(self) -> str :# コンタクトフォームと思しきurlを返す | 見つからなければ　""
 
       result = ""
       logger.debug("first_contact : " + self.url)
@@ -264,15 +265,18 @@ class CoSpider(Arthropod):
       time.sleep(5) 
 
       html = self.driver.page_source
+      #soup = BeautifulSoup(html, 'html.parser')
+      #links = [url.get('href') for url in soup.find_all('a')]
 
       if "title" not in self.detected_url.keys(): 
          self.detected_url = {"title" : self.driver.title} 
 
-      elements_l_t = []
+      elements_l_t = []  
+
       for c_str in self.contact_texts :
          elements_l_t += self.driver.find_elements(By.LINK_TEXT,c_str)
 
-      if not elements_l_t :
+      if not elements_l_t : # お問い合わせが img である場合を見て走査
          t_element = None
          time.sleep(1+random.uniform(1, 2)) 
          elements_i_a = self.driver.find_elements(By.TAG_NAME,'img')    
@@ -287,30 +291,70 @@ class CoSpider(Arthropod):
             if t_element :
                break
 
-      for element in elements_l_t :    
-         try :
-            href_srt = element.get_attribute('href')
-            #o = urlparse(href_srt)
-            logger.debug("first_contact : " + href_srt)
-            self.driver.get(href_srt)#直後のデータとURLが有効
-            time.sleep(5)        #嘘だろ 
-            html = self.driver.page_source
-            t_f_d = self.target_form_detector(html)
-            if (2 <= t_f_d["p"])and(1 <= t_f_d["t"]) :
-               result = href_srt
-               break
-            break
+      if elements_l_t :         
+         for element in elements_l_t :    
+            try :
+               href_srt = element.get_attribute('href')
 
-         except selenium.common.exceptions.StaleElementReferenceException :
-            break # さて
+               logger.debug("first_contact : " + href_srt)
+               self.driver.get(href_srt)#直後のデータとURLが有効 first first!
+               time.sleep(5)         
+               html = self.driver.page_source
+
+               t_f_d = self.target_form_detector(html)
+               if (2 <= t_f_d["p"])and(1 <= t_f_d["t"]) :# 
+                  result = href_srt
+                  break
+
+               else: # 問い合わせフォームの入口　 一旦既存のコピペ
+
+                  elements_l_t_end  = []
+                  next_driver =  webdriver.Chrome(ChromeDriverManager().install(), options=self.options) 
+
+                  for c_str in self.contact_texts :
+                     elements_l_t_end += self.driver.find_elements(By.LINK_TEXT,c_str)   
+      
+                  if not elements_l_t_end :
+                     t_element = None
+                     time.sleep(1+random.uniform(1, 2)) 
+                     elements_i_a = self.driver.find_elements(By.TAG_NAME,'img')    
+                     for element_end in elements_i_a:
+                        a_str = element_end.get_attribute('alt')
+                        for c_str in self.contact_texts :
+                           if re.search(c_str, a_str):
+                              t_element = element_end.find_element(By.XPATH , './..')
+                              if t_element :
+                                 elements_l_t_end.append(t_element)
+                                 break
+                        if t_element :
+                           break
+
+                  #pass
+                  for element_end in elements_l_t_end :    
+                     try :
+                        href_srt = ""
+                        href_srt = element_end.get_attribute('href')
+                        #o = urlparse(href_srt)
+                        logger.debug("first_contact : " + href_srt)
+                        #self.driver.execute_script("window.open()") 
+                        #self.driver.switch_to.window(self.driver.window_handles[1])
+                        #time.sleep(1)   
+                        self.driver.get(href_srt)#直後のデータとURLが有効
+                        time.sleep(5)        #嘘だろ 
+                        html = self.driver.page_source
+                        t_f_d = self.target_form_detector(html)
+                        if (2 <= t_f_d["p"])and(1 <= t_f_d["t"]) :
+                           result = href_srt
+                           break
+                     except selenium.common.exceptions.StaleElementReferenceException :
+                        break # さて
+                     
+               break
+
+            except selenium.common.exceptions.StaleElementReferenceException :
+               break # さて
             
-      #for a_href_text in links :
-      #   if 'a' == a_href_text.name :
-      #      if re.search(r"(お問合|問い合|問合|contact)", a_href_text.text): 
-      #         t_f_d = self.target_form_detector(html)
-      #         if (2 <= t_f_d["p"])and(1 <= t_f_d["t"]) :
-      #            result = a_href_text.attrs['href']
-      #            break
+
 
       return result
 
