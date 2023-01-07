@@ -38,7 +38,7 @@ class CoSpider(Arthropod):
                      , "確認" , "進む" , "必須" , "タイトル" , "題名" , "本文" , "連絡先" , "フリガナ" , "内容"] 
    negative_words = ["レンタル","アカウント"] 
 
-   contact_texts = ['お問い合わせ' , '問い合わせ','お問合せ','お問合わせ','御問合せ','御問い合わせ','御問合わせ','お問い合せ','おといあわせ','ご質問 お問い合わせ', 'ご注文・お問い合わせ','お問い合わせ先','contact','contact us']
+   contact_texts = ['お問い合わせ' , '問い合わせ','お問合せ','お問合わせ','御問合せ','御問い合わせ','御問合わせ','お問い合せフォームはこちら','お問い合せ','おといあわせ','ご質問 お問い合わせ', 'ご注文・お問い合わせ','お問い合わせ先','CONTACT','contact','contact us']
    contact_href_into_words = ['contact','toiawase','otoiawase','faq','inquiry']
 
    ext = ".csv"
@@ -55,8 +55,10 @@ class CoSpider(Arthropod):
       super().__init__(save_file_name=save_file_name ,  breath = breath , hedden_window = hedden_window)
       #インストール自体は先に済ませておくべき。
       #ここでは既に行われたアップデートのインストール先のパスが帰ってきている。
+      
+      if not url :
+         logger.debug("__init__ failure", url)
       self.url = url
-      logger.debug("__init__ failure", url)
       return None
 
 
@@ -257,16 +259,30 @@ class CoSpider(Arthropod):
 
    def first_contact(self) -> str :# コンタクトフォームと思しきurlを返す | 見つからなければ　""
 
+      def _element_img(_elements , _driver):
+         t_element = None
+         time.sleep(1+random.uniform(1, 2)) 
+         elements_i_a = _driver.find_elements(By.TAG_NAME,'img')    
+         for element in elements_i_a:
+            a_str = element.get_attribute('alt')
+            for c_str in self.contact_texts :
+               if re.search(c_str, a_str):
+                  t_element = element.find_element(By.XPATH , './..')
+                  if t_element :
+                     _elements.append(t_element)
+                     break
+            if t_element :
+               break
+
+         return 
+
       result = ""
       logger.debug("first_contact : " + self.url)
-      self.driver.get(self.url)#直後のデータとURLが有効
+      self.driver.get(self.url)  #直後のデータとURLが有効 first first   GET
       
       #GETのあとスリープを入れてselenumの処理結果を安定させる。
-      time.sleep(5) 
+      time.sleep(4) 
 
-      html = self.driver.page_source
-      #soup = BeautifulSoup(html, 'html.parser')
-      #links = [url.get('href') for url in soup.find_all('a')]
 
       if "title" not in self.detected_url.keys(): 
          self.detected_url = {"title" : self.driver.title} 
@@ -274,22 +290,12 @@ class CoSpider(Arthropod):
       elements_l_t = []  
 
       for c_str in self.contact_texts :
-         elements_l_t += self.driver.find_elements(By.LINK_TEXT,c_str)
+         elements_l_t += self.driver.find_elements(By.PARTIAL_LINK_TEXT,c_str)
 
       if not elements_l_t : # お問い合わせが img である場合を見て走査
-         t_element = None
-         time.sleep(1+random.uniform(1, 2)) 
-         elements_i_a = self.driver.find_elements(By.TAG_NAME,'img')    
-         for element in elements_i_a:
-            a_str = element.get_attribute('alt')
-            for c_str in self.contact_texts :
-               if re.search(c_str, a_str):
-                  t_element = element.find_element(By.XPATH , './..')
-                  if t_element :
-                     elements_l_t.append(t_element)
-                     break
-            if t_element :
-               break
+         _element_img(elements_l_t , self.driver)
+
+      next_driver =  Arthropod(save_file_name="" , breath = None , hedden_window = False)     
 
       if elements_l_t :         
          for element in elements_l_t :    
@@ -297,65 +303,54 @@ class CoSpider(Arthropod):
                href_srt = element.get_attribute('href')
 
                logger.debug("first_contact : " + href_srt)
-               self.driver.get(href_srt)#直後のデータとURLが有効 first first!
-               time.sleep(5)         
-               html = self.driver.page_source
+               next_driver.driver.get(href_srt)#直後のデータとURLが有効 
+               time.sleep(4)         
+               html = next_driver.driver.page_source
 
                t_f_d = self.target_form_detector(html)
                if (2 <= t_f_d["p"])and(1 <= t_f_d["t"]) :# 
                   result = href_srt
                   break
 
-               else: # 問い合わせフォームの入口　 一旦既存のコピペ
+               else: # 
 
                   elements_l_t_end  = []
-                  next_driver =  webdriver.Chrome(ChromeDriverManager().install(), options=self.options) 
+                  #scan_driver =  webdriver.Chrome(ChromeDriverManager().install(), options=self.options) 
+                  scan_driver =  Arthropod(save_file_name="" , breath = None , hedden_window = False)   
+                  # PARTIAL_LINK_TEXT　以外にも有ってもよいか
 
                   for c_str in self.contact_texts :
-                     elements_l_t_end += self.driver.find_elements(By.LINK_TEXT,c_str)   
+                     elements_l_t_end += next_driver.driver.find_elements(By.PARTIAL_LINK_TEXT,c_str)   
       
                   if not elements_l_t_end :
-                     t_element = None
-                     time.sleep(1+random.uniform(1, 2)) 
-                     elements_i_a = self.driver.find_elements(By.TAG_NAME,'img')    
-                     for element_end in elements_i_a:
-                        a_str = element_end.get_attribute('alt')
-                        for c_str in self.contact_texts :
-                           if re.search(c_str, a_str):
-                              t_element = element_end.find_element(By.XPATH , './..')
-                              if t_element :
-                                 elements_l_t_end.append(t_element)
-                                 break
-                        if t_element :
-                           break
-
-                  #pass
+                     _element_img(elements_l_t_end , next_driver.driver)
+   
                   for element_end in elements_l_t_end :    
                      try :
                         href_srt = ""
                         href_srt = element_end.get_attribute('href')
-                        #o = urlparse(href_srt)
                         logger.debug("first_contact : " + href_srt)
-                        #self.driver.execute_script("window.open()") 
-                        #self.driver.switch_to.window(self.driver.window_handles[1])
-                        #time.sleep(1)   
-                        self.driver.get(href_srt)#直後のデータとURLが有効
-                        time.sleep(5)        #嘘だろ 
-                        html = self.driver.page_source
+                        scan_driver.driver.get(href_srt) #直後のデータとURLが有効
+                        time.sleep(4) 
+                        html = scan_driver.driver.page_source
                         t_f_d = self.target_form_detector(html)
                         if (2 <= t_f_d["p"])and(1 <= t_f_d["t"]) :
                            result = href_srt
                            break
-                     except selenium.common.exceptions.StaleElementReferenceException :
+                     #except selenium.common.exceptions.StaleElementReferenceException :
+                     except Exception :
                         break # さて
-                     
+
+                  scan_driver.browser_close   
+
                break
 
-            except selenium.common.exceptions.StaleElementReferenceException :
+            #except selenium.common.exceptions.StaleElementReferenceException :
+            except Exception :
                break # さて
-            
 
-
+      next_driver.browser_close         
+     
       return result
 
    def finish_it(self) -> bool :
@@ -371,8 +366,11 @@ class CoSpider(Arthropod):
          #f_s_r_href = o.scheme + '/' + hostname + f_s_r_href
          self.detected_url |= {"url" : f_s_r_href} 
          r_result = True
-      else:
-         r_result = self.recursive_async(self.url , self.url) # 結果が何であれ記録が必要
+      #else:
+         #r_result = self.recursive_async(self.url , self.url) # 結果が何であれ記録が必要
+         # 新たにフラット検索を導入。。。
+         # 再帰的検索などの跡地
+         #r_result = self.flat_search(self.url , self.url)
 
       if r_result : # 結果の保存はここで
          self.detected_url |= {"hostname" : hostname}
@@ -450,6 +448,18 @@ class CoSpider(Arthropod):
          self.__download_file_selenium(link_url)
  
       return self.detected
+
+
+   def flat_search(self , url , root_url):
+
+      result = ""
+      html = self.driver.page_source
+      soup = BeautifulSoup(html, 'html.parser')
+      links = [url.get('href') for url in soup.find_all('a')]
+
+
+
+      return result
 
 
    def get_result_list(self) -> list:
