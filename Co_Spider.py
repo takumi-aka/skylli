@@ -277,6 +277,10 @@ class CoSpider(Arthropod):
          return 
 
       result = ""
+
+      next_driver = None
+      scan_driver = None
+
       logger.debug("first_contact : " + self.url)
       self.driver.get(self.url)  #直後のデータとURLが有効 first first   GET
       
@@ -295,9 +299,10 @@ class CoSpider(Arthropod):
       if not elements_l_t : # お問い合わせが img である場合を見て走査
          _element_img(elements_l_t , self.driver)
 
-      next_driver =  Arthropod(save_file_name="" , breath = None , hedden_window = False)     
+       
 
-      if elements_l_t :         
+      if elements_l_t :  
+         next_driver =  Arthropod(save_file_name="" , breath = None , hedden_window = False)           
          for element in elements_l_t :    
             try :
                href_srt = element.get_attribute('href')
@@ -310,7 +315,7 @@ class CoSpider(Arthropod):
                t_f_d = self.target_form_detector(html)
                if (2 <= t_f_d["p"])and(1 <= t_f_d["t"]) :# 
                   result = href_srt
-                  break
+                  break # 301 for element in elements_l_t :   
 
                else: # 
 
@@ -325,9 +330,10 @@ class CoSpider(Arthropod):
                   if not elements_l_t_end :
                      _element_img(elements_l_t_end , next_driver.driver)
    
+                  href_srt = ""
                   for element_end in elements_l_t_end :    
                      try :
-                        href_srt = ""
+                        
                         href_srt = element_end.get_attribute('href')
                         logger.debug("first_contact : " + href_srt)
                         scan_driver.driver.get(href_srt) #直後のデータとURLが有効
@@ -336,25 +342,35 @@ class CoSpider(Arthropod):
                         t_f_d = self.target_form_detector(html)
                         if (2 <= t_f_d["p"])and(1 <= t_f_d["t"]) :
                            result = href_srt
-                           break
-                     #except selenium.common.exceptions.StaleElementReferenceException :
+                           break # 320 for element_end in elements_l_t_end :     
+                     #except selenium.common.exceptions.StaleElementReferenceException : # 細かくやっていく場合
                      except Exception :
-                        break # さて
+                        break # 320  for element_end in elements_l_t_end :    
 
-                  scan_driver.browser_close   
+                  if scan_driver :
+                     scan_driver.browser_close   
+                     scan_driver = None
+                  if result :
+                     break
 
-               break
-
-            #except selenium.common.exceptions.StaleElementReferenceException :
+            #except selenium.common.exceptions.StaleElementReferenceException : # 細かくやっていく場合
             except Exception :
-               break # さて
+               if scan_driver :
+                  scan_driver.browser_close   
+                  scan_driver = None
+               break  # 301 for element in elements_l_t :   
 
-      next_driver.browser_close         
+         if scan_driver :
+            scan_driver.browser_close   
+
+         next_driver.browser_close         
      
       return result
 
+
    def finish_it(self) -> bool :
       result = False
+      r_result = False
       if not self.url :
          return result
       o = urlparse(self.url)
