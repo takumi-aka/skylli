@@ -78,8 +78,8 @@ if __name__ == '__main__':
 
     frame2 = sg.Frame('',
     [
-        [sg.Text('狭間のインスタンス : ')] , [sg.Text('', key='-STAT2-')] , [sg.Text('', key='-STAT1-')] , [sg.Text('', key='-STAT-')]
-    ] , size=(base_frame_width, 32)  , key='-frame1-'
+        [sg.Text('狭の間 : ') , sg.Text('', key='-STAT2-') , sg.Text('', key='-STAT1-')] , [sg.Text('             ') , sg.Text('', key='-STAT-')]
+    ] , size=(base_frame_width, 64)  , key='-frame1-'
     )
 
     frame3 = sg.Frame('',
@@ -207,7 +207,7 @@ if __name__ == '__main__':
                     try:       
                         result = {"clean_up" : False}
                         if param_dic :
-                            search_result_all |= param_dic # kokokara 20221121
+                            search_result_all |= param_dic # 
                             update_list = list()
                             for key_url , value_title in param_dic.items():#その検索ワードの成果だけを表示させたいためparam_dicにしてある
                                 update_list += [[value_title , key_url]]
@@ -253,13 +253,17 @@ if __name__ == '__main__':
                         result = {"clean_up" : False}
                         if param_list :
 
+                            window["-STAT2-"].update(str(param_list[0]))
+                            window['-STAT1-'].update(str(param_list[1]))
+                            window['-STAT-'].update(str(param_list[2]))
+
                             f_name = save_file_name
                             if not f_name :  
                                 f_name = "eldenring"
                             f = open(f_name + ".csv" , mode="a" , newline="", encoding="UTF-8")                       
-                            if param_list :    
-                                writer = csv.writer(f)                
-                                writer.writerow(param_list)
+                              
+                            writer = csv.writer(f)                
+                            writer.writerow(param_list)
 
                             result = {"clean_up" : True}     
                     finally:
