@@ -54,53 +54,54 @@ if __name__ == '__main__':
     T = [[]]
     H = ['Title','URL']
 
-    base_frame_width = 720
+    base_frame_width = 1024
     search_word_list = []
+    frame0 = sg.Frame('',
+        [
+            [sg.Text('検索ワード :'), sg.Input(key='-SEARCH-SHRIMP-') , sg.Button('検索',font=('',11) , key = "-g-search-start-"),  sg.Button('検索終了',font=('',11) , key = "-g-search-break-" )],
+            [sg.Text('連続検索ワード :'), sg.Listbox ( search_word_list , size =(24 , 5) , key='-search-word-list-box-') , sg.Button('追加',font=('',11)),  sg.Button('削除',font=('',11)),sg.Button('リストの読み込み',font=('',11)), sg.Button('リストの保存',font=('',11))],
+            [sg.Text('連続検索 :') , sg.Button('検索',font=('',11) , key = "-g-search-words-start-") , sg.Button('検索終了',font=('',11)  , key = "-g-search-words-break-" )],
+            [sg.Text('passing :'),sg.Text('', key='-CURRENT-TEXT-SHRIMP-')],
+            [ sg.Table (T , headings=H , auto_size_columns = False , vertical_scroll_only = True ,expand_x=True,
+                #def_col_width=32 ,
+                col_widths=[45, 38],
+                num_rows=9 ,
+                display_row_numbers= True ,
+                font =('',10) ,
+                header_text_color= '#0000ff' ,
+                header_background_color= '#cccccc',
+                key='-TABLE-'
+                ) , sg.Button('CSVを読み込む',font=('',11)), sg.Button('CSVへ保存',font=('',11))] ,
+            [sg.Button('サイト内検索',font=('',12) ,  key = "-spider-start-"),  sg.Button('検索終了',font=('',11) , key = "-spider-break-" ) , sg.Button('終了')],
+            [sg.Text('検出した情報 :', key='-ACT-')],                
+            [ sg.Table (T , headings=H , auto_size_columns = False , vertical_scroll_only = True ,expand_x=True,     
+                col_widths=[45, 38],
+                num_rows=9 ,
+                display_row_numbers= True ,
+                font =('',10) ,
+                header_text_color= '#0000ff' ,
+                header_background_color= '#cccccc',
+                key='-TABLE1-')]
+        ] , size=(base_frame_width, 528) , key='-frame0-'
+    )
+    
     frame1 = sg.Frame('',
-    [
-        [sg.Text('検索ワード :'), sg.Input(key='-SEARCH-SHRIMP-') , sg.Button('エビ',font=('',11)),  sg.Button('エビ終了',font=('',11))],
-        [sg.Text('連続検索ワード :'), sg.Listbox ( search_word_list , size =(24 , 5) , key='-search-word-list-box-') , sg.Button('追加',font=('',11)),  sg.Button('削除',font=('',11)),sg.Button('リストの読み込み',font=('',11)), sg.Button('リストの保存',font=('',11))],
-        [sg.Text('連続検索 :') , sg.Button('エビs',font=('',11)), sg.Button('エビs終了',font=('',11))],
-        [sg.Text('passing :'),sg.Text('', key='-CURRENT-TEXT-SHRIMP-')],
-        [ sg.Table (T , headings=H , auto_size_columns = False , vertical_scroll_only = True ,expand_x=True,
-            #def_col_width=32 ,
-            col_widths=[45, 38],
-            num_rows=9 ,
-            display_row_numbers= True ,
-            font =('',10) ,
-            header_text_color= '#0000ff' ,
-            header_background_color= '#cccccc',
-            key='-TABLE-'
-        )],
-        [sg.Button('CSVを読み込む',font=('',11)), sg.Button('CSVへ保存',font=('',11))]
-    ] , size=(base_frame_width, 376) , key='-frame0-'
+        [
+            [sg.Text(' 検出されたデータ : ') ],
+            [ sg.Text('', key='-STAT2-') ], 
+            [sg.Text(' domain : ',font=('',11)) , sg.Text('', key='-STAT1-')], 
+            [sg.Text(' location : ') , sg.Text('', key='-STAT-')]
+        ] , size=(base_frame_width, 128)  , key='-frame1-'
     )
-
-    frame2 = sg.Frame('',
-    [
-        [sg.Text('狭の間 : ') , sg.Text('', key='-STAT2-') , sg.Text('', key='-STAT1-')] , [sg.Text('             ') , sg.Text('', key='-STAT-')]
-    ] , size=(base_frame_width, 64)  , key='-frame1-'
-    )
-
-    frame3 = sg.Frame('',
-    [
-                [sg.Button('蜘蛛',font=('',12)),  sg.Button('蜘蛛終了',font=('',11)) , sg.Button('終了')],
-                [sg.Text('', key='-ACT-')],                
-                [sg.Listbox(values="", size=(120, 9), expand_x=True, key='-LIST-', enable_events=True)]                
-    ] , size=(base_frame_width, 220)  , key='-frame2-'
-    )
-
-
 
     layout = [
-                [frame1] , [frame2] ,[frame3] 
+                [frame0] , [frame1] 
             ]
 
     window = sg.Window('ui_sample_skylli', layout , resizable=True,  finalize=True )
     window["-search-word-list-box-"].bind('<Double-Button-1>' , "+-double click-")  #-Button
     window["-frame0-"].expand(expand_x=True, expand_y=False)
     window["-frame1-"].expand(expand_x=True, expand_y=False)
-    window["-frame2-"].expand(expand_x=True, expand_y=False)
 
 
     def _search_word_load() :#ファイルからロード
@@ -280,7 +281,6 @@ if __name__ == '__main__':
             return 
 
         match swt:
-#stringなのかチェックしてない
             case "swt_shrimp" : 
                 if (type(param) is str) and (param) :
                     with ThreadPoolExecutor(max_workers=1, initializer=initializer, initargs=('pool',)) as executor: 
@@ -297,7 +297,6 @@ if __name__ == '__main__':
                         for future in concurrent.futures.as_completed(futures):
                             result = future.result() 
 
-#この間より上下にあるCASEはある数字以外を除いて、全てお無しなのであと一つ増えそうなら入れ子関数にしまう。
 
             case "swt_spider" : 
                 if (type(param) is list) and (0 < len(param)):               
@@ -309,6 +308,9 @@ if __name__ == '__main__':
                             result = future.result() 
 
         worker_thread_with = None
+
+        #match 上記からのレザルト処理 resultから得る
+
         return 
 
 
@@ -318,14 +320,18 @@ if __name__ == '__main__':
         if event == sg.WIN_CLOSED or event == '終了': # スレッドセーフで終了するように main(any time)
             break
 
-        elif event == 'エビs':#subthread
+        elif event == '-g-search-words-start-':#subthread
             if (shrimp_stat == thread_mode['noop']) and (0 < len(search_word_list)) and (worker_thread_with is None) :
                 executor = ThreadPoolExecutor(max_workers=1)
                 shrimp_stat = thread_mode['active'] 
                 go_on = True                 
                 worker_thread_with = executor.submit(skylli_worker_thread_with , 'swt_shrimps' , search_word_list)
              
-        elif event == '蜘蛛':#subthread   # list からdic に代わってるので動作不可 
+        elif event == '-g-search-words-break-':#subthread 
+
+            pass
+
+        elif event == '-spider-start-':#subthread   # list からdic に代わってるので動作不可 
             if (0 < len(search_result_all)) and (worker_thread_with is None) :
                 executor = ThreadPoolExecutor(max_workers=1)
                 url_list = list() 
@@ -336,7 +342,7 @@ if __name__ == '__main__':
                     go_on = True 
                     worker_thread_with = executor.submit(skylli_worker_thread_with , 'swt_spider' , url_list)
 
-        elif event == 'エビ': #subthread
+        elif event == '-g-search-start-': # 検索
             if (shrimp_stat == thread_mode['noop'] )  and (worker_thread_with is None) :
                 s_str =  window['-SEARCH-SHRIMP-'].get()
                 if s_str : #スペースだろうが検索するよ 正規化はしない
@@ -344,9 +350,8 @@ if __name__ == '__main__':
                     shrimp_stat = thread_mode['active'] 
                     go_on = True                     
                     worker_thread_with = executor.submit(skylli_worker_thread_with , 'swt_shrimp' , s_str)
-
                 
-        elif event == 'エビ終了': #main(any time)
+        elif event == '-g-search-break-': # 検索終了 main(any time)
             if shrimp_stat == thread_mode['active'] :
                 go_on = False #発生したスレッドの処理を終了に促す
                 shrimp_executor = None
@@ -363,6 +368,7 @@ if __name__ == '__main__':
                 search_word_list.remove(values['-search-word-list-box-'][0]) 
                 window ['-search-word-list-box-'].Update( search_word_list )
 
+
         elif event == 'リストの読み込み': #main(any time)
             _search_word_load()
             window ['-search-word-list-box-'].Update( search_word_list )
@@ -377,15 +383,13 @@ if __name__ == '__main__':
             _csv_save()
 
 
-
-
         elif event == '-search-word-list-box-+-double click-': #main(any time)
             if values['-search-word-list-box-']:
                 val = values['-search-word-list-box-'][0] 
                 window ['-SEARCH-SHRIMP-'].Update(val)
 
 
-        elif event == '蜘蛛終了': #main(any time)
+        elif event == '-spider-break-': #main(any time)
             window.refresh()
 
         elif event == '決定':
