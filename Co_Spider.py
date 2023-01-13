@@ -31,6 +31,30 @@ logger.addHandler(handler)
 logger.propagate = False
 
 
+class CoSpider_result():
+   result_l = [[]]
+
+   def __init__(self):
+      
+      return
+
+   def add_r(self,param_r_l = list() , title_r_s = "" , domain_r_s = "" , location_r_s = "") : 
+      #
+      if 3 == len(param_r_l) :
+
+         return True
+
+      if (title_r_s) and (domain_r_s) and (location_r_s) :
+
+         result_l += [title_r_s , domain_r_s , location_r_s]
+
+         return True
+
+      return False
+
+   #    
+   #CoSpider_result end   
+
 class CoSpider(Arthropod):
    #needless = "(twitter|instagram|facebook|youtube)"
    power_word = ["問い合" , "お問合"]
@@ -391,6 +415,7 @@ class CoSpider(Arthropod):
       if r_result : # 結果の保存はここで
          self.detected_url |= {"hostname" : hostname}
          result = True 
+         self.detected = True
          self.save_to_csv_a()  
       self.browser_close()
 
@@ -483,7 +508,7 @@ class CoSpider(Arthropod):
       if not self.detected :
          return result
       result = [self.detected_url["title"] , self.detected_url["hostname"] , self.detected_url["url"], str(id(self)) , str(id(self.driver))]  
-
+      
       return result
 
 

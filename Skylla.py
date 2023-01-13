@@ -13,7 +13,7 @@ import time
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium import webdriver 
 from Co_Shrimp import GoogleShrimp 
-from Co_Spider import CoSpider 
+from Co_Spider import CoSpider , CoSpider_result
 
 
 worker_thread_with = None
@@ -29,6 +29,7 @@ shrimp_executor = None #coshrimp実行の為のサブスレッド
 __lock = Lock() #クリティカルセクション
 go_on = True
 search_result_all = {}
+last_result_object = None
 
 def initializer(string):
     print(f'{string} init thread!')
@@ -254,7 +255,7 @@ if __name__ == '__main__':
                         result = {"clean_up" : False}
                         if param_list :
 
-                            window["-STAT2-"].update(str(param_list[0]))
+                            window["-STAT2-"].update(str(param_list[0])) # クラスを持たざるMAIN的エスケープ
                             window['-STAT1-'].update(str(param_list[1]))
                             window['-STAT-'].update(str(param_list[2]))
 
@@ -276,9 +277,12 @@ if __name__ == '__main__':
 
 
     def skylli_worker_thread_with(swt , param):#ワーカースレッドが終わるまで待ってるスレッド  状態遷移の主軸に
-        global worker_thread_with
-        if worker_thread_with is None :
+        global worker_thread_with , last_result_object 
+
+        if worker_thread_with is None : #以下の３つ(match)の処理、何れかの一つしか実行できないようにしている。　つもり。            
             return 
+
+        result = ""
 
         match swt:
             case "swt_shrimp" : 
@@ -300,19 +304,30 @@ if __name__ == '__main__':
 
             case "swt_spider" : 
                 if (type(param) is list) and (0 < len(param)):               
+                    #　各クラスに用意してあるレザルトを入れておくインスタンスを作成する
+                    CS_result = CoSpider_result()
+                    last_result_object = CS_result
+
                     with ThreadPoolExecutor(max_workers=1, initializer=initializer, initargs=('pool',)) as executor:   #ワーカースレッド数
                         for url in param:
                             futures.append(executor.submit(spider_worker, url))
 
-                        for future in concurrent.futures.as_completed(futures):
-                            result = future.result() 
+                        for future in concurrent.futures.as_completed(futures): #処理が終わったスレッドが都度検出される。　それの終了待ちループであるようだが この記述で実装されてしまうのは謎だ。
+                            result = future.result()  
+                            if 3 <= len(result) :#問題あり
+                                CS_result.add_r(result[0] , result[1]  , result[2])#  検索処理の結果を保存しておくオブジェクトを作り、そこに追加していく。
+
 
         worker_thread_with = None
 
         #match 上記からのレザルト処理 resultから得る
+        match result :
+            case "great" :
+                pass
 
         return 
-
+        
+        # skylli_worker_thread_with end 
 
     futures = []
     while True:
@@ -338,7 +353,7 @@ if __name__ == '__main__':
                 for url in search_result_all.keys() :
                     url_list += [url]
                 if url_list:
-                    shrimp_stat = thread_mode['active'] 
+                    spider_stat = thread_mode['active'] 
                     go_on = True 
                     worker_thread_with = executor.submit(skylli_worker_thread_with , 'swt_spider' , url_list)
 

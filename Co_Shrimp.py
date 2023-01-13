@@ -15,8 +15,10 @@ from Arthropod_Base import Arthropod
 # 出力  URLのリスト->CSVとインスタンス両方
 
 
+class GoogleShrimp_result():
 
-
+   pass
+   #GoogleShrimp_result end   
 class GoogleShrimp(Arthropod) :
   
     search_word = ""
@@ -26,7 +28,6 @@ class GoogleShrimp(Arthropod) :
         self.search_word = search_word
 
         return 
-
 
     def boil(self) :
         self.driver.get('https://google.com/search?q=' + self.search_word  + '&filter=0')

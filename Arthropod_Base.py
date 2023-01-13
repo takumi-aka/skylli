@@ -12,6 +12,7 @@ logger.propagate = False
 
 from threading import Lock
 
+
 class Arthropod :
     lucky_urls = "(docs.google.com/forms|forms.gle)"
     needless = "(tfm.co.jp|okinawatimes.co.jp|autolook.pt|moneypost.jp|carsensor.net|tranbi.com|jmd.co.jp|fnn.jp|ameblo.jp|kira-boshi.jp|yomiuri.co.jp|itmedia.co.jp|nikkan.co.jp|dmm.com|nikkei.com|nhk.or.jp|vorkers.com|diamond.jp|books.google|itp.ne.jp|job.rikunabi.com|doda.jp|tsukulink.net|e-shops|mapion|twitter|instagram|facebook|asahi|youtube|indeed|baseconnect|yahoo|townpage|domonet|news|docomo|amazom|kakaku|oricon|wikipedia|tiktok|tokubai|seeing-japan|satomono|navi)"
