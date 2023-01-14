@@ -50,16 +50,17 @@ if __name__ == '__main__':
     multiprocessing.set_start_method('spawn', True)
     update_chrome_install() 
     
-    sg.theme('DarkTeal')
+    sg.theme('LightBrown5')
 
     T = [[]]
     H = ['Title','URL']
+    H1 = ['Title','Domain','Location']
 
     base_frame_width = 1024
     search_word_list = []
     frame0 = sg.Frame('',
         [
-            [sg.Text('検索ワード :'), sg.Input(key='-SEARCH-SHRIMP-') , sg.Button('検索',font=('',11) , key = "-g-search-start-"),  sg.Button('検索終了',font=('',11) , key = "-g-search-break-" )],
+            [sg.Text('検索ワード :'), sg.Input(key='-SEARCH-SHRIMP-') , sg.Button('検索',font=('',11) , key = "-g-search-start-"),  sg.Button('検索終了',font=('',11) , key = "-g-search-break-" ) , sg.Button('決定',font=('',11)) ],
             [sg.Text('連続検索ワード :'), sg.Listbox ( search_word_list , size =(24 , 5) , key='-search-word-list-box-') , sg.Button('追加',font=('',11)),  sg.Button('削除',font=('',11)),sg.Button('リストの読み込み',font=('',11)), sg.Button('リストの保存',font=('',11))],
             [sg.Text('連続検索 :') , sg.Button('検索',font=('',11) , key = "-g-search-words-start-") , sg.Button('検索終了',font=('',11)  , key = "-g-search-words-break-" )],
             [sg.Text('passing :'),sg.Text('', key='-CURRENT-TEXT-SHRIMP-')],
@@ -75,8 +76,8 @@ if __name__ == '__main__':
                 ) , sg.Button('CSVを読み込む',font=('',11)), sg.Button('CSVへ保存',font=('',11))] ,
             [sg.Button('サイト内検索',font=('',12) ,  key = "-spider-start-"),  sg.Button('検索終了',font=('',11) , key = "-spider-break-" ) , sg.Button('終了')],
             [sg.Text('検出した情報 :', key='-ACT-')],                
-            [ sg.Table (T , headings=H , auto_size_columns = False , vertical_scroll_only = True ,expand_x=True,     
-                col_widths=[45, 38],
+            [ sg.Table (T , headings=H1 , auto_size_columns = False , vertical_scroll_only = True ,expand_x=True,     
+                col_widths=[45, 20, 40],
                 num_rows=9 ,
                 display_row_numbers= True ,
                 font =('',10) ,
@@ -92,7 +93,7 @@ if __name__ == '__main__':
             [ sg.Text('', key='-STAT2-') ], 
             [sg.Text(' domain : ',font=('',11)) , sg.Text('', key='-STAT1-')], 
             [sg.Text(' location : ') , sg.Text('', key='-STAT-')]
-        ] , size=(base_frame_width, 128)  , key='-frame1-'
+        ] , size=(base_frame_width, 120)  , key='-frame1-'
     )
 
     layout = [
@@ -308,22 +309,20 @@ if __name__ == '__main__':
                     CS_result = CoSpider_result()
                     last_result_object = CS_result
 
-                    with ThreadPoolExecutor(max_workers=1, initializer=initializer, initargs=('pool',)) as executor:   #ワーカースレッド数
+                    with ThreadPoolExecutor(max_workers=4, initializer=initializer, initargs=('pool',)) as executor:   #ワーカースレッド数
                         for url in param:
                             futures.append(executor.submit(spider_worker, url))
 
                         for future in concurrent.futures.as_completed(futures): #処理が終わったスレッドが都度検出される。　それの終了待ちループであるようだが この記述で実装されてしまうのは謎だ。
                             result = future.result()  
-                            if 3 <= len(result) :#問題あり
-                                CS_result.add_r(result[0] , result[1]  , result[2])#  検索処理の結果を保存しておくオブジェクトを作り、そこに追加していく。
+                            if 3 <= len(result) :#問題あり リテラル
+                                CS_result.add_r(title_r_s = result[0] , domain_r_s = result[1] , location_r_s = result[2]) #  検索処理の結果を保存しておくオブジェクトを作り、そこに追加していく。
+
+                        # 結果をUIに反映
+                        window['-TABLE1-'].update(CS_result.get_r_list_table())
 
 
         worker_thread_with = None
-
-        #match 上記からのレザルト処理 resultから得る
-        match result :
-            case "great" :
-                pass
 
         return 
         
@@ -409,7 +408,7 @@ if __name__ == '__main__':
 
         elif event == '決定':
 
-            sg.Multiline.Update()   
+            sg.preview_all_look_and_feel_themes()
 
 
     window.close()

@@ -32,25 +32,25 @@ logger.propagate = False
 
 
 class CoSpider_result():
-   result_l = [[]]
-
+   
    def __init__(self):
-      
+      self.__result_l = []
       return
 
-   def add_r(self,param_r_l = list() , title_r_s = "" , domain_r_s = "" , location_r_s = "") : 
+   def add_r(self, param_r_l = list() , title_r_s = "" , domain_r_s = "" , location_r_s = "") : 
       #
       if 3 == len(param_r_l) :
-
          return True
 
       if (title_r_s) and (domain_r_s) and (location_r_s) :
-
-         result_l += [title_r_s , domain_r_s , location_r_s]
-
+         self.__result_l.append([title_r_s , domain_r_s , location_r_s])
          return True
 
       return False
+
+   def get_r_list_table(self) :
+      return copy.deepcopy(self.__result_l)
+
 
    #    
    #CoSpider_result end   
@@ -66,7 +66,7 @@ class CoSpider(Arthropod):
    contact_href_into_words = ['contact','toiawase','otoiawase','faq','inquiry']
 
    ext = ".csv"
-   test_files = {} # {[url] : bool}
+   accepted_urls = {} # {[url] : bool}
    #detected_url = {} # {'title : str , ''url' : str , 'savepath' : str}
    detected = False
 
@@ -331,6 +331,11 @@ class CoSpider(Arthropod):
             try :
                href_srt = element.get_attribute('href')
 
+               if href_srt in self.accepted_urls:
+                  continue
+               else :
+                  self.accepted_urls[href_srt] = True
+
                logger.debug("first_contact : " + href_srt)
                next_driver.driver.get(href_srt)#直後のデータとURLが有効 
                time.sleep(4)         
@@ -359,6 +364,12 @@ class CoSpider(Arthropod):
                      try :
                         
                         href_srt = element_end.get_attribute('href')
+
+                        if href_srt in self.accepted_urls:
+                           continue
+                        else :
+                           self.accepted_urls[href_srt] = True
+
                         logger.debug("first_contact : " + href_srt)
                         scan_driver.driver.get(href_srt) #直後のデータとURLが有効
                         time.sleep(4) 
@@ -442,10 +453,10 @@ class CoSpider(Arthropod):
       if True == r_selenium["needless"] : return result #不要なURLである印がある
       savepath = r_selenium["savepath"] 
       if savepath is None: return result
-      if savepath in self.test_files: return result # 既に辞書にあるURLである
+      if savepath in self.accepted_urls: return result # 既に辞書にあるURLである
       if self.detected : return self.detected 
 
-      self.test_files[savepath] = True
+      self.accepted_urls[savepath] = True
       logger.debug("recursiv_sync=", url)
 
       #encodingは各サイトで幾つか試す必要があるだろう  
