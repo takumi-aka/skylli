@@ -12,7 +12,7 @@ import tkinter as tk
 import time
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium import webdriver 
-from Co_Shrimp import GoogleShrimp 
+from Co_Shrimp import GoogleShrimp , GoogleShrimp_result
 from Co_Spider import CoSpider , CoSpider_result
 
 
@@ -50,7 +50,7 @@ if __name__ == '__main__':
     multiprocessing.set_start_method('spawn', True)
     update_chrome_install() 
     
-    sg.theme('LightBrown5')
+    sg.theme('LightGreen4')
 
     T = [[]]
     H = ['Title','URL']
@@ -64,6 +64,7 @@ if __name__ == '__main__':
             [sg.Text('連続検索ワード :'), sg.Listbox ( search_word_list , size =(24 , 5) , key='-search-word-list-box-') , sg.Button('追加',font=('',11)),  sg.Button('削除',font=('',11)),sg.Button('リストの読み込み',font=('',11)), sg.Button('リストの保存',font=('',11))],
             [sg.Text('連続検索 :') , sg.Button('検索',font=('',11) , key = "-g-search-words-start-") , sg.Button('検索終了',font=('',11)  , key = "-g-search-words-break-" )],
             [sg.Text('passing :'),sg.Text('', key='-CURRENT-TEXT-SHRIMP-')],
+            #検索結果 URL
             [ sg.Table (T , headings=H , auto_size_columns = False , vertical_scroll_only = True ,expand_x=True,
                 #def_col_width=32 ,
                 col_widths=[45, 38],
@@ -73,7 +74,14 @@ if __name__ == '__main__':
                 header_text_color= '#0000ff' ,
                 header_background_color= '#cccccc',
                 key='-TABLE-'
-                ) , sg.Button('CSVを読み込む',font=('',11)), sg.Button('CSVへ保存',font=('',11))] ,
+                ) , sg.Button('CSVを読み込む',font=('',11)), sg.Button('CSVへ保存',font=('',11))] 
+            #現在コンタクトフォームの検索結果
+
+        ] , size=(base_frame_width, 332) , key='-frame0-'
+    )
+    
+    T1 = sg.Tab('ContactForm' , 
+        [
             [sg.Button('サイト内検索',font=('',12) ,  key = "-spider-start-"),  sg.Button('検索終了',font=('',11) , key = "-spider-break-" ) , sg.Button('終了')],
             [sg.Text('検出した情報 :', key='-ACT-')],                
             [ sg.Table (T , headings=H1 , auto_size_columns = False , vertical_scroll_only = True ,expand_x=True,     
@@ -84,10 +92,28 @@ if __name__ == '__main__':
                 header_text_color= '#0000ff' ,
                 header_background_color= '#cccccc',
                 key='-TABLE1-')]
-        ] , size=(base_frame_width, 528) , key='-frame0-'
+        ]
     )
-    
-    frame1 = sg.Frame('',
+
+    T2 = sg.Tab('place' , 
+        [
+            [sg.Text(' 検出されたデータ : ') ],
+            [ sg.Text('', key='-STAT2-') ], 
+            [sg.Text(' domain : ',font=('',11)) , sg.Text('', key='-STAT1-')], 
+            [sg.Text(' location : ') , sg.Text('', key='-STAT-')]
+        ]
+    )
+
+
+    TL = [[sg.TabGroup([[T1,T2]]
+        , size=(base_frame_width, 240)  , key='-tll-'
+    )]]
+
+    frame1 = sg.Frame('', TL
+        , size=(base_frame_width, 240)  , key='-frame1-'
+    )
+
+    frame2 = sg.Frame('',
         [
             [sg.Text(' 検出されたデータ : ') ],
             [ sg.Text('', key='-STAT2-') ], 
@@ -97,7 +123,7 @@ if __name__ == '__main__':
     )
 
     layout = [
-                [frame0] , [frame1] 
+                [frame0] , [frame1] , [frame2] 
             ]
 
     window = sg.Window('ui_sample_skylli', layout , resizable=True,  finalize=True )
@@ -191,9 +217,10 @@ if __name__ == '__main__':
 
         return
 
+
     def shrimp_worker(search_word):
         coshrimp = GoogleShrimp(search_word=search_word , save_file_name="検索結果.csv" , breath = shrimp_breather) 
-        return coshrimp.boil()
+        return coshrimp.boil() 
 
     def shrimp_breather(switch , save_file_name="" , param_dic={}, current_text="") : # 戻り値 {}
         global shrimp_stat , search_result_all , go_on
@@ -211,13 +238,13 @@ if __name__ == '__main__':
                         result = {"clean_up" : False}
                         if param_dic :
                             search_result_all |= param_dic # 
+
                             update_list = list()
                             for key_url , value_title in param_dic.items():#その検索ワードの成果だけを表示させたいためparam_dicにしてある
-                                update_list += [[value_title , key_url]]
+                                update_list += [[value_title , key_url]] # 廃止候補
+                            #window['-TABLE-'].update(update_list)
 
-                            window['-TABLE-'].update(update_list)
-
-                            f_name = save_file_name
+                            f_name = save_file_name # ファイルに保存するルーチンは各result格納クラスに移動させる
                             if not f_name :  
                                 f_name = "nioh.csv"
                             f = open(f_name , mode="a" , newline="", encoding="UTF-8")     
@@ -238,7 +265,6 @@ if __name__ == '__main__':
         cospider = CoSpider("nioh" , url=url , breath=spider_breather , hedden_window=False) 
         cospider.finish_it()
         return cospider.get_result_list()
-
 
     def spider_breather(switch , save_file_name="" , param_list=list(), current_text="") : # 戻り値 {}
         global shrimp_stat , search_result_all , go_on
@@ -288,6 +314,7 @@ if __name__ == '__main__':
         match swt:
             case "swt_shrimp" : 
                 if (type(param) is str) and (param) :
+
                     with ThreadPoolExecutor(max_workers=1, initializer=initializer, initargs=('pool',)) as executor: 
                         futures.append(executor.submit(shrimp_worker, param)) 
                         for future in concurrent.futures.as_completed(futures):# キューではない
@@ -295,6 +322,8 @@ if __name__ == '__main__':
 
             case "swt_shrimps" : 
                 if (type(param) is list) and (0 < len(param)) :
+                    GS_results =  GoogleShrimp_result()
+                    last_result_object = GS_results
                     with ThreadPoolExecutor(max_workers=1, initializer=initializer, initargs=('pool',)) as executor:   
                         for search_word in param:
                             futures.append(executor.submit(shrimp_worker, search_word))
@@ -302,14 +331,20 @@ if __name__ == '__main__':
                         for future in concurrent.futures.as_completed(futures):
                             result = future.result() 
 
+                        if 2 <= len(result) : #
+                            GS_results.add_r(title_r_s = result[0] , location_r_s = result[1])
+
+
+                        window['-TABLE-'].update(GS_results.get_r_list_table())
+
 
             case "swt_spider" : 
                 if (type(param) is list) and (0 < len(param)):               
                     #　各クラスに用意してあるレザルトを入れておくインスタンスを作成する
-                    CS_result = CoSpider_result()
-                    last_result_object = CS_result
+                    CS_result = CoSpider_result() 
+                    last_result_object = CS_result # 上書でよい
 
-                    with ThreadPoolExecutor(max_workers=4, initializer=initializer, initargs=('pool',)) as executor:   #ワーカースレッド数
+                    with ThreadPoolExecutor(max_workers=1, initializer=initializer, initargs=('pool',)) as executor:   #ワーカースレッド数
                         for url in param:
                             futures.append(executor.submit(spider_worker, url))
 
@@ -328,6 +363,7 @@ if __name__ == '__main__':
         
         # skylli_worker_thread_with end 
 
+    #イベントループ
     futures = []
     while True:
         event, values = window.read()
@@ -359,7 +395,7 @@ if __name__ == '__main__':
         elif event == '-g-search-start-': # 検索
             if (shrimp_stat == thread_mode['noop'] )  and (worker_thread_with is None) :
                 s_str =  window['-SEARCH-SHRIMP-'].get()
-                if s_str : #スペースだろうが検索するよ 正規化はしない
+                if s_str : #スペースだろうが検索する 正規化はしない
                     executor = ThreadPoolExecutor(max_workers=1)
                     shrimp_stat = thread_mode['active'] 
                     go_on = True                     
@@ -410,9 +446,7 @@ if __name__ == '__main__':
 
             sg.preview_all_look_and_feel_themes()
 
-
     window.close()
-
 
     exit()
     

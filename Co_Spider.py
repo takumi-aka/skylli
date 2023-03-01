@@ -51,9 +51,8 @@ class CoSpider_result():
    def get_r_list_table(self) :
       return copy.deepcopy(self.__result_l)
 
-
-   #    
    #CoSpider_result end   
+   
 
 class CoSpider(Arthropod):
    #needless = "(twitter|instagram|facebook|youtube)"

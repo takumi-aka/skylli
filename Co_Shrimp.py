@@ -5,7 +5,7 @@ from selenium.webdriver.common.by import By
 
 from urllib.parse import urlparse
 
-import csv ,random , re , time
+import csv ,random , re , time , copy
 
 from threading import Lock
 from Arthropod_Base import Arthropod
@@ -17,8 +17,25 @@ from Arthropod_Base import Arthropod
 
 class GoogleShrimp_result():
 
-   pass
-   #GoogleShrimp_result end   
+    def __init__(self):
+        self.__result_l = []
+        return
+
+    def add_r(self, param_r_l = list() , title_r_s = "" , location_r_s = "") : 
+        if 2 == len(param_r_l) :
+            return True
+
+        if (title_r_s) and (location_r_s) :
+            self.__result_l.append([title_r_s  , location_r_s])
+            return True
+
+        return False
+
+    def get_r_list_table(self) :
+        return copy.deepcopy(self.__result_l)
+
+    #GoogleShrimp_result end   
+
 class GoogleShrimp(Arthropod) :
   
     search_word = ""
@@ -49,11 +66,10 @@ class GoogleShrimp(Arthropod) :
                 elem_a = elem_h3.find_element(By.XPATH , '..')  
                 o = urlparse(elem_a.get_attribute('href'))
                 host_url = elem_a.get_attribute('href')
-                #host_url = o.scheme + "://" + o.hostname
                 if not re.search(self.needless , host_url):
                     if not re.search(self.negative_multibyte_words , elem_h3.text):
                         r_list += [[elem_h3.text , host_url]]
-                        r_dic.update({host_url : elem_h3.text})
+                        r_dic.update({host_url : elem_h3.text}) # URLをキーに
                 print(elem_h3.text)
                 print(elem_a.get_attribute('href'))
                 self.breather("breath" , current_text=elem_h3.text+ " : " +host_url)
