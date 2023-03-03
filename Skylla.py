@@ -11,6 +11,7 @@ import tkinter as tk
 
 import time
 from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.chrome import service as fs
 from selenium import webdriver 
 from Co_Shrimp import GoogleShrimp , GoogleShrimp_result
 from Co_Spider import CoSpider , CoSpider_result
@@ -38,8 +39,15 @@ def initializer(string):
 def update_chrome_install() :
     options = webdriver.ChromeOptions()
     options.add_argument('--headless')
-    webdriver.Chrome(ChromeDriverManager().install(), options=options)
+
+    path = ChromeDriverManager().install() 
+    print(f'{path} init thread!')
+    chrome_service = fs.Service(executable_path=path) 
+    webdriver.Chrome(service=chrome_service, options=options)
     webdriver.Chrome.close
+
+    #webdriver.Chrome(ChromeDriverManager().install(), options=options)
+    #webdriver.Chrome.close
     return
 
 
@@ -220,6 +228,7 @@ if __name__ == '__main__':
 
     def shrimp_worker(search_word):
         coshrimp = GoogleShrimp(search_word=search_word , save_file_name="検索結果.csv" , breath = shrimp_breather) 
+        print(f'{id(coshrimp)} shrimp_worker 231')
         return coshrimp.boil() 
 
     def shrimp_breather(switch , save_file_name="" , param_dic={}, current_text="") : # 戻り値 {}
@@ -242,7 +251,7 @@ if __name__ == '__main__':
                             update_list = list()
                             for key_url , value_title in param_dic.items():#その検索ワードの成果だけを表示させたいためparam_dicにしてある
                                 update_list += [[value_title , key_url]] # 廃止候補
-                            #window['-TABLE-'].update(update_list)
+                            window['-TABLE-'].update(update_list)
 
                             f_name = save_file_name # ファイルに保存するルーチンは各result格納クラスに移動させる
                             if not f_name :  
@@ -306,6 +315,7 @@ if __name__ == '__main__':
     def skylli_worker_thread_with(swt , param):#ワーカースレッドが終わるまで待ってるスレッド  状態遷移の主軸に
         global worker_thread_with , last_result_object 
 
+        print(f'{id(swt)} skylli_worker_thread_with 318')
         if worker_thread_with is None : #以下の３つ(match)の処理、何れかの一つしか実行できないようにしている。　つもり。            
             return 
 
@@ -324,7 +334,9 @@ if __name__ == '__main__':
                 if (type(param) is list) and (0 < len(param)) :
                     GS_results =  GoogleShrimp_result()
                     last_result_object = GS_results
+                    print(f'{id(last_result_object)} swt_shrimps 335')
                     with ThreadPoolExecutor(max_workers=1, initializer=initializer, initargs=('pool',)) as executor:   
+
                         for search_word in param:
                             futures.append(executor.submit(shrimp_worker, search_word))
 
@@ -372,10 +384,14 @@ if __name__ == '__main__':
 
         elif event == '-g-search-words-start-':#subthread
             if (shrimp_stat == thread_mode['noop']) and (0 < len(search_word_list)) and (worker_thread_with is None) :
+                print(f'{event} init thread!')
                 executor = ThreadPoolExecutor(max_workers=1)
+                print(f'{id(executor)} init thread!')
                 shrimp_stat = thread_mode['active'] 
+                
                 go_on = True                 
                 worker_thread_with = executor.submit(skylli_worker_thread_with , 'swt_shrimps' , search_word_list)
+                print(f'{id(worker_thread_with)} init thread!')
              
         elif event == '-g-search-words-break-':#subthread 
 

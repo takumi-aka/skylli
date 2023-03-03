@@ -1,0 +1,1 @@
+pyinstaller skylla.py --onefile

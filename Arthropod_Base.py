@@ -1,6 +1,7 @@
 from tkinter.tix import Tree
 from selenium import webdriver 
 from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.chrome import service as fs
 
 from logging import getLogger, StreamHandler, DEBUG 
 logger = getLogger(__name__)
@@ -31,7 +32,14 @@ class Arthropod :
             self.options.add_argument("--window-size=1366,720")
             if hedden_window :
                 self.options.add_argument('--headless')
-            self.driver = webdriver.Chrome(ChromeDriverManager().install(), options=self.options) 
+            path = ChromeDriverManager().install() 
+
+            chrome_service = fs.Service(executable_path=path) 
+            self.driver  = webdriver.Chrome(service=chrome_service, options=self.options)
+
+
+            #self.driver = webdriver.Chrome(path, options=self.options) 
+            print(f'{path} ChromeDriver Path ')
 
             self.save_file_name = save_file_name 
             if breath is not None : 
