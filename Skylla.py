@@ -64,6 +64,9 @@ if __name__ == '__main__':
     H = ['Title','URL']
     H1 = ['Title','Domain','Location']
 
+    g_counter = int
+    g_test_cnt = int
+
     base_frame_width = 1024
     search_word_list = []
     frame0 = sg.Frame('',
@@ -88,9 +91,10 @@ if __name__ == '__main__':
         ] , size=(base_frame_width, 332) , key='-frame0-'
     )
     
-    T1 = sg.Tab('ContactForm' , 
+
+    T1 = sg.Tab('コンタクトフォーム検索' , 
         [
-            [sg.Button('サイト内検索',font=('',12) ,  key = "-spider-start-"),  sg.Button('検索終了',font=('',11) , key = "-spider-break-" ) , sg.Button('終了')],
+            [sg.Button('検索開始',font=('',12) ,  key = "-spider-start-"),  sg.Button('検索終了',font=('',11) , key = "-spider-break-" ) , sg.Button('終了') , sg.Spin([1,2,3,4,5,6],initial_value=4 , size=(4,7))],
             [sg.Text('検出した情報 :', key='-ACT-')],                
             [ sg.Table (T , headings=H1 , auto_size_columns = False , vertical_scroll_only = True ,expand_x=True,     
                 col_widths=[45, 20, 40],
@@ -99,16 +103,14 @@ if __name__ == '__main__':
                 font =('',10) ,
                 header_text_color= '#0000ff' ,
                 header_background_color= '#cccccc',
-                key='-TABLE1-')]
+                key='-spider-table-')]
+
         ]
     )
 
     T2 = sg.Tab('place' , 
         [
-            [sg.Text(' 検出されたデータ : ') ],
-            [ sg.Text('', key='-STAT2-') ], 
-            [sg.Text(' domain : ',font=('',11)) , sg.Text('', key='-STAT1-')], 
-            [sg.Text(' location : ') , sg.Text('', key='-STAT-')]
+            [sg.Text(' 空地 : ') ]
         ]
     )
 
@@ -123,11 +125,11 @@ if __name__ == '__main__':
 
     frame2 = sg.Frame('',
         [
-            [sg.Text(' 検出されたデータ : ') ],
-            [ sg.Text('', key='-STAT2-') ], 
-            [sg.Text(' domain : ',font=('',11)) , sg.Text('', key='-STAT1-')], 
-            [sg.Text(' location : ') , sg.Text('', key='-STAT-')]
-        ] , size=(base_frame_width, 120)  , key='-frame1-'
+            [sg.Text('', key='-log-title-' ) , sg.Text('    ', key='-r-space0-') ,  sg.Text('', key='-r-cnt0-') , sg.Text('    ', key='-r-space1-') ,  sg.Text('', key='-r-cnt1-') ],
+            [sg.Text('  ', key='-r-space2-') , sg.Text('', key='-r-title0-') ], 
+            [sg.Text(''  , key='-r-title1-') , sg.Text('', key='-r-text1-')], 
+            [sg.Text('', key='-r-title2-') , sg.Text('', key='-r-text2-')]
+        ] , size=(base_frame_width, 120)  , key='-frame2-'
     )
 
     layout = [
@@ -138,7 +140,7 @@ if __name__ == '__main__':
     window["-search-word-list-box-"].bind('<Double-Button-1>' , "+-double click-")  #-Button
     window["-frame0-"].expand(expand_x=True, expand_y=False)
     window["-frame1-"].expand(expand_x=True, expand_y=False)
-
+    window["-frame2-"].expand(expand_x=True, expand_y=False)
 
     def _search_word_load() :#ファイルからロード
         global search_word_list
@@ -270,6 +272,41 @@ if __name__ == '__main__':
         return result
 
 
+    def frame2_cf_init():
+        global g_counter , g_test_cnt
+        window["-log-title-"].update(' 検出されたデータ : ') 
+        window['-r-title1-'].update(str(' domain : '))
+        window['-r-title2-'].update(str(' location : '))
+        g_counter = 0 
+        g_test_cnt = 0 
+    
+    def frame2_cf_test_cnt():
+        global g_test_cnt
+
+        g_test_cnt += 1 
+        window['-r-cnt1-'].update('    試行回数 : ' + str(g_test_cnt))
+
+    def frame2_cf_s_passing(param_list=list()):
+        global g_counter
+        if param_list :
+            g_counter += 1 
+            window["-r-title0-"].update(str(param_list[0])) 
+            window['-r-cnt0-'].update('検出数 : ' + str(g_counter))
+            window['-r-text1-'].update(str(param_list[1]))
+            window['-r-text2-'].update(str(param_list[2]))
+
+    def frame2_cf_s_result():
+        global g_counter , g_test_cnt
+
+        window['-r-cnt0-'].update('')
+        window['-r-cnt1-'].update('')
+        window["-r-title0-"].update('') 
+        window['-r-title1-'].update(str(' 試行回数 : '))
+        window['-r-title2-'].update(str(' 検出数 : '))
+        window['-r-text1-'].update(str(g_test_cnt)) # 
+        window['-r-text2-'].update(str(g_counter))
+
+
     def spider_worker(url=""):
         cospider = CoSpider("nioh" , url=url , breath=spider_breather , hedden_window=False) 
         cospider.finish_it()
@@ -289,11 +326,10 @@ if __name__ == '__main__':
                 case "clean_up" :
                     try:       
                         result = {"clean_up" : False}
-                        if param_list :
+                        
+                        frame2_cf_s_passing(param_list=param_list)
 
-                            window["-STAT2-"].update(str(param_list[0])) # クラスを持たざるMAIN的エスケープ
-                            window['-STAT1-'].update(str(param_list[1]))
-                            window['-STAT-'].update(str(param_list[2]))
+                        if param_list :
 
                             f_name = save_file_name
                             if not f_name :  
@@ -315,7 +351,7 @@ if __name__ == '__main__':
     def skylli_worker_thread_with(swt , param):#ワーカースレッドが終わるまで待ってるスレッド  状態遷移の主軸に
         global worker_thread_with , last_result_object 
 
-        print(f'{id(swt)} skylli_worker_thread_with 318')
+        print(f'{id(swt)} skylli_worker_thread_with 346')
         if worker_thread_with is None : #以下の３つ(match)の処理、何れかの一つしか実行できないようにしている。　つもり。            
             return 
 
@@ -334,7 +370,7 @@ if __name__ == '__main__':
                 if (type(param) is list) and (0 < len(param)) :
                     GS_results =  GoogleShrimp_result()
                     last_result_object = GS_results
-                    print(f'{id(last_result_object)} swt_shrimps 335')
+                    print(f'{id(last_result_object)} swt_shrimps 365')
                     with ThreadPoolExecutor(max_workers=1, initializer=initializer, initargs=('pool',)) as executor:   
 
                         for search_word in param:
@@ -348,26 +384,28 @@ if __name__ == '__main__':
 
 
                         window['-TABLE-'].update(GS_results.get_r_list_table())
-
+                        
 
             case "swt_spider" : 
                 if (type(param) is list) and (0 < len(param)):               
                     #　各クラスに用意してあるレザルトを入れておくインスタンスを作成する
                     CS_result = CoSpider_result() 
                     last_result_object = CS_result # 上書でよい
+                    frame2_cf_init()
 
-                    with ThreadPoolExecutor(max_workers=1, initializer=initializer, initargs=('pool',)) as executor:   #ワーカースレッド数
+                    with ThreadPoolExecutor(max_workers=4, initializer=initializer, initargs=('pool',)) as executor:   #ワーカースレッド数
                         for url in param:
                             futures.append(executor.submit(spider_worker, url))
-
+                        
                         for future in concurrent.futures.as_completed(futures): #処理が終わったスレッドが都度検出される。　それの終了待ちループであるようだが この記述で実装されてしまうのは謎だ。
-                            result = future.result()  
+                            result = future.result()
+                            frame2_cf_test_cnt()
                             if 3 <= len(result) :#問題あり リテラル
                                 CS_result.add_r(title_r_s = result[0] , domain_r_s = result[1] , location_r_s = result[2]) #  検索処理の結果を保存しておくオブジェクトを作り、そこに追加していく。
 
                         # 結果をUIに反映
-                        window['-TABLE1-'].update(CS_result.get_r_list_table())
-
+                        window['-spider-table-'].update(CS_result.get_r_list_table())
+                        frame2_cf_s_result()
 
         worker_thread_with = None
 
