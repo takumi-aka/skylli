@@ -64,8 +64,11 @@ class GoogleShrimp(Arthropod) :
 
             for elem_h3 in self.driver.find_elements(By.XPATH, '//a/h3'):
                 elem_a = elem_h3.find_element(By.XPATH , '..')  
-                o = urlparse(elem_a.get_attribute('href'))
+
                 host_url = elem_a.get_attribute('href')
+                if host_url == None :
+                    continue
+
                 if not re.search(self.needless , host_url):
                     if not re.search(self.negative_multibyte_words , elem_h3.text):
                         r_list += [[elem_h3.text , host_url]]
@@ -123,6 +126,8 @@ class BillShrimp(Arthropod) : #没
             for elem_h3 in elements:
                 elem_a = elem_h3.find_element(By.XPATH , '//h2/a')  
                 o = urlparse(elem_a.get_attribute('href'))
+                if o == None :
+                    continue
                 host_url = o.scheme + "://" + o.hostname
                 if not re.search(self.needless , host_url):
                     r_list += [[elem_h3.text , host_url]]

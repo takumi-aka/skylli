@@ -94,7 +94,7 @@ if __name__ == '__main__':
 
     T1 = sg.Tab('コンタクトフォーム検索' , 
         [
-            [sg.Button('検索開始',font=('',12) ,  key = "-spider-start-"),  sg.Button('検索終了',font=('',11) , key = "-spider-break-" ) , sg.Button('終了') , sg.Spin([1,2,3,4,5,6],initial_value=4 , size=(4,7))],
+            [sg.Button('検索開始',font=('',12) ,  key = "-spider-start-"),  sg.Button('検索終了',font=('',11) , key = "-spider-break-" ) , sg.Button('終了') , sg.Spin([1,2,3,4,5,6],initial_value=4 , size=(4,7) , key='-spin-t-cnt-')],
             [sg.Text('検出した情報 :', key='-ACT-')],                
             [ sg.Table (T , headings=H1 , auto_size_columns = False , vertical_scroll_only = True ,expand_x=True,     
                 col_widths=[45, 20, 40],
@@ -281,8 +281,7 @@ if __name__ == '__main__':
         g_test_cnt = 0 
     
     def frame2_cf_test_cnt():
-        global g_test_cnt
-
+        global g_test_cnt , go_on
         g_test_cnt += 1 
         window['-r-cnt1-'].update('    試行回数 : ' + str(g_test_cnt))
 
@@ -308,7 +307,11 @@ if __name__ == '__main__':
 
 
     def spider_worker(url=""):
-        cospider = CoSpider("nioh" , url=url , breath=spider_breather , hedden_window=False) 
+        global go_on
+        if not go_on :
+            return list()
+
+        cospider = CoSpider("ContactForm 検索結果" , url=url , breath=spider_breather , hedden_window=False) 
         cospider.finish_it()
         return cospider.get_result_list()
 
@@ -351,7 +354,7 @@ if __name__ == '__main__':
     def skylli_worker_thread_with(swt , param):#ワーカースレッドが終わるまで待ってるスレッド  状態遷移の主軸に
         global worker_thread_with , last_result_object 
 
-        print(f'{id(swt)} skylli_worker_thread_with 346')
+        print(f'{id(swt)} skylli_worker_thread_with 354')
         if worker_thread_with is None : #以下の３つ(match)の処理、何れかの一つしか実行できないようにしている。　つもり。            
             return 
 
@@ -370,7 +373,7 @@ if __name__ == '__main__':
                 if (type(param) is list) and (0 < len(param)) :
                     GS_results =  GoogleShrimp_result()
                     last_result_object = GS_results
-                    print(f'{id(last_result_object)} swt_shrimps 365')
+                    print(f'{id(last_result_object)} swt_shrimps 373')
                     with ThreadPoolExecutor(max_workers=1, initializer=initializer, initargs=('pool',)) as executor:   
 
                         for search_word in param:
@@ -392,15 +395,17 @@ if __name__ == '__main__':
                     CS_result = CoSpider_result() 
                     last_result_object = CS_result # 上書でよい
                     frame2_cf_init()
-
-                    with ThreadPoolExecutor(max_workers=4, initializer=initializer, initargs=('pool',)) as executor:   #ワーカースレッド数
+                    #-spin-t-cnt-
+                    m_t = window['-spin-t-cnt-'].get()
+                    with ThreadPoolExecutor(max_workers=m_t, initializer=initializer, initargs=('pool',)) as executor:   #ワーカースレッド数
                         for url in param:
                             futures.append(executor.submit(spider_worker, url))
                         
                         for future in concurrent.futures.as_completed(futures): #処理が終わったスレッドが都度検出される。　それの終了待ちループであるようだが この記述で実装されてしまうのは謎だ。
                             result = future.result()
-                            frame2_cf_test_cnt()
-                            if 3 <= len(result) :#問題あり リテラル
+
+                            frame2_cf_test_cnt() #試行回数をインクリメント
+                            if 3 <= len(result) :#
                                 CS_result.add_r(title_r_s = result[0] , domain_r_s = result[1] , location_r_s = result[2]) #  検索処理の結果を保存しておくオブジェクトを作り、そこに追加していく。
 
                         # 結果をUIに反映
@@ -493,8 +498,10 @@ if __name__ == '__main__':
                 window ['-SEARCH-SHRIMP-'].Update(val)
 
 
-        elif event == '-spider-break-': #main(any time)
+        elif event == '-spider-break-': #main(any time)   spider terminate
             window.refresh()
+            go_on = False
+
 
         elif event == '決定':
 

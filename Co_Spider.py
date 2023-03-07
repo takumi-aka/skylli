@@ -288,6 +288,8 @@ class CoSpider(Arthropod):
          elements_i_a = _driver.find_elements(By.TAG_NAME,'img')    
          for element in elements_i_a:
             a_str = element.get_attribute('alt')
+            if a_str == None :
+               continue
             for c_str in self.contact_texts :
                if re.search(c_str, a_str):
                   t_element = element.find_element(By.XPATH , './..')
@@ -305,6 +307,12 @@ class CoSpider(Arthropod):
       scan_driver = None
 
       logger.debug("first_contact : " + self.url)
+
+      if not self.breather("life")['life'] :
+         self.terminate_flag = True 
+         return result
+
+
       self.driver.get(self.url)  #直後のデータとURLが有効 first first   GET
       
       #GETのあとスリープを入れてselenumの処理結果を安定させる。
@@ -322,18 +330,29 @@ class CoSpider(Arthropod):
       if not elements_l_t : # お問い合わせが img である場合を見て走査
          _element_img(elements_l_t , self.driver)
 
-       
+
+      if not self.breather("life")['life'] :
+         self.terminate_flag = True 
+         return result
+
 
       if elements_l_t :  
          next_driver =  Arthropod(save_file_name="" , breath = None , hedden_window = False)           
          for element in elements_l_t :    
             try :
                href_srt = element.get_attribute('href')
+               if href_srt == None :
+                  continue
 
                if href_srt in self.accepted_urls:
                   continue
+
                else :
                   self.accepted_urls[href_srt] = True
+
+               if not self.breather("life")['life'] :
+                  self.terminate_flag = True 
+                  return result
 
                logger.debug("first_contact : " + href_srt)
                next_driver.driver.get(href_srt)#直後のデータとURLが有効 
@@ -363,11 +382,18 @@ class CoSpider(Arthropod):
                      try :
                         
                         href_srt = element_end.get_attribute('href')
+                        if href_srt == None:
+                           continue
 
                         if href_srt in self.accepted_urls:
                            continue
                         else :
                            self.accepted_urls[href_srt] = True
+
+
+                        if not self.breather("life")['life'] :
+                           self.terminate_flag = True 
+                           return result
 
                         logger.debug("first_contact : " + href_srt)
                         scan_driver.driver.get(href_srt) #直後のデータとURLが有効
@@ -407,6 +433,12 @@ class CoSpider(Arthropod):
       r_result = False
       if not self.url :
          return result
+      
+      if not self.breather("life")['life'] :
+         self.terminate_flag = True # ?
+         return result
+
+
       o = urlparse(self.url)
       hostname = o.hostname
 
