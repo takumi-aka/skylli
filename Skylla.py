@@ -1,4 +1,5 @@
 import os
+import tkinter
 import PySimpleGUI as sg
 import csv
 
@@ -21,6 +22,9 @@ worker_thread_with = None
 thread_mode = {'noop' : 0 ,'active' : 1 , 'destroy' : 2 } 
 shrimp_stat = thread_mode['noop']
 spider_stat = thread_mode['noop']
+cf_enable = ('-g-search-start-' , '-g-search-break-' , '-g-search-words-start-' , '-g-search-words-break-'
+             ,'-spider-start-' , '-spider-break-' , '-spin-t-cnt-' , '-cbox-hedden-window-')
+
 
 #coshrimp  #検索エンジンからデータをあさるクラス
 #cospider  #各サイトにコンタクトフォームが存在するか走査するクラス
@@ -94,7 +98,8 @@ if __name__ == '__main__':
 
     T1 = sg.Tab('コンタクトフォーム検索' , 
         [
-            [sg.Button('検索開始',font=('',12) ,  key = "-spider-start-"),  sg.Button('検索終了',font=('',11) , key = "-spider-break-" ) , sg.Button('終了') , sg.Spin([1,2,3,4,5,6],initial_value=4 , size=(4,7) , key='-spin-t-cnt-')],
+            [sg.Button('検索開始',font=('',12) ,  key = "-spider-start-"),  sg.Button('検索終了',font=('',11) , key = "-spider-break-" ) , sg.Button('終了')
+            , sg.Text('       ') , sg.Spin([1,2,3,4,5,6],initial_value=4 , size=(4,7) , key='-spin-t-cnt-')  , sg.Text(':  起動ブラウザ数') , sg.Text('     ') , sg.Checkbox(': ブラウザ表示', key='-cbox-hedden-window-') ],
             [sg.Text('検出した情報 :', key='-ACT-')],                
             [ sg.Table (T , headings=H1 , auto_size_columns = False , vertical_scroll_only = True ,expand_x=True,     
                 col_widths=[45, 20, 40],
@@ -311,7 +316,8 @@ if __name__ == '__main__':
         if not go_on :
             return list()
 
-        cospider = CoSpider("ContactForm 検索結果" , url=url , breath=spider_breather , hedden_window=False) 
+        cb_hw_n = not window['-cbox-hedden-window-'].get()
+        cospider = CoSpider("ContactForm 検索結果" , url=url , breath=spider_breather , hedden_window=cb_hw_n) 
         cospider.finish_it()
         return cospider.get_result_list()
 
@@ -384,7 +390,6 @@ if __name__ == '__main__':
 
                         if 2 <= len(result) : #
                             GS_results.add_r(title_r_s = result[0] , location_r_s = result[1])
-
 
                         window['-TABLE-'].update(GS_results.get_r_list_table())
                         
@@ -505,7 +510,13 @@ if __name__ == '__main__':
 
         elif event == '決定':
 
-            sg.preview_all_look_and_feel_themes()
+            root = window.TKroot
+            cld = root.winfo_children()
+
+            for key in cf_enable :
+                window[key]  #打ち止め
+            
+            #sg.preview_all_look_and_feel_themes()
 
     window.close()
 

@@ -72,13 +72,14 @@ class CoSpider(Arthropod):
    enc = "UTF-8"
    init_error = False
    
+   __hw = False
    url = ""
 
    def __init__(self , save_file_name="" , url = "",  breath = None , hedden_window = False) :# sname : 結果を保存するFILENAMEを指定している
       super().__init__(save_file_name=save_file_name ,  breath = breath , hedden_window = hedden_window)
       #インストール自体は先に済ませておくべき。
       #ここでは既に行われたアップデートのインストール先のパスが帰ってきている。
-      
+      self.__hw = hedden_window
       if not url :
          logger.debug("__init__ failure", url)
       self.url = url
@@ -337,7 +338,7 @@ class CoSpider(Arthropod):
 
 
       if elements_l_t :  
-         next_driver =  Arthropod(save_file_name="" , breath = None , hedden_window = False)           
+         next_driver =  Arthropod(save_file_name="" , breath = None , hedden_window = self.__hw)           
          for element in elements_l_t :    
             try :
                href_srt = element.get_attribute('href')
@@ -368,7 +369,7 @@ class CoSpider(Arthropod):
 
                   elements_l_t_end  = []
                   #scan_driver =  webdriver.Chrome(ChromeDriverManager().install(), options=self.options) 
-                  scan_driver =  Arthropod(save_file_name="" , breath = None , hedden_window = False)   
+                  scan_driver =  Arthropod(save_file_name="" , breath = None , hedden_window = self.__hw)   
                   # PARTIAL_LINK_TEXT　以外にも有ってもよいか
 
                   for c_str in self.contact_texts :
@@ -382,7 +383,7 @@ class CoSpider(Arthropod):
                      try :
                         
                         href_srt = element_end.get_attribute('href')
-                        if href_srt == None:
+                        if (href_srt == None) or (href_srt == '') :
                            continue
 
                         if href_srt in self.accepted_urls:
