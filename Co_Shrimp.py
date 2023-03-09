@@ -77,8 +77,8 @@ class GoogleShrimp(Arthropod) :
                 print(elem_a.get_attribute('href'))
                 self.breather("breath" , current_text=elem_h3.text+ " : " +host_url)
             try:
-                next_page = self.driver.find_element(By.ID , "pnnext").get_attribute("href")
-                #if next_page == [] :
+                next_page = self.driver.find_element(By.ID , "pnnext").get_attribute("href")# pnnextが見つからないとエラーがライズされ except break へ移りループを抜ける
+        
             except:
                 break
 

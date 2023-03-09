@@ -1,5 +1,4 @@
 import os
-import tkinter
 import PySimpleGUI as sg
 import csv
 
@@ -22,8 +21,12 @@ worker_thread_with = None
 thread_mode = {'noop' : 0 ,'active' : 1 , 'destroy' : 2 } 
 shrimp_stat = thread_mode['noop']
 spider_stat = thread_mode['noop']
-cf_enable = ('-g-search-start-' , '-g-search-break-' , '-g-search-words-start-' , '-g-search-words-break-'
-             ,'-spider-start-' , '-spider-break-' , '-spin-t-cnt-' , '-cbox-hedden-window-')
+
+window_keys = ('-g-search-start-' , '-g-search-break-' , '-g-search-words-start-' , '-g-search-words-break-'
+             ,'-spider-start-' ,  '-spider-break-' ,'-spin-t-cnt-' , '-cbox-hedden-window-')
+shrimp_btn_enable = (window_keys[0] , window_keys[2] , window_keys[3], window_keys[4] , window_keys[5] , window_keys[6] , window_keys[7] )
+shrimps_btn_enable = (window_keys[0] , window_keys[1], window_keys[2] , window_keys[4] , window_keys[5] , window_keys[6] , window_keys[7] )
+spider_btn_enable = (window_keys[0] , window_keys[1],window_keys[2] , window_keys[3],window_keys[4] , window_keys[6],window_keys[7] )
 
 
 #coshrimp  #検索エンジンからデータをあさるクラス
@@ -75,10 +78,10 @@ if __name__ == '__main__':
     search_word_list = []
     frame0 = sg.Frame('',
         [
-            [sg.Text('検索ワード :'), sg.Input(key='-SEARCH-SHRIMP-') , sg.Button('検索',font=('',11) , key = "-g-search-start-"),  sg.Button('検索終了',font=('',11) , key = "-g-search-break-" ) , sg.Button('決定',font=('',11)) ],
+            [sg.Text('検索ワード :'), sg.Input(key='-serch-shrimp-') , sg.Button('検索',font=('',11) , key = "-g-search-start-"),  sg.Button('検索終了',font=('',11) , key = "-g-search-break-" ) , sg.Button('決定',font=('',11)) ],
             [sg.Text('連続検索ワード :'), sg.Listbox ( search_word_list , size =(24 , 5) , key='-search-word-list-box-') , sg.Button('追加',font=('',11)),  sg.Button('削除',font=('',11)),sg.Button('リストの読み込み',font=('',11)), sg.Button('リストの保存',font=('',11))],
             [sg.Text('連続検索 :') , sg.Button('検索',font=('',11) , key = "-g-search-words-start-") , sg.Button('検索終了',font=('',11)  , key = "-g-search-words-break-" )],
-            [sg.Text('passing :'),sg.Text('', key='-CURRENT-TEXT-SHRIMP-')],
+            [sg.Text('passing :'),sg.Text('', key='-current-text-shrimp-')],
             #検索結果 URL
             [ sg.Table (T , headings=H , auto_size_columns = False , vertical_scroll_only = True ,expand_x=True,
                 #def_col_width=32 ,
@@ -95,10 +98,9 @@ if __name__ == '__main__':
         ] , size=(base_frame_width, 332) , key='-frame0-'
     )
     
-
     T1 = sg.Tab('コンタクトフォーム検索' , 
         [
-            [sg.Button('検索開始',font=('',12) ,  key = "-spider-start-"),  sg.Button('検索終了',font=('',11) , key = "-spider-break-" ) , sg.Button('終了')
+            [sg.Button('検索開始',font=('',12) ,  key = '-spider-start-'),  sg.Button('検索終了',font=('',11) , key = '-spider-break-' ) , sg.Button('終了')
             , sg.Text('       ') , sg.Spin([1,2,3,4,5,6],initial_value=4 , size=(4,7) , key='-spin-t-cnt-')  , sg.Text(':  起動ブラウザ数') , sg.Text('     ') , sg.Checkbox(': ブラウザ表示', key='-cbox-hedden-window-') ],
             [sg.Text('検出した情報 :', key='-ACT-')],                
             [ sg.Table (T , headings=H1 , auto_size_columns = False , vertical_scroll_only = True ,expand_x=True,     
@@ -118,7 +120,6 @@ if __name__ == '__main__':
             [sg.Text(' 空地 : ') ]
         ]
     )
-
 
     TL = [[sg.TabGroup([[T1,T2]]
         , size=(base_frame_width, 240)  , key='-tll-'
@@ -245,7 +246,7 @@ if __name__ == '__main__':
             match switch:
                 case "breath" :
                     result = {}
-                    window['-CURRENT-TEXT-SHRIMP-'].update(current_text)
+                    window['-current-text-shrimp-'].update(current_text)
                 case "life" :
                     result = {'life' : go_on}     
     
@@ -276,6 +277,9 @@ if __name__ == '__main__':
 
         return result
 
+    def window_btn_visible(keys , visible = False): # -serch-shrimp- クリック時に利用できないボタンを無効化　またはその有効化。
+        for key in keys :
+            window.find_element(key).update(disabled=visible) 
 
     def frame2_cf_init():
         global g_counter , g_test_cnt
@@ -375,6 +379,8 @@ if __name__ == '__main__':
                         for future in concurrent.futures.as_completed(futures):# キューではない
                             result = future.result() #正常終了か問題ありか位は乗せておきたい
 
+                window_btn_visible(shrimp_btn_enable)
+
             case "swt_shrimps" : 
                 if (type(param) is list) and (0 < len(param)) :
                     GS_results =  GoogleShrimp_result()
@@ -392,7 +398,7 @@ if __name__ == '__main__':
                             GS_results.add_r(title_r_s = result[0] , location_r_s = result[1])
 
                         window['-TABLE-'].update(GS_results.get_r_list_table())
-                        
+                window_btn_visible(shrimps_btn_enable)
 
             case "swt_spider" : 
                 if (type(param) is list) and (0 < len(param)):               
@@ -416,6 +422,7 @@ if __name__ == '__main__':
                         # 結果をUIに反映
                         window['-spider-table-'].update(CS_result.get_r_list_table())
                         frame2_cf_s_result()
+                window_btn_visible(spider_btn_enable)
 
         worker_thread_with = None
 
@@ -437,7 +444,8 @@ if __name__ == '__main__':
                 print(f'{id(executor)} init thread!')
                 shrimp_stat = thread_mode['active'] 
                 
-                go_on = True                 
+                go_on = True          
+                window_btn_visible(shrimps_btn_enable ,visible = True)       
                 worker_thread_with = executor.submit(skylli_worker_thread_with , 'swt_shrimps' , search_word_list)
                 print(f'{id(worker_thread_with)} init thread!')
              
@@ -453,21 +461,24 @@ if __name__ == '__main__':
                     url_list += [url]
                 if url_list:
                     spider_stat = thread_mode['active'] 
-                    go_on = True 
+                    go_on = True
+                    window_btn_visible(spider_btn_enable , visible= True)
                     worker_thread_with = executor.submit(skylli_worker_thread_with , 'swt_spider' , url_list)
 
         elif event == '-g-search-start-': # 検索
             if (shrimp_stat == thread_mode['noop'] )  and (worker_thread_with is None) :
-                s_str =  window['-SEARCH-SHRIMP-'].get()
+                s_str =  window['-serch-shrimp-'].get()
                 if s_str : #スペースだろうが検索する 正規化はしない
                     executor = ThreadPoolExecutor(max_workers=1)
                     shrimp_stat = thread_mode['active'] 
                     go_on = True                     
+                    
+                    window_btn_visible(shrimp_btn_enable ,visible = True)    
                     worker_thread_with = executor.submit(skylli_worker_thread_with , 'swt_shrimp' , s_str)
                 
         elif event == '-g-search-break-': # 検索終了 main(any time)
             if shrimp_stat == thread_mode['active'] :
-                go_on = False #発生したスレッドの処理を終了に促す
+                go_on = False #スレッドの処理を終了を促す
                 shrimp_executor = None
                 shrimp_stat = thread_mode['noop']  #back to noop
 
@@ -500,7 +511,7 @@ if __name__ == '__main__':
         elif event == '-search-word-list-box-+-double click-': #main(any time)
             if values['-search-word-list-box-']:
                 val = values['-search-word-list-box-'][0] 
-                window ['-SEARCH-SHRIMP-'].Update(val)
+                window ['-serch-shrimp-'].Update(val)
 
 
         elif event == '-spider-break-': #main(any time)   spider terminate
@@ -509,13 +520,8 @@ if __name__ == '__main__':
 
 
         elif event == '決定':
-
-            root = window.TKroot
-            cld = root.winfo_children()
-
-            for key in cf_enable :
-                window[key]  #打ち止め
-            
+            window_btn_visible(shrimps_btn_enable ,visible = True)
+         
             #sg.preview_all_look_and_feel_themes()
 
     window.close()
