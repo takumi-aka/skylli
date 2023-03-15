@@ -29,6 +29,8 @@ class Arthropod :
     def __init__(self , save_file_name="" , breath = None , hedden_window = False) :
         try:
             self.options = webdriver.ChromeOptions()
+            self.options.add_argument('--ignore-certificate-errors')
+            self.options.add_argument('--ignore-ssl-errors')
             self.options.add_argument("--window-size=1366,720")
             if hedden_window :
                 self.options.add_argument('--headless')

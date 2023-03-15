@@ -39,8 +39,8 @@ class CoSpider_result():
 
    def add_r(self, param_r_l = list() , title_r_s = "" , domain_r_s = "" , location_r_s = "") : 
       #
-      if 3 == len(param_r_l) :
-         return True
+      #if 3 == len(param_r_l) :
+      #   return True
 
       if (title_r_s) and (domain_r_s) and (location_r_s) :
          self.__result_l.append([title_r_s , domain_r_s , location_r_s])
@@ -61,7 +61,7 @@ class CoSpider(Arthropod):
                      , "確認" , "進む" , "必須" , "タイトル" , "題名" , "本文" , "連絡先" , "フリガナ" , "内容"] 
    negative_words = ["レンタル","アカウント"] 
 
-   contact_texts = ['お問い合わせ' , '問い合わせ','お問合せ','お問合わせ','御問合せ','御問い合わせ','御問合わせ','お問い合せフォームはこちら','お問い合せ','おといあわせ','ご質問 お問い合わせ', 'ご注文・お問い合わせ','お問い合わせ先','CONTACT','contact','contact us']
+   contact_texts = ['お問い合わせ' , '問い合わせ','お問合せ','お問合わせ','御問合せ','御問い合わせ','御問合わせ','お問い合せフォームはこちら','お問い合せ','おといあわせ','ご質問 お問い合わせ', 'ご注文・お問い合わせ','お問い合わせ先','CONTACT','contact','Contact','contact us']
    contact_href_into_words = ['contact','toiawase','otoiawase','faq','inquiry']
 
    ext = ".csv"
@@ -101,7 +101,7 @@ class CoSpider(Arthropod):
 
    def __download_file_selenium(self , url): # result {'url' : str ,'savepath' : str ,  'isthis' bool}
 
-      try:#ここをダウンロードからコンテンツチェックに変える
+      try:
          result = {"url" : "" , "savepath" : "" ,  "isthis" : False , "needless" : False}
          o = urlparse(url)
 
@@ -226,6 +226,7 @@ class CoSpider(Arthropod):
          return result
 
       t_cnt = scan("<title","/title>",self.power_word ) 
+      t_cnt += scan("<form","/form>",self.power_word ) 
       p_cnt = scan("<form","/form>",self.positive_words )
       n_cnt = scan("<form","/form>",self.negative_words )
 
@@ -281,7 +282,12 @@ class CoSpider(Arthropod):
          print("ダウンロード失敗:", url)
          return None
 
-   def first_contact(self) -> str :# コンタクトフォームと思しきurlを返す | 見つからなければ　""
+
+   def search_contactform_url():  # result None / urls(list()) 
+      pass
+
+
+   def first_contact(self) -> str :# コンタクトフォームと思しきurlを返す list()
 
       def _element_img(_elements , _driver):
          t_element = None
@@ -302,7 +308,7 @@ class CoSpider(Arthropod):
 
          return 
 
-      result = ""
+      result = list()
 
       next_driver = None
       scan_driver = None
@@ -313,6 +319,9 @@ class CoSpider(Arthropod):
          self.terminate_flag = True 
          return result
 
+
+      if re.search(self.needless , self.url):
+         return result
 
       self.driver.get(self.url)  #直後のデータとURLが有効 first first   GET
       
@@ -356,57 +365,61 @@ class CoSpider(Arthropod):
                   return result
 
                logger.debug("first_contact : " + href_srt)
-               next_driver.driver.get(href_srt)#直後のデータとURLが有効 
-               time.sleep(4)         
-               html = next_driver.driver.page_source
 
-               t_f_d = self.target_form_detector(html)
-               if (2 <= t_f_d["p"])and(1 <= t_f_d["t"]) :# 
-                  result = href_srt
-                  break # 301 for element in elements_l_t :   
+               #二つ目のブラウザ
+               if not re.search('@' , href_srt):
+                  next_driver.driver.get(href_srt)#直後のデータとURLが有効 
 
-               else: # 
+                  time.sleep(4)         
+                  html = next_driver.driver.page_source
 
-                  elements_l_t_end  = []
-                  #scan_driver =  webdriver.Chrome(ChromeDriverManager().install(), options=self.options) 
-                  scan_driver =  Arthropod(save_file_name="" , breath = None , hedden_window = self.__hw)   
-                  # PARTIAL_LINK_TEXT　以外にも有ってもよいか
+                  t_f_d = self.target_form_detector(html)
+                  if (2 <= t_f_d["p"])and(1 <= t_f_d["t"]) :# 
+                     result += [href_srt]
+                     break # 301 for element in elements_l_t :   
 
-                  for c_str in self.contact_texts :
-                     elements_l_t_end += next_driver.driver.find_elements(By.PARTIAL_LINK_TEXT,c_str)   
+                  else: # 
+
+                     elements_l_t_end  = [] # 三つ目のブラウザで走査するURL
+                     #scan_driver =  webdriver.Chrome(ChromeDriverManager().install(), options=self.options) 
+                     scan_driver =  Arthropod(save_file_name="" , breath = None , hedden_window = self.__hw)   
+                     # PARTIAL_LINK_TEXT　以外にも有ってもよいか
+
+                     for c_str in self.contact_texts :
+                        elements_l_t_end += next_driver.driver.find_elements(By.PARTIAL_LINK_TEXT,c_str)   
+         
+                     if not elements_l_t_end :
+                        _element_img(elements_l_t_end , next_driver.driver)
       
-                  if not elements_l_t_end :
-                     _element_img(elements_l_t_end , next_driver.driver)
-   
-                  href_srt = ""
-                  for element_end in elements_l_t_end :    
-                     try :
-                        
-                        href_srt = element_end.get_attribute('href')
-                        if (href_srt == None) or (href_srt == '') :
-                           continue
+                     href_srt = ""
+                     for element_end in elements_l_t_end :    
+                        try :
+                           
+                           href_srt = element_end.get_attribute('href')
+                           if (href_srt == None) or (href_srt == '') :
+                              continue
 
-                        if href_srt in self.accepted_urls:
-                           continue
-                        else :
-                           self.accepted_urls[href_srt] = True
+                           if href_srt in self.accepted_urls:
+                              continue
+                           else :
+                              self.accepted_urls[href_srt] = True
 
+                           if not self.breather("life")['life'] :
+                              self.terminate_flag = True 
+                              return result
 
-                        if not self.breather("life")['life'] :
-                           self.terminate_flag = True 
-                           return result
-
-                        logger.debug("first_contact : " + href_srt)
-                        scan_driver.driver.get(href_srt) #直後のデータとURLが有効
-                        time.sleep(4) 
-                        html = scan_driver.driver.page_source
-                        t_f_d = self.target_form_detector(html)
-                        if (2 <= t_f_d["p"])and(1 <= t_f_d["t"]) :
-                           result = href_srt
-                           break # 320 for element_end in elements_l_t_end :     
-                     #except selenium.common.exceptions.StaleElementReferenceException : # 細かくやっていく場合
-                     except Exception :
-                        break # 320  for element_end in elements_l_t_end :    
+                           logger.debug("first_contact : " + href_srt)
+                           if not re.search('@' , href_srt):
+                              scan_driver.driver.get(href_srt) #直後のデータとURLが有効
+                              time.sleep(4) 
+                              html = scan_driver.driver.page_source
+                              t_f_d = self.target_form_detector(html)
+                              if (2 <= t_f_d["p"])and(1 <= t_f_d["t"]) :
+                                 result += [href_srt]
+                                 continue # 320 for element_end in elements_l_t_end :      複数あることを這い処すべき　
+                        #except selenium.common.exceptions.StaleElementReferenceException : # 細かくやっていく場合
+                        except Exception :
+                           break # 320  for element_end in elements_l_t_end :    
 
                   if scan_driver :
                      scan_driver.browser_close   
@@ -444,10 +457,10 @@ class CoSpider(Arthropod):
       hostname = o.hostname
 
       #全体走査の前にTOPページにあるURLに関連付けられたワードなどから、お問い合わせフォームであるかをチェックする。（時間を端折るため
-      f_s_r_href = self.first_contact()
-      if f_s_r_href :
+      f_s_r_href = self.first_contact() #list()が帰ってきている
+      for url in f_s_r_href :
          #f_s_r_href = o.scheme + '/' + hostname + f_s_r_href
-         self.detected_url |= {"url" : f_s_r_href} 
+         self.detected_url |= {"url" : url} 
          r_result = True
       #else:
          #r_result = self.recursive_async(self.url , self.url) # 結果が何であれ記録が必要
@@ -463,14 +476,14 @@ class CoSpider(Arthropod):
       self.browser_close()
 
       #いずれにしてもここでファイルを削除したい
-      rmtd= self.save_directory + '/' + hostname + '/'
-      if(os.path.isdir(rmtd) == True):
-         try:
-            if not os.access(rmtd, os.W_OK):
-               os.chmod(rmtd, 755)
-            shutil.rmtree(rmtd)
-         except:
-            pass
+      #rmtd= self.save_directory + '/' + hostname + '/'
+      #if(os.path.isdir(rmtd) == True):
+      #   try:
+      #      if not os.access(rmtd, os.W_OK):
+      #         os.chmod(rmtd, 755)
+      #      shutil.rmtree(rmtd)
+      #   except:
+      #      pass
          
       return result
 
@@ -550,7 +563,9 @@ class CoSpider(Arthropod):
       result = list()
       if not self.detected :
          return result
-      result = [self.detected_url["title"] , self.detected_url["hostname"] , self.detected_url["url"], str(id(self)) , str(id(self.driver))]  
+      
+      for a_url in self.accepted_urls :
+         result += [[self.detected_url["title"] , self.detected_url["hostname"] , a_url, str(id(self)) , str(id(self.driver))]]
       
       return result
 

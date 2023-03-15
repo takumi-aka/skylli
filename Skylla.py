@@ -23,10 +23,10 @@ shrimp_stat = thread_mode['noop']
 spider_stat = thread_mode['noop']
 
 window_keys = ('-g-search-start-' , '-g-search-break-' , '-g-search-words-start-' , '-g-search-words-break-'
-             ,'-spider-start-' ,  '-spider-break-' ,'-spin-t-cnt-' , '-cbox-hedden-window-')
-shrimp_btn_enable = (window_keys[0] , window_keys[2] , window_keys[3], window_keys[4] , window_keys[5] , window_keys[6] , window_keys[7] )
-shrimps_btn_enable = (window_keys[0] , window_keys[1], window_keys[2] , window_keys[4] , window_keys[5] , window_keys[6] , window_keys[7] )
-spider_btn_enable = (window_keys[0] , window_keys[1],window_keys[2] , window_keys[3],window_keys[4] , window_keys[6],window_keys[7] )
+             ,'-spider-start-' ,  '-spider-break-' ,'-spin-t-cnt-' , '-spider-cbox-hw-' , '-shrimp-cbox-hw-')
+shrimp_btn_enable = (window_keys[0] , window_keys[2] , window_keys[3], window_keys[4] , window_keys[5] , window_keys[6] , window_keys[7] ,window_keys[8])
+shrimps_btn_enable = (window_keys[0] , window_keys[1], window_keys[2] , window_keys[4] , window_keys[5] , window_keys[6] , window_keys[7] ,window_keys[8])
+spider_btn_enable = (window_keys[0] , window_keys[1],window_keys[2] , window_keys[3],window_keys[4] , window_keys[6],window_keys[7] ,window_keys[8])
 
 
 #coshrimp  #検索エンジンからデータをあさるクラス
@@ -76,9 +76,9 @@ if __name__ == '__main__':
 
     base_frame_width = 1024
     search_word_list = []
-    frame0 = sg.Frame('',
+    frame0 = sg.Frame(' Step.1 ',
         [
-            [sg.Text('検索ワード :'), sg.Input(key='-serch-shrimp-') , sg.Button('検索',font=('',11) , key = "-g-search-start-"),  sg.Button('検索終了',font=('',11) , key = "-g-search-break-" ) , sg.Button('決定',font=('',11)) ],
+            [sg.Text('検索ワード :'), sg.Input(key='-serch-shrimp-') , sg.Button('検索',font=('',11) , key = "-g-search-start-"),  sg.Button('検索終了',font=('',11) , key = "-g-search-break-" ) , sg.Button('決定',font=('',11)) , sg.Text('     ') , sg.Checkbox(': ブラウザ表示', key='-shrimp-cbox-hw-')],
             [sg.Text('連続検索ワード :'), sg.Listbox ( search_word_list , size =(24 , 5) , key='-search-word-list-box-') , sg.Button('追加',font=('',11)),  sg.Button('削除',font=('',11)),sg.Button('リストの読み込み',font=('',11)), sg.Button('リストの保存',font=('',11))],
             [sg.Text('連続検索 :') , sg.Button('検索',font=('',11) , key = "-g-search-words-start-") , sg.Button('検索終了',font=('',11)  , key = "-g-search-words-break-" )],
             [sg.Text('passing :'),sg.Text('', key='-current-text-shrimp-')],
@@ -95,13 +95,13 @@ if __name__ == '__main__':
                 ) , sg.Button('CSVを読み込む',font=('',11)), sg.Button('CSVへ保存',font=('',11))] 
             #現在コンタクトフォームの検索結果
 
-        ] , size=(base_frame_width, 332) , key='-frame0-'
+        ] , size=(base_frame_width, 332) , key='-frame0-', font=('',14)
     )
     
     T1 = sg.Tab('コンタクトフォーム検索' , 
         [
             [sg.Button('検索開始',font=('',12) ,  key = '-spider-start-'),  sg.Button('検索終了',font=('',11) , key = '-spider-break-' ) , sg.Button('終了')
-            , sg.Text('       ') , sg.Spin([1,2,3,4,5,6],initial_value=4 , size=(4,7) , key='-spin-t-cnt-')  , sg.Text(':  起動ブラウザ数') , sg.Text('     ') , sg.Checkbox(': ブラウザ表示', key='-cbox-hedden-window-') ],
+            , sg.Text('       ') , sg.Spin([1,2,3,4,5,6],initial_value=1 , size=(4,7) , key='-spin-t-cnt-')  , sg.Text(':  起動ブラウザ数') , sg.Text('     ') , sg.Checkbox(': ブラウザ表示', key='-spider-cbox-hw-') ],
             [sg.Text('検出した情報 :', key='-ACT-')],                
             [ sg.Table (T , headings=H1 , auto_size_columns = False , vertical_scroll_only = True ,expand_x=True,     
                 col_widths=[45, 20, 40],
@@ -125,17 +125,17 @@ if __name__ == '__main__':
         , size=(base_frame_width, 240)  , key='-tll-'
     )]]
 
-    frame1 = sg.Frame('', TL
-        , size=(base_frame_width, 240)  , key='-frame1-'
+    frame1 = sg.Frame(' Step.2 ', TL
+        , size=(base_frame_width, 240)  , key='-frame1-', font=('',14)
     )
 
-    frame2 = sg.Frame('',
+    frame2 = sg.Frame(' Status ',
         [
             [sg.Text('', key='-log-title-' ) , sg.Text('    ', key='-r-space0-') ,  sg.Text('', key='-r-cnt0-') , sg.Text('    ', key='-r-space1-') ,  sg.Text('', key='-r-cnt1-') ],
             [sg.Text('  ', key='-r-space2-') , sg.Text('', key='-r-title0-') ], 
             [sg.Text(''  , key='-r-title1-') , sg.Text('', key='-r-text1-')], 
             [sg.Text('', key='-r-title2-') , sg.Text('', key='-r-text2-')]
-        ] , size=(base_frame_width, 120)  , key='-frame2-'
+        ] , size=(base_frame_width, 120)  , key='-frame2-', font=('',13)
     )
 
     layout = [
@@ -188,6 +188,8 @@ if __name__ == '__main__':
 
         fTyp = [("CSVファイル", "*.csv")]
         iDir = os.path.abspath(os.path.dirname(__file__))
+        #iDir = '../'
+        print(f'{id(worker_thread_with)} init thread!' + iDir)
         file_name = tk.filedialog.askopenfile(filetypes=fTyp, initialdir=iDir)
         if None == file_name :
             return 
@@ -235,8 +237,13 @@ if __name__ == '__main__':
 
 
     def shrimp_worker(search_word):
-        coshrimp = GoogleShrimp(search_word=search_word , save_file_name="検索結果.csv" , breath = shrimp_breather) 
-        print(f'{id(coshrimp)} shrimp_worker 231')
+        global go_on
+        if not go_on :
+            return list()
+        
+        hw_n = not window['-shrimp-cbox-hw-'].get()
+        coshrimp = GoogleShrimp(search_word=search_word , save_file_name="Google検索結果.csv" , breath = shrimp_breather, hedden_window=hw_n) 
+        
         return coshrimp.boil() 
 
     def shrimp_breather(switch , save_file_name="" , param_dic={}, current_text="") : # 戻り値 {}
@@ -257,13 +264,13 @@ if __name__ == '__main__':
                             search_result_all |= param_dic # 
 
                             update_list = list()
-                            for key_url , value_title in param_dic.items():#その検索ワードの成果だけを表示させたいためparam_dicにしてある
+                            for key_url , value_title in search_result_all.items():#その検索ワードの成果だけを表示させたいためparam_dicにしてある
                                 update_list += [[value_title , key_url]] # 廃止候補
                             window['-TABLE-'].update(update_list)
 
                             f_name = save_file_name # ファイルに保存するルーチンは各result格納クラスに移動させる
                             if not f_name :  
-                                f_name = "nioh.csv"
+                                f_name = "Google検索結果.csv"
                             f = open(f_name , mode="a" , newline="", encoding="UTF-8")     
 
                             writer = csv.writer(f)
@@ -320,8 +327,8 @@ if __name__ == '__main__':
         if not go_on :
             return list()
 
-        cb_hw_n = not window['-cbox-hedden-window-'].get()
-        cospider = CoSpider("ContactForm 検索結果" , url=url , breath=spider_breather , hedden_window=cb_hw_n) 
+        hw_n = not window['-spider-cbox-hw-'].get()
+        cospider = CoSpider("ContactForm 検索結果" , url=url , breath=spider_breather , hedden_window=hw_n) 
         cospider.finish_it()
         return cospider.get_result_list()
 
@@ -394,10 +401,10 @@ if __name__ == '__main__':
                         for future in concurrent.futures.as_completed(futures):
                             result = future.result() 
 
-                        if 2 <= len(result) : #
-                            GS_results.add_r(title_r_s = result[0] , location_r_s = result[1])
+                        #if 2 <= len(result) : #
+                        #    GS_results.add_r(title_r_s = result[0] , location_r_s = result[1])
 
-                        window['-TABLE-'].update(GS_results.get_r_list_table())
+                        #window['-TABLE-'].update(GS_results.get_r_list_table())
                 window_btn_visible(shrimps_btn_enable)
 
             case "swt_spider" : 
@@ -416,8 +423,10 @@ if __name__ == '__main__':
                             result = future.result()
 
                             frame2_cf_test_cnt() #試行回数をインクリメント
-                            if 3 <= len(result) :#
-                                CS_result.add_r(title_r_s = result[0] , domain_r_s = result[1] , location_r_s = result[2]) #  検索処理の結果を保存しておくオブジェクトを作り、そこに追加していく。
+                            with __lock: 
+                                if not None == result :#
+                                    for item in result:
+                                        CS_result.add_r(title_r_s = item[0] , domain_r_s = item[1] , location_r_s = item[2]) #  検索処理の結果を保存しておくオブジェクトを作り、そこに追加していく。
 
                         # 結果をUIに反映
                         window['-spider-table-'].update(CS_result.get_r_list_table())
@@ -430,7 +439,9 @@ if __name__ == '__main__':
         
         # skylli_worker_thread_with end 
 
+
     #イベントループ
+
     futures = []
     while True:
         event, values = window.read()
