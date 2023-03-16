@@ -16,7 +16,7 @@ from threading import Lock
 
 class Arthropod :
     lucky_urls = "(docs.google.com/forms|forms.gle)"
-    needless = "(tfm.co.jp|okinawatimes.co.jp|autolook.pt|moneypost.jp|carsensor.net|tranbi.com|jmd.co.jp|fnn.jp|ameblo.jp|kira-boshi.jp|yomiuri.co.jp|itmedia.co.jp|nikkan.co.jp|dmm.com|nikkei.com|nhk.or.jp|vorkers.com|diamond.jp|books.google|itp.ne.jp|job.rikunabi.com|doda.jp|tsukulink.net|e-shops|mapion|twitter|instagram|facebook|asahi|youtube|indeed|baseconnect|yahoo|townpage|domonet|news|docomo|amazom|kakaku|oricon|wikipedia|tiktok|tokubai|seeing-japan|satomono|navi)"
+    needless = "(togetter|tfm.co.jp|okinawatimes.co.jp|autolook.pt|moneypost.jp|carsensor.net|tranbi.com|jmd.co.jp|fnn.jp|ameblo.jp|kira-boshi.jp|yomiuri.co.jp|itmedia.co.jp|nikkan.co.jp|dmm.com|nikkei.com|nhk.or.jp|vorkers.com|diamond.jp|books.google|itp.ne.jp|job.rikunabi.com|doda.jp|tsukulink.net|e-shops|mapion|twitter|instagram|facebook|asahi|youtube|indeed|baseconnect|yahoo|townpage|domonet|news|docomo|amazom|kakaku|oricon|wikipedia|tiktok|tokubai|seeing-japan|satomono|navi)"
     negative_multibyte_words = "(支援サイト|産業フェア|キャリア|派遣|求人|地図|アルバイト|ハローワーク|マピオン|goo地図|グルメ)" 
     options = None
     driver = None
@@ -24,7 +24,7 @@ class Arthropod :
     save_file_name = ""
     breather = None
     terminate_flag = False
-    detected_url = {} # {'title : str , ''url' : str , 'savepath' : str}
+    detected_urls = [] # {'title : str , ''url' : str , 'savepath' : str}
 
     def __init__(self , save_file_name="" , breath = None , hedden_window = False) :
         try:
@@ -53,8 +53,10 @@ class Arthropod :
 
 
     def save_to_csv_a(self) :
-        if self.detected_url :
-            data_list = [self.detected_url["title"] , self.detected_url["hostname"] , self.detected_url["url"] , str(id(self)) , str(id(self.driver))]        
+        data_list = list()
+        for a_url in self.detected_urls : # 
+             data_list += [[self.detected_host["title"] , self.detected_host["hostname"] , a_url ]]
+             
         result = self.breather("clean_up" , save_file_name=self.save_file_name  , param_list=data_list) 
         return result
 

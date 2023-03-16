@@ -76,7 +76,7 @@ if __name__ == '__main__':
 
     base_frame_width = 1024
     search_word_list = []
-    frame0 = sg.Frame(' Step.1 ',
+    frame0 = sg.Frame(' Step 1.',
         [
             [sg.Text('検索ワード :'), sg.Input(key='-serch-shrimp-') , sg.Button('検索',font=('',11) , key = "-g-search-start-"),  sg.Button('検索終了',font=('',11) , key = "-g-search-break-" ) , sg.Button('決定',font=('',11)) , sg.Text('     ') , sg.Checkbox(': ブラウザ表示', key='-shrimp-cbox-hw-')],
             [sg.Text('連続検索ワード :'), sg.Listbox ( search_word_list , size =(24 , 5) , key='-search-word-list-box-') , sg.Button('追加',font=('',11)),  sg.Button('削除',font=('',11)),sg.Button('リストの読み込み',font=('',11)), sg.Button('リストの保存',font=('',11))],
@@ -125,7 +125,7 @@ if __name__ == '__main__':
         , size=(base_frame_width, 240)  , key='-tll-'
     )]]
 
-    frame1 = sg.Frame(' Step.2 ', TL
+    frame1 = sg.Frame(' Step 2.', TL
         , size=(base_frame_width, 240)  , key='-frame1-', font=('',14)
     )
 
@@ -291,8 +291,8 @@ if __name__ == '__main__':
     def frame2_cf_init():
         global g_counter , g_test_cnt
         window["-log-title-"].update(' 検出されたデータ : ') 
-        window['-r-title1-'].update(str(' domain : '))
-        window['-r-title2-'].update(str(' location : '))
+        #window['-r-title1-'].update(str(' domain : '))
+        #window['-r-title2-'].update(str(' location : '))
         g_counter = 0 
         g_test_cnt = 0 
     
@@ -305,10 +305,10 @@ if __name__ == '__main__':
         global g_counter
         if param_list :
             g_counter += 1 
-            window["-r-title0-"].update(str(param_list[0])) 
+            #window["-r-title0-"].update(str(param_list[0])) 
             window['-r-cnt0-'].update('検出数 : ' + str(g_counter))
-            window['-r-text1-'].update(str(param_list[1]))
-            window['-r-text2-'].update(str(param_list[2]))
+            #window['-r-text1-'].update(str(param_list[1]))
+            #window['-r-text2-'].update(str(param_list[2]))
 
     def frame2_cf_s_result():
         global g_counter , g_test_cnt
@@ -346,18 +346,17 @@ if __name__ == '__main__':
                 case "clean_up" :
                     try:       
                         result = {"clean_up" : False}
-                        
                         frame2_cf_s_passing(param_list=param_list)
-
                         if param_list :
-
+                            
                             f_name = save_file_name
                             if not f_name :  
                                 f_name = "eldenring"
                             f = open(f_name + ".csv" , mode="a" , newline="", encoding="UTF-8")                       
                               
-                            writer = csv.writer(f)                
-                            writer.writerow(param_list)
+                            writer = csv.writer(f)       
+                            for param in param_list :
+                                writer.writerow(param)
 
                             result = {"clean_up" : True}     
                     finally:
@@ -422,11 +421,12 @@ if __name__ == '__main__':
                         for future in concurrent.futures.as_completed(futures): #処理が終わったスレッドが都度検出される。　それの終了待ちループであるようだが この記述で実装されてしまうのは謎だ。
                             result = future.result()
 
-                            frame2_cf_test_cnt() #試行回数をインクリメント
                             with __lock: 
-                                if not None == result :#
-                                    for item in result:
-                                        CS_result.add_r(title_r_s = item[0] , domain_r_s = item[1] , location_r_s = item[2]) #  検索処理の結果を保存しておくオブジェクトを作り、そこに追加していく。
+                                frame2_cf_test_cnt() #試行回数をインクリメント
+                                
+                            if not None == result :#
+                                for item in result:
+                                    CS_result.add_r(title_r_s = item[0] , domain_r_s = item[1] , location_r_s = item[2]) #  検索処理の結果を保存しておくオブジェクトを作り、そこに追加していく。
 
                         # 結果をUIに反映
                         window['-spider-table-'].update(CS_result.get_r_list_table())
