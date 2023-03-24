@@ -39,8 +39,6 @@ class Arthropod :
             chrome_service = fs.Service(executable_path=path) 
             self.driver  = webdriver.Chrome(service=chrome_service, options=self.options)
 
-
-            #self.driver = webdriver.Chrome(path, options=self.options) 
             print(f'{path} ChromeDriver Path ')
 
             self.save_file_name = save_file_name 

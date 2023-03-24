@@ -9,7 +9,6 @@ from concurrent.futures import ThreadPoolExecutor
 
 import tkinter as tk
 
-import time
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.chrome import service as fs
 from selenium import webdriver 
@@ -48,13 +47,11 @@ def update_chrome_install() :
     options.add_argument('--headless')
 
     path = ChromeDriverManager().install() 
-    print(f'{path} init thread!')
+    print(f'{path} update_chrome_install')
     chrome_service = fs.Service(executable_path=path) 
     webdriver.Chrome(service=chrome_service, options=options)
     webdriver.Chrome.close
 
-    #webdriver.Chrome(ChromeDriverManager().install(), options=options)
-    #webdriver.Chrome.close
     return
 
 
@@ -84,7 +81,6 @@ if __name__ == '__main__':
             [sg.Text('passing :'),sg.Text('', key='-current-text-shrimp-')],
             #検索結果 URL
             [ sg.Table (T , headings=H , auto_size_columns = False , vertical_scroll_only = True ,expand_x=True,
-                #def_col_width=32 ,
                 col_widths=[45, 38],
                 num_rows=9 ,
                 display_row_numbers= True ,
@@ -101,7 +97,7 @@ if __name__ == '__main__':
     T1 = sg.Tab('コンタクトフォーム検索' , 
         [
             [sg.Button('検索開始',font=('',12) ,  key = '-spider-start-'),  sg.Button('検索終了',font=('',11) , key = '-spider-break-' ) , sg.Button('終了')
-            , sg.Text('       ') , sg.Spin([1,2,3,4,5,6],initial_value=1 , size=(4,7) , key='-spin-t-cnt-')  , sg.Text(':  起動ブラウザ数') , sg.Text('     ') , sg.Checkbox(': ブラウザ表示', key='-spider-cbox-hw-') ],
+            , sg.Text('       ') , sg.Spin([1,2,3,4,5,6],initial_value=3 , size=(4,7) , key='-spin-t-cnt-')  , sg.Text(':  起動ブラウザ数') , sg.Text('     ') , sg.Checkbox(': ブラウザ表示', key='-spider-cbox-hw-') ],
             [sg.Text('検出した情報 :', key='-ACT-')],                
             [ sg.Table (T , headings=H1 , auto_size_columns = False , vertical_scroll_only = True ,expand_x=True,     
                 col_widths=[45, 20, 40],
@@ -111,7 +107,6 @@ if __name__ == '__main__':
                 header_text_color= '#0000ff' ,
                 header_background_color= '#cccccc',
                 key='-spider-table-')]
-
         ]
     )
 
@@ -188,8 +183,7 @@ if __name__ == '__main__':
 
         fTyp = [("CSVファイル", "*.csv")]
         iDir = os.path.abspath(os.path.dirname(__file__))
-        #iDir = '../'
-        print(f'{id(worker_thread_with)} init thread!' + iDir)
+        print(f'{id(worker_thread_with)} os.path.abspath(os.path.dirname(__file__)) ' + iDir)
         file_name = tk.filedialog.askopenfile(filetypes=fTyp, initialdir=iDir)
         if None == file_name :
             return 
@@ -235,7 +229,6 @@ if __name__ == '__main__':
 
         return
 
-
     def shrimp_worker(search_word):
         global go_on
         if not go_on :
@@ -264,11 +257,11 @@ if __name__ == '__main__':
                             search_result_all |= param_dic # 
 
                             update_list = list()
-                            for key_url , value_title in search_result_all.items():#その検索ワードの成果だけを表示させたいためparam_dicにしてある
-                                update_list += [[value_title , key_url]] # 廃止候補
+                            for key_url , value_title in search_result_all.items():#
+                                update_list += [[value_title , key_url]] #
                             window['-TABLE-'].update(update_list)
 
-                            f_name = save_file_name # ファイルに保存するルーチンは各result格納クラスに移動させる
+                            f_name = save_file_name #
                             if not f_name :  
                                 f_name = "Google検索結果.csv"
                             f = open(f_name , mode="a" , newline="", encoding="UTF-8")     
@@ -288,7 +281,7 @@ if __name__ == '__main__':
         for key in keys :
             window.find_element(key).update(disabled=visible) 
 
-    def frame2_cf_init():
+    def frame2_spider_ui_init():
         global g_counter , g_test_cnt
         window["-log-title-"].update(' 検出されたデータ : ') 
         #window['-r-title1-'].update(str(' domain : '))
@@ -296,12 +289,12 @@ if __name__ == '__main__':
         g_counter = 0 
         g_test_cnt = 0 
     
-    def frame2_cf_test_cnt():
+    def frame2_spider_ui_test_cnt():
         global g_test_cnt , go_on
         g_test_cnt += 1 
         window['-r-cnt1-'].update('    試行回数 : ' + str(g_test_cnt))
 
-    def frame2_cf_s_passing(param_list=list()):
+    def frame2_spider_ui_passing(param_list=list()):
         global g_counter
         if param_list :
             g_counter += 1 
@@ -310,7 +303,7 @@ if __name__ == '__main__':
             #window['-r-text1-'].update(str(param_list[1]))
             #window['-r-text2-'].update(str(param_list[2]))
 
-    def frame2_cf_s_result():
+    def frame2_spider_ui_result():
         global g_counter , g_test_cnt
 
         window['-r-cnt0-'].update('')
@@ -320,7 +313,6 @@ if __name__ == '__main__':
         window['-r-title2-'].update(str(' 検出数 : '))
         window['-r-text1-'].update(str(g_test_cnt)) # 
         window['-r-text2-'].update(str(g_counter))
-
 
     def spider_worker(url=""):
         global go_on
@@ -339,14 +331,14 @@ if __name__ == '__main__':
             match switch:
                 case "breath" :
                     result = {}
-                    #window['-CURRENT-TEXT-'].update(current_text)
+
                 case "life" :
                     result = {"life" : go_on}   
     
                 case "clean_up" :
                     try:       
                         result = {"clean_up" : False}
-                        frame2_cf_s_passing(param_list=param_list)
+                        frame2_spider_ui_passing(param_list=param_list)
                         if param_list :
                             
                             f_name = save_file_name
@@ -365,13 +357,10 @@ if __name__ == '__main__':
 
         return result
 
-
-
-    def skylli_worker_thread_with(swt , param):#ワーカースレッドが終わるまで待ってるスレッド  状態遷移の主軸に
+    def skylli_worker_thread_with(swt , param):#ワーカースレッドが終わるまで待ってるスレッド  状態遷移の主軸に と考え
         global worker_thread_with , last_result_object 
 
-        print(f'{id(swt)} skylli_worker_thread_with 354')
-        if worker_thread_with is None : #以下の３つ(match)の処理、何れかの一つしか実行できないようにしている。　つもり。            
+        if worker_thread_with is None : #以下の３つ(match)の処理、何れかの一つしか実行できないようにしている。        
             return 
 
         result = ""
@@ -383,7 +372,7 @@ if __name__ == '__main__':
                     with ThreadPoolExecutor(max_workers=1, initializer=initializer, initargs=('pool',)) as executor: 
                         futures.append(executor.submit(shrimp_worker, param)) 
                         for future in concurrent.futures.as_completed(futures):# キューではない
-                            result = future.result() #正常終了か問題ありか位は乗せておきたい
+                            result = future.result() 
 
                 window_btn_visible(shrimp_btn_enable)
 
@@ -391,7 +380,6 @@ if __name__ == '__main__':
                 if (type(param) is list) and (0 < len(param)) :
                     GS_results =  GoogleShrimp_result()
                     last_result_object = GS_results
-                    print(f'{id(last_result_object)} swt_shrimps 373')
                     with ThreadPoolExecutor(max_workers=1, initializer=initializer, initargs=('pool',)) as executor:   
 
                         for search_word in param:
@@ -400,7 +388,7 @@ if __name__ == '__main__':
                         for future in concurrent.futures.as_completed(futures):
                             result = future.result() 
 
-                        #if 2 <= len(result) : #
+                        #if 2 <= len(result) :     #工事中
                         #    GS_results.add_r(title_r_s = result[0] , location_r_s = result[1])
 
                         #window['-TABLE-'].update(GS_results.get_r_list_table())
@@ -411,8 +399,7 @@ if __name__ == '__main__':
                     #　各クラスに用意してあるレザルトを入れておくインスタンスを作成する
                     CS_result = CoSpider_result() 
                     last_result_object = CS_result # 上書でよい
-                    frame2_cf_init()
-                    #-spin-t-cnt-
+                    frame2_spider_ui_init()
                     m_t = window['-spin-t-cnt-'].get()
                     with ThreadPoolExecutor(max_workers=m_t, initializer=initializer, initargs=('pool',)) as executor:   #ワーカースレッド数
                         for url in param:
@@ -422,15 +409,15 @@ if __name__ == '__main__':
                             result = future.result()
 
                             with __lock: 
-                                frame2_cf_test_cnt() #試行回数をインクリメント
+                                frame2_spider_ui_test_cnt() #試行回数をインクリメント
                                 
-                            if not None == result :#
+                            if not None == result :
                                 for item in result:
                                     CS_result.add_r(title_r_s = item[0] , domain_r_s = item[1] , location_r_s = item[2]) #  検索処理の結果を保存しておくオブジェクトを作り、そこに追加していく。
 
                         # 結果をUIに反映
                         window['-spider-table-'].update(CS_result.get_r_list_table())
-                        frame2_cf_s_result()
+                        frame2_spider_ui_result()
                 window_btn_visible(spider_btn_enable)
 
         worker_thread_with = None
@@ -439,9 +426,7 @@ if __name__ == '__main__':
         
         # skylli_worker_thread_with end 
 
-
     #イベントループ
-
     futures = []
     while True:
         event, values = window.read()
@@ -450,15 +435,15 @@ if __name__ == '__main__':
 
         elif event == '-g-search-words-start-':#subthread
             if (shrimp_stat == thread_mode['noop']) and (0 < len(search_word_list)) and (worker_thread_with is None) :
-                print(f'{event} init thread!')
+                print(f'{event} -g-search-words-start-')
                 executor = ThreadPoolExecutor(max_workers=1)
-                print(f'{id(executor)} init thread!')
+                print(f'{id(executor)} create executor ')
                 shrimp_stat = thread_mode['active'] 
                 
                 go_on = True          
                 window_btn_visible(shrimps_btn_enable ,visible = True)       
                 worker_thread_with = executor.submit(skylli_worker_thread_with , 'swt_shrimps' , search_word_list)
-                print(f'{id(worker_thread_with)} init thread!')
+                print(f'{id(worker_thread_with)} worker_thread_with')
              
         elif event == '-g-search-words-break-':#subthread 
 
@@ -518,62 +503,22 @@ if __name__ == '__main__':
         elif event == 'CSVへ保存': #main(any time)
             _csv_save()
 
-
         elif event == '-search-word-list-box-+-double click-': #main(any time)
             if values['-search-word-list-box-']:
                 val = values['-search-word-list-box-'][0] 
                 window ['-serch-shrimp-'].Update(val)
 
-
         elif event == '-spider-break-': #main(any time)   spider terminate
             window.refresh()
             go_on = False
-
 
         elif event == '決定':
             window_btn_visible(shrimps_btn_enable ,visible = True)
          
             #sg.preview_all_look_and_feel_themes()
-
     window.close()
 
     exit()
     
-    #Co_spider テスト
-    u0 = "https://wx10.wadax.ne.jp/~yoshidakaya-co-jp/" 
-    #url = "https://www.octoparse.jp/"
-    u1 = "https://oec-evaluation.uh-oh.jp/"
-    u2 = "https://bonten.cc/"
-    u3 = "https://akubi-office.com/"
-    u4 = 'https://kokusai-bs.jp/' 
-    u5 = "https://exceed-confect.co.jp/"
-
-    target_list = [u0 , u2, u3, u3, u4 ,u5]
-
-    futures = []
-
-    #ProcessPoolExecutor   破棄
-    with ThreadPoolExecutor(max_workers=1, initializer=initializer, initargs=('pool',)) as executor:       
-
-        for url in target_list:
-            futures.append(executor.submit(worker, url))
-
-        #for future in as_completed(futures):
-        #    r_list = list(future.result()) 
-
-
-        if futures :
-            try:       
-                f = open("nioh" + ".csv" , mode="a" , newline="", encoding="UTF-8")           
-                for ft in futures :
-                    r_list = list(ft.result())
-                    if r_list :
-                    # 排他的になってない 
-                        writer = csv.writer(f)
-                        writer.writerow(r_list)
-            finally:
-                f.close()
-
-        #sg.theme_previewer()
 
 
